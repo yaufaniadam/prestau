@@ -1,0 +1,148 @@
+// Override Bootstrap default variables here
+// Do not edit any of the files in /vendor/bootstrap/scss/!
+
+// Color Variables
+// Bootstrap Color Overrides
+
+$white: #fff !default;
+$gray-100: #f8f9fc !default;
+$gray-200: #eaecf4 !default;
+$gray-300: #dddfeb !default;
+$gray-400: #d1d3e2 !default;
+$gray-500: #b7b9cc !default;
+$gray-600: #858796 !default;
+$gray-700: #6e707e !default;
+$gray-800: #5a5c69 !default;
+$gray-900: #3a3b45 !default;
+$black: #000 !default;
+
+$blue: #4e73df !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #e83e8c !default;
+$red: #b0272b !default;
+$orange: #fd7e14 !default;
+$yellow: #fbc800 !default;
+$green: #065139 !default;
+$teal: #20c9a6 !default;
+$cyan: #36b9cc !default;
+
+// Custom Colors
+$brand-google: #ea4335;
+$brand-facebook: #3b5998;
+$green-400: #067250 !default;
+$white-op-9:rgba(255, 255, 255, 0.9);
+
+// Set Contrast Threshold
+$yiq-contrasted-threshold: 195 !default;
+
+// Typography
+$body-color: $gray-900 !default;
+
+$font-family-sans-serif: "Nunito",
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+Roboto,
+"Helvetica Neue",
+Arial,
+sans-serif,
+"Apple Color Emoji",
+"Segoe UI Emoji",
+"Segoe UI Symbol",
+'Noto Color Emoji' !default;
+
+$font-weight-light: 300 !default;
+// $font-weight-base: 400;
+$headings-font-weight: 400 !default;
+
+// Shadows
+$box-shadow-sm: 0 0.125rem 0.25rem 0 rgba($gray-900, .2) !default;
+$box-shadow: 0 0.15rem 1.75rem 0 rgba($gray-900, .15) !default;
+// $box-shadow-lg: 0 1rem 3rem rgba($black, .175) !default;
+
+// Borders Radius
+$border-radius: 0.35rem !default;
+$border-color: darken($gray-200, 2%);
+
+// Spacing Variables
+// Change below variable if the height of the navbar changes
+$topbar-base-height: 4.375rem;
+// Change below variable to change the width of the sidenav
+$sidebar-base-width: 14rem;
+// Change below variable to change the width of the sidenav when collapsed
+$sidebar-collapsed-width: 6.5rem;
+
+// Card
+$card-cap-bg: $gray-100;
+$card-border-color: $border-color;
+
+// Adjust column spacing for symmetry
+$spacer: 1rem;
+$grid-gutter-width: $spacer * 1.5;
+
+// Transitions
+$transition-collapse: height .15s ease !default;
+
+// Dropdowns
+$dropdown-font-size: 0.85rem;
+$dropdown-border-color: $border-color;
+
+// custom warna
+$perak: #eeeced !default;
+$ijomuda: #8fce90 !default;
+$ungu: #d17cad !default;
+$ungutua: #880e5f !default;
+$birutua: #3775d3 !default;
+$birudongker: #212f59 !default;
+$tosca: #3fcaa1 !default;
+$toscatua: #038452 !default;
+$abutua : #556270 !default;
+$abumuda: #8d9bab !default;
+$orangepastel: #f06f4f !default;
+
+$colors: () !default;
+$colors: map-merge(("perak": $perak,
+		"ijomuda": $ijomuda,
+		"ungu": $ungu,
+		"ungutua": $ungutua,
+		"birutua": $birutua,
+		"birudongker": $birudongker,
+		"tosca": $tosca,
+		"toscatua": $toscatua,
+		"abutua": $abutua,
+		"abumuda": $abumuda,
+		"orangepastel": $orangepastel,
+
+	),
+	$colors);
+
+$perak: $perak !default;
+$ijomuda: $ijomuda !default;
+$ungu: $ungu !default;
+$ungutua: $ungutua !default;
+$birutua: $birutua !default;
+$birudongker: $birudongker !default;
+$tosca: $tosca !default;
+$toscatua: $toscatua !default;
+$abutua: $abutua  !default;
+$abumuda: $abumuda !default;
+$orangepastel: $orangepastel !default;
+
+
+$theme-colors: () !default;
+$theme-colors: map-merge(("perak": $perak,
+    "ijomuda": $ijomuda,
+    "ungu": $ungu,
+		"ungutua": $ungutua,
+		"birutua": $birutua,
+		"birudongker": $birudongker,
+		"tosca": $tosca,
+		"toscatua": $toscatua,
+		"abutua ": $abutua,
+		"abumuda": $abumuda,
+		"orangepastel": $orangepastel    
+    ),
+	$theme-colors);
+
+$table-color:#202124 !default;

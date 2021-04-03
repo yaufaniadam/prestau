@@ -1,0 +1,378 @@
+USE [master]
+GO
+/****** Object:  Database [simkatmawa]    Script Date: 05/01/2021 11:19:22 ******/
+CREATE DATABASE [simkatmawa]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'simkatmawa', FILENAME = N'D:\App\MSSQL14.SQLEXPRESS\MSSQL\DATA\simkatmawa.mdf' , SIZE = 73728KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'simkatmawa_log', FILENAME = N'D:\App\MSSQL14.SQLEXPRESS\MSSQL\DATA\simkatmawa_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+GO
+ALTER DATABASE [simkatmawa] SET COMPATIBILITY_LEVEL = 140
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [simkatmawa].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [simkatmawa] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [simkatmawa] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [simkatmawa] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [simkatmawa] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [simkatmawa] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [simkatmawa] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [simkatmawa] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [simkatmawa] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [simkatmawa] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [simkatmawa] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [simkatmawa] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [simkatmawa] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [simkatmawa] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [simkatmawa] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [simkatmawa] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [simkatmawa] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [simkatmawa] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [simkatmawa] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [simkatmawa] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [simkatmawa] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [simkatmawa] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [simkatmawa] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [simkatmawa] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [simkatmawa] SET  MULTI_USER 
+GO
+ALTER DATABASE [simkatmawa] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [simkatmawa] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [simkatmawa] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [simkatmawa] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [simkatmawa] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [simkatmawa] SET QUERY_STORE = OFF
+GO
+USE [simkatmawa]
+GO
+/****** Object:  User [super_admin]    Script Date: 05/01/2021 11:19:24 ******/
+CREATE USER [super_admin] FOR LOGIN [admin] WITH DEFAULT_SCHEMA=[db_owner]
+GO
+/****** Object:  User [sadmin]    Script Date: 05/01/2021 11:19:24 ******/
+CREATE USER [sadmin] FOR LOGIN [sadmin] WITH DEFAULT_SCHEMA=[dbo]
+GO
+/****** Object:  User [admin_root]    Script Date: 05/01/2021 11:19:24 ******/
+CREATE USER [admin_root] FOR LOGIN [toor] WITH DEFAULT_SCHEMA=[db_accessadmin]
+GO
+ALTER ROLE [db_owner] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_accessadmin] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_securityadmin] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_ddladmin] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_backupoperator] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_denydatareader] ADD MEMBER [admin_root]
+GO
+ALTER ROLE [db_denydatawriter] ADD MEMBER [admin_root]
+GO
+/****** Object:  Table [dbo].[Mstr_Capaian_Prestasi]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Mstr_Capaian_Prestasi](
+	[Capaian_Prestasi_Id] [int] NOT NULL,
+	[Capaian_Prestasi] [varchar](250) NULL,
+	[Created_By] [varchar](50) NULL,
+	[Created_Date] [datetime] NULL,
+	[Modified_By] [varchar](50) NULL,
+	[Modified_Date] [datetime] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Mstr_Department]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Mstr_Department](
+	[DEPARTMENT_ID] [int] NOT NULL,
+	[NAME_OF_DEPARTMENT] [varchar](255) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Mstr_Fields]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Mstr_Fields](
+	[field_id] [int] IDENTITY(1,1) NOT NULL,
+	[field] [varchar](255) NULL,
+	[key] [varchar](50) NULL,
+	[type] [varchar](50) NULL,
+	[deskripsi] [text] NULL,
+	[array] [text] NULL,
+ CONSTRAINT [PK_Mstr_Fields] PRIMARY KEY CLUSTERED 
+(
+	[field_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Mstr_Jenis_Pengajuan]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Mstr_Jenis_Pengajuan](
+	[Jenis_Pengajuan_Id] [int] NOT NULL,
+	[Jenis_Pengajuan] [varchar](250) NOT NULL,
+	[Created_By] [varchar](50) NULL,
+	[Created_Date] [datetime] NULL,
+	[Modified_By] [varchar](50) NULL,
+	[Modified_Date] [datetime] NULL,
+	[parent] [int] NULL,
+	[deskripsi] [text] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Mstr_Role]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Mstr_Role](
+	[role_id] [int] IDENTITY(1,1) NOT NULL,
+	[role] [varchar](20) NULL,
+ CONSTRAINT [PK_Mstr_Role] PRIMARY KEY CLUSTERED 
+(
+	[role_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Mstr_Status_Pesan]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Mstr_Status_Pesan](
+	[status_pesan_id] [int] IDENTITY(1,1) NOT NULL,
+	[id_status] [int] NULL,
+	[role] [int] NULL,
+	[icon] [varchar](50) NULL,
+	[badge] [varchar](15) NULL,
+	[alert] [text] NULL,
+	[judul_notif] [varchar](255) NULL,
+	[isi_notif] [text] NULL,
+ CONSTRAINT [PK_Mstr_Status_Pesan] PRIMARY KEY CLUSTERED 
+(
+	[status_pesan_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Mstr_Tingkat_Prestasi]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Mstr_Tingkat_Prestasi](
+	[Tingkat_Prestasi_Id] [int] NOT NULL,
+	[Tingkat_Prestasi] [varchar](50) NOT NULL,
+	[Created_By] [varchar](50) NULL,
+	[Created_Date] [datetime] NULL,
+	[Modified_By] [varchar](50) NULL,
+	[Modified_Date] [datetime] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Tr_Field_Value]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Tr_Field_Value](
+	[field_value_id] [int] IDENTITY(1,1) NOT NULL,
+	[value] [varchar](255) NULL,
+	[pengajuan_id] [nchar](10) NULL,
+	[field_id] [nchar](10) NULL,
+	[verifikasi] [tinyint] NULL,
+ CONSTRAINT [PK_Tr_Field_Value] PRIMARY KEY CLUSTERED 
+(
+	[field_value_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Tr_Media]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Tr_Media](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nim] [nchar](20) NULL,
+	[file] [text] NULL,
+	[thumb] [text] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Tr_Pengajuan]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Tr_Pengajuan](
+	[pengajuan_id] [int] IDENTITY(1,1) NOT NULL,
+	[Jenis_Pengajuan_Id] [int] NULL,
+	[nim] [varchar](20) NULL,
+ CONSTRAINT [PK_Tr_Pengajuan] PRIMARY KEY CLUSTERED 
+(
+	[pengajuan_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Tr_Pengajuan_Field]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Tr_Pengajuan_Field](
+	[pengajuan_fields_id] [int] IDENTITY(1,1) NOT NULL,
+	[Jenis_Pengajuan_Id] [int] NULL,
+	[field_id] [int] NULL,
+	[terpakai] [int] NULL,
+ CONSTRAINT [PK_Tr_Pengajuan_Field] PRIMARY KEY CLUSTERED 
+(
+	[pengajuan_fields_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Tr_Pengajuan_Status]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Tr_Pengajuan_Status](
+	[status_pengajuan_id] [int] IDENTITY(1,1) NOT NULL,
+	[date] [datetime] NULL,
+	[pic] [varchar](20) NULL,
+	[pengajuan_id] [int] NULL,
+	[status_id] [int] NULL,
+ CONSTRAINT [PK_Tr_Pengajuan_Status] PRIMARY KEY CLUSTERED 
+(
+	[status_pengajuan_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Tr_Status]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Tr_Status](
+	[status_id] [int] IDENTITY(0,1) NOT NULL,
+	[status] [varchar](50) NULL,
+	[icon] [varchar](30) NULL,
+	[badge] [varchar](50) NULL,
+	[alert] [text] NULL,
+ CONSTRAINT [PK_Tr_Status] PRIMARY KEY CLUSTERED 
+(
+	[status_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[users]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[users](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[username] [varchar](50) NULL,
+	[password] [varchar](255) NULL,
+	[email] [varchar](255) NULL,
+	[telp] [varchar](14) NULL,
+	[role] [int] NULL,
+	[fullname] [varchar](100) NULL,
+	[created_at] [datetime] NULL,
+	[updated_at] [datetime] NULL,
+ CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[V_Dosen]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[V_Dosen](
+	[id_pegawai] [int] NOT NULL,
+	[nik] [varchar](25) NULL,
+	[nama] [varchar](229) NULL,
+	[unitkerja] [varchar](70) NULL,
+	[status_kepegawaian] [varchar](75) NULL,
+	[status_aktif] [varchar](9) NOT NULL,
+	[jabatan_struktural] [varchar](100) NULL,
+	[unitkerja_struktural] [varchar](70) NULL,
+	[unitkerja_strukturalid] [int] NULL,
+	[nidn] [varchar](25) NULL,
+	[jabatan_fungsional] [varchar](75) NULL,
+	[tingkat_pendidikan] [varchar](25) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[V_Mahasiswa]    Script Date: 05/01/2021 11:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[V_Mahasiswa](
+	[STUDENTID] [varchar](15) NOT NULL,
+	[FULLNAME] [varchar](50) NULL,
+	[NAME_OF_FACULTY] [varchar](200) NULL,
+	[DEPARTMENT_ID] [varchar](150) NULL,
+	[email] [varchar](60) NULL
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Mstr_Fields] ADD  DEFAULT (NULL) FOR [array]
+GO
+ALTER TABLE [dbo].[Mstr_Jenis_Pengajuan] ADD  DEFAULT (NULL) FOR [deskripsi]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Mstr_Fields', @level2type=N'COLUMN',@level2name=N'array'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Mstr_Jenis_Pengajuan', @level2type=N'COLUMN',@level2name=N'parent'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Mstr_Jenis_Pengajuan', @level2type=N'COLUMN',@level2name=N'deskripsi'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Tr_Pengajuan_Status', @level2type=N'COLUMN',@level2name=N'pengajuan_id'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Tr_Pengajuan_Status', @level2type=N'COLUMN',@level2name=N'status_id'
+GO
+USE [master]
+GO
+ALTER DATABASE [simkatmawa] SET  READ_WRITE 
+GO
