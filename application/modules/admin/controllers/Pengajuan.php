@@ -26,6 +26,11 @@ class Pengajuan extends Admin_Controller
 			$daftar_pengajuan_id = $this->input->post('pengajuan_id[]');
 			$periode_id = $this->input->post('periode_id');
 
+			// echo "<pre>";
+			// print_r($daftar_pengajuan_id);
+			// echo "</pre>";
+			// die();
+
 			foreach ($daftar_pengajuan_id as $pengajuan_id) {
 
 				$jenis_pengajuan_id = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->Jenis_Pengajuan_Id;
@@ -41,7 +46,6 @@ class Pengajuan extends Admin_Controller
 							'pic' => $_SESSION['user_id'],
 							'STUDENTID' => $mahasiswa
 						];
-
 						$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
 					}
 					//dicomment karena dobel datanya
@@ -62,18 +66,18 @@ class Pengajuan extends Admin_Controller
 						'STUDENTID' => $nim
 					];
 					$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
-					// $this->db->set('status_id', 9)
-					// 	->set('pic', $this->session->userdata('user_id'))
-					// 	->set('date', 'getdate()', FALSE)
-					// 	->set('pengajuan_id', $pengajuan_id)
-					// 	->insert('Tr_Pengajuan_Status');
+					$this->db->set('status_id', 9)
+						->set('pic', $this->session->userdata('user_id'))
+						->set('date', 'getdate()', FALSE)
+						->set('pengajuan_id', $pengajuan_id)
+						->insert('Tr_Pengajuan_Status');
 				}
 			}
-			$this->db->set('status_id', 9)
-				->set('pic', $this->session->userdata('user_id'))
-				->set('date', 'getdate()', FALSE)
-				->set('pengajuan_id', $pengajuan_id)
-				->insert('Tr_Pengajuan_Status');
+			// $this->db->set('status_id', 9)
+			// 	->set('pic', $this->session->userdata('user_id'))
+			// 	->set('date', 'getdate()', FALSE)
+			// 	->set('pengajuan_id', $pengajuan_id)
+			// 	->insert('Tr_Pengajuan_Status');
 
 			redirect(base_url('admin/pengajuan/verified'));
 		} else {
@@ -215,6 +219,17 @@ class Pengajuan extends Admin_Controller
 			} else if ($this->input->post('rev2') == 7) {
 				$role = array(3, 6);
 			}
+
+			//buat notifikasi
+			$this_pengajuan = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_array();
+			$data_for_notif = [
+				'pengirim' => $_SESSION['userid'],
+				'penerima' => $this_pengajuan['nim'],
+				'id_pengajuan' => $pengajuan_id,
+				'role' => [3],
+				'id_status_notif' => $this->input->post('rev2'),
+			];
+			$this->notif_model->send_notif($data_for_notif);
 
 			// // buat notifikasi
 			// $data_notif = array(

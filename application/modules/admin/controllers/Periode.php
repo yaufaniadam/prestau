@@ -7,6 +7,7 @@ class Periode extends Admin_Controller
 		parent::__construct();
 		$this->load->model('periode_model', 'periode_model');
 		$this->load->model('pengajuan_model', 'pengajuan_model');
+		$this->load->model('notif/Notif_model', 'notif_model');
 	}
 
 	public function index($status = '')
@@ -71,6 +72,7 @@ class Periode extends Admin_Controller
 			$this->db->where('id_periode', $id_periode);
 			$this->db->update('Tr_Periode_Penerbitan', $data);
 
+			// $this->db->select('*');
 			$this->db->select('id_pengajuan');
 			$this->db->distinct();
 			$this->db->from('Tr_Penerbitan_Pengajuan');
@@ -79,6 +81,16 @@ class Periode extends Admin_Controller
 			$result = $this->db->get()->result_array();
 
 			foreach ($result as $pengajuan) {
+				$this_pengajuan = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan['id_pengajuan']])->row_array();
+				$data_for_notif = [
+					'pengirim' => $_SESSION['userid'],
+					'penerima' => $this_pengajuan['nim'],
+					'id_pengajuan' => $pengajuan['id_pengajuan'],
+					'role' => [3],
+					'id_status_notif' => 10,
+				];
+				$this->notif_model->send_notif($data_for_notif);
+
 				$this->db->set('status_id', 10)
 					->set('pic', $this->session->userdata('user_id'))
 					->set('date', 'getdate()', FALSE)

@@ -41,7 +41,7 @@
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
 									Pengajuan Saya <a href="<?= base_url('mahasiswa/pengajuan/pengajuan_saya/'); ?>" title="Lihat Semua Pengajuan"><i class="fas fa-external-link-alt"></i></a></div>
-								<div><span class="h3 mb-0 font-weight-bold text-gray-800">3</span> </div>
+								<div><span class="h3 mb-0 font-weight-bold text-gray-800"><?= $pengajuan_saya; ?></span> </div>
 
 							</div>
 							<div class="col-auto">
@@ -58,7 +58,7 @@
 							<div class="col mr-2">
 								<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
 									Prestasi Saya <a href="<?= base_url('mahasiswa/pengajuan/prestasi_saya/'); ?>" title="Lihat Semua Prestasi Saya"><i class="fas fa-external-link-alt"></i></a></div>
-								<div class="h3 mb-0 font-weight-bold text-gray-800">13</div>
+								<div class="h3 mb-0 font-weight-bold text-gray-800"><?= $prestasi_saya; ?></div>
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-medal fa-2x text-gray-300"></i>

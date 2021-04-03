@@ -22,7 +22,7 @@ class Dashboard extends Mahasiswa_Controller
 			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id=p.Jenis_Pengajuan_Id')
 			->join('V_Mahasiswa m', 'm.STUDENTID=p.nim')
 			->limit(10)
-			->order_by('tanggal_masuk', 'DESC')
+			->order_by('id_notif', 'DESC')
 			->where(
 				[
 					'n.status' => null,
@@ -32,10 +32,30 @@ class Dashboard extends Mahasiswa_Controller
 			)
 			->get();
 
-		// echo "<pre>";
-		// print_r($notif->result_array());
-		// echo "</pre>";
+		$pengajuan_saya = $this->db
+			->get_where(
+				'Tr_Pengajuan',
+				[
+					'nim' => $_SESSION['studentid']
+				]
+			)->num_rows();
 
+		// $is_field_anggota_exist = $this->db->get_where('Tr_Pengajuan_Field', ['field_id' => 77])->num_rows();
+
+		$prestasi_saya = $this->db
+			->select('*')
+			->from('Tr_Penerbitan_Pengajuan')
+			->where(
+				[
+					'STUDENTID' => $_SESSION['studentid'],
+				]
+			)->get()
+			->num_rows();
+
+
+
+		$data['pengajuan_saya'] = $pengajuan_saya;
+		$data['prestasi_saya'] = $prestasi_saya;
 		$data['notif'] = $notif->result_array();
 		$data['title'] = 'Dashboard';
 		$data['view'] = 'dashboard/index';

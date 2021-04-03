@@ -292,9 +292,9 @@ function tampil_notif()
 		->join('Tr_Pengajuan p', 'p.pengajuan_id=n.id_pengajuan')
 		->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id=p.Jenis_Pengajuan_Id')
 		->join('V_Mahasiswa m', 'm.STUDENTID=p.nim')
-		->order_by('tanggal_masuk', 'DESC')
+		->order_by('id_notif', 'DESC')
 		->where($where)
-		->where(['n.status' => null, 'n.status' => 0])
+		->where(['n.status' => 0])
 		->get();
 
 	// print_r($_SESSION);
@@ -356,7 +356,11 @@ function tampil_notif()
 			$.ajax({
 				url: "<?= base_url('notif/read_notif/'); ?>" + nid,
 				success: function() {
-					window.location.href = "<?= base_url('admin/pengajuan/detail/'); ?>" + pid
+					<?php if ($_SESSION['role'] == 2) { ?>
+						window.location.href = "<?= base_url('admin/pengajuan/detail/'); ?>" + pid
+					<?php } elseif ($_SESSION['role'] == 3) { ?>
+						window.location.href = "<?= base_url('mahasiswa/pengajuan/tambah/'); ?>" + pid
+					<?php } ?>
 				}
 			});
 		});
