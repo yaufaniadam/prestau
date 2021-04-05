@@ -49,7 +49,6 @@
 							<input type="text" value="<?= $pengajuan->Jenis_Pengajuan; ?>" disabled class="form-control">
 						</div>
 					</div>
-					<?= $pengajuan->Jenis_Pengajuan; ?>
 					<?php
 					foreach ($pengajuan_fields as $pengajuan_field) { ?>
 
