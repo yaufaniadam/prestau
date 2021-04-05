@@ -2,7 +2,7 @@
 
 <?php call_styles(); ?>
 
-<h1 class="h3 mb-4 text-gray-900"><?php /*echo $surat['kategori_surat'];*/ ?> </h1>
+<h1 class="h3 mb-4 text-gray-900"><?php /*echo $prestasi['kategori_prestasi'];*/ ?> </h1>
 
 <div class="row">
 	<div class="col-md-8 mb-4">
@@ -37,9 +37,19 @@
 
 					<?php echo form_open(base_url('mahasiswa/pengajuan/tambah/' . $pengajuan->pengajuan_id), '') ?>
 
-					<input type="hidden" name="id_surat" value="<?= $pengajuan->pengajuan_id ?>">
-					<input type="hidden" name="id_notif" value="<?php /*echo $surat['id_notif'];*/ ?>">
+					<input type="hidden" name="id_prestasi" value="<?= $pengajuan->pengajuan_id ?>">
+					<input type="hidden" name="id_notif" value="<?php /*echo $prestasi['id_notif'];*/ ?>">
 
+					<div class="form-group row">
+						<label class="col-md-5" for="">
+							Kategori Prestasi
+						</label>
+
+						<div class="col-md-7">
+							<input type="text" value="<?= $pengajuan->Jenis_Pengajuan; ?>" disabled class="form-control">
+						</div>
+					</div>
+					<?= $pengajuan->Jenis_Pengajuan; ?>
 					<?php
 					foreach ($pengajuan_fields as $pengajuan_field) { ?>
 
@@ -60,7 +70,7 @@
 
 					<?php if ($pengajuan->status_id == 4) { ?>
 						<input type="hidden" name="status" value="4">
-						<input class="btn btn-lg btn-<?= $pengajuan->badge; ?> btn-block" type="submit" name="submit" value="<?= ($pengajuan->status_id == '4') ? " Kirim Revisi Data" : "Ajukan Surat " . $pengajuan->Jenis_Pengajuan; ?>" />
+						<input class="btn btn-lg btn-<?= $pengajuan->badge; ?> btn-block" type="submit" name="submit" value="<?= ($pengajuan->status_id == '4') ? " Kirim Revisi Data" : "Ajukan prestasi " . $pengajuan->Jenis_Pengajuan; ?>" />
 
 					<?php } elseif ($pengajuan->status_id == 1) { ?>
 						<input type="hidden" name="status" value="<?= ($pengajuan->status_id == 1) ? '1' : '2' ?>">

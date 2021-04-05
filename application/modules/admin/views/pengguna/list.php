@@ -20,14 +20,14 @@
 				</a> &nbsp;
 
 
-				<span class="float-right">
+				<!-- <span class="float-right">
 					<select id="selectload">
 						<option value="">-- Select Role --</option>
 						<?php foreach ($role as $role) {
 							echo "<option value='" . $role['role_id'] . "'>" . $role['role'] . "</option>";
 						} ?>
 					</select>
-				</span>
+				</span> -->
 
 			</div>
 

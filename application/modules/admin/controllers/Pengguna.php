@@ -9,7 +9,6 @@ class Pengguna extends Admin_Controller
 	{
 		parent::__construct();
 		$this->load->model('pengguna_model', 'pengguna_model');
-		$this->load->model('prodi_model', 'prodi_model');
 		$this->load->library('datatable');
 	}
 
