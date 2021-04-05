@@ -48,6 +48,12 @@ class Pengajuan extends Admin_Controller
 						];
 						$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
 					}
+
+					$this->db->set('status_id', 9)
+						->set('pic', $this->session->userdata('user_id'))
+						->set('date', 'getdate()', FALSE)
+						->set('pengajuan_id', $pengajuan_id)
+						->insert('Tr_Pengajuan_Status');
 					//dicomment karena dobel datanya
 					// $nim = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->nim;
 					// $data = [
@@ -66,6 +72,7 @@ class Pengajuan extends Admin_Controller
 						'STUDENTID' => $nim
 					];
 					$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
+
 					$this->db->set('status_id', 9)
 						->set('pic', $this->session->userdata('user_id'))
 						->set('date', 'getdate()', FALSE)

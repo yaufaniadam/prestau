@@ -60,11 +60,11 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="card-body pb-3">
 					<div class="media">
 
-						<?= profPic($pengajuan['nim'], 60); ?>
+						<?= profPic($pengajuan['STUDENTID'], 60); ?>
 
 						<div class="media-body ml-2">
 							<h5 class="mt-0 text-gray-900 mb-0 font-weight-bold"><?= $pengajuan['FULLNAME']; ?></h5>
-							<span class="mb-0 badge badge-ijomuda"> <?= $pengajuan['nim']; ?></span>
+							<span class="mb-0 badge badge-ijomuda"> <?= $pengajuan['STUDENTID']; ?></span>
 							<p class="mb-0 text-gray-800"> <?= $pengajuan['NAME_OF_DEPARTMENT']; ?></p>
 						</div>
 					</div>

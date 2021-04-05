@@ -9,7 +9,7 @@
 				<a class=" nav-lilk" href="<?= base_url("admin/pengajuan/index/"); ?>">
 					<i class="fas fa-fw fa-envelope"></i> Tampilkan semua pengajuan</a>
 			</div>
-			<div class="card-body">asd
+			<div class="card-body">
 				<?php
 				if ($query) {  ?>
 					<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
@@ -24,7 +24,8 @@
 						</thead>
 						<tbody>
 							<!-- <pre>
-								<?php print_r($query) ?>
+								<?php //print_r($query) 
+								?>
 							</pre> -->
 							<?php
 							foreach ($query as $pengajuan) {  ?>

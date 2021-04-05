@@ -27,7 +27,8 @@ class Dashboard extends Mahasiswa_Controller
 				[
 					'n.status' => null,
 					'n.status' => 0,
-					'n.role' => 3
+					'n.role' => 3,
+					'n.penerima' => $_SESSION['studentid']
 				]
 			)
 			->get();
@@ -51,8 +52,6 @@ class Dashboard extends Mahasiswa_Controller
 				]
 			)->get()
 			->num_rows();
-
-
 
 		$data['pengajuan_saya'] = $pengajuan_saya;
 		$data['prestasi_saya'] = $prestasi_saya;

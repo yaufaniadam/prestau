@@ -5,7 +5,7 @@
 <h1 class="h3 mb-4 text-gray-900"><?php /*echo $prestasi['kategori_prestasi'];*/ ?> </h1>
 
 <div class="row">
-	<div class="col-md-8 mb-4">
+	<div class="col-md-<?= $_SESSION['studentid'] == $pengajuan->nim ? 8 : 12 ?> mb-4">
 		<?php if ($pengajuan->status_id == 10) {  ?>
 			<div class="card shadow mb-4">
 				<div class="card-body pb-3">
@@ -84,36 +84,38 @@
 
 
 	</div>
-	<div class="col-md-4">
 
-		<div class="card shadow">
-			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-<?= (($pengajuan->status_id == 7) || ($pengajuan->status_id == 9)) ? 'birutua' : $pengajuan->badge; ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
-				<p class="h5 text-center font-weight-bold text-white"> <?= (($pengajuan->status_id == 7) || ($pengajuan->status_id == 9)) ? 'Tunggu Verifikasi Petugas' : $pengajuan->status;  ?> </p>
-			</a>
-			<div class="collapse show" id="collStatus">
-				<div class="card-body pl-2">
+	<?php if ($_SESSION['studentid'] == $pengajuan->nim) { ?>
+		<div class="col-md-4">
+			<div class="card shadow">
+				<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-<?= (($pengajuan->status_id == 7) || ($pengajuan->status_id == 9)) ? 'birutua' : $pengajuan->badge; ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
+					<p class="h5 text-center font-weight-bold text-white"> <?= (($pengajuan->status_id == 7) || ($pengajuan->status_id == 9)) ? 'Tunggu Verifikasi Petugas' : $pengajuan->status;  ?> </p>
+				</a>
+				<div class="collapse show" id="collStatus">
+					<div class="card-body pl-2">
 
-					<div class="timeline timeline-xs">
-						<?php foreach ($timeline as $tl) { ?>
-							<div class="timeline-item <?= ($tl['status_id'] === 7 || $tl['status_id'] === 9) ? 'd-none' : '' ?>">
-								<div class="timeline-item-marker">
-									<div class="timeline-item-marker-text"><?= $tl['date']; ?></div>
-									<div class="timeline-item-marker-indicator bg-<?= $tl['badge']; ?>"></div>
+						<div class="timeline timeline-xs">
+							<?php foreach ($timeline as $tl) { ?>
+								<div class="timeline-item <?= ($tl['status_id'] === 2 || $tl['status_id'] === 7 || $tl['status_id'] === 9) ? 'd-none' : '' ?>">
+									<div class="timeline-item-marker">
+										<div class="timeline-item-marker-text"><?= $tl['date']; ?></div>
+										<div class="timeline-item-marker-indicator bg-<?= $tl['badge']; ?>"></div>
+									</div>
+									<div class="timeline-item-content">
+										<?= $tl['status']; ?>
+										<span class="badge badge-perak"><?= $tl['time']; ?></span>
+									</div>
 								</div>
-								<div class="timeline-item-content">
-									<?= $tl['status']; ?>
-									<span class="badge badge-perak"><?= $tl['time']; ?></span>
-								</div>
-							</div>
-						<?php } ?>
+							<?php } ?>
+						</div>
+
 					</div>
-
 				</div>
 			</div>
-		</div>
 
-		<!-- <?php if ($pengajuan->status_id == 7) { ?>
-			<div class="card shadow mt-3">
+			<?php //if ($pengajuan->status_id == 7) { 
+			?>
+			<!-- <div class="card shadow mt-3">
 				<a href="#collterbit" class="d-block card-header pt-3 pb-2 bg-success" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collterbit">
 					<p class="h6 font-weight-bold text-white">Blangko Pencairan Dana</p>
 				</a>
@@ -124,11 +126,11 @@
 						<a href="<?= base_url("mahasiswa/pengajuan/tampil_pengajuan/" . $pengajuan->pengajuan_id); ?>" class="btn btn-success btn-block"> <i class="fas fa-file-pdf"></i> Download blangko</a>
 					</div>
 				</div>
-			</div>
-		<?php } ?> -->
-
-
-	</div>
+			</div> -->
+			<?php //} 
+			?>
+		</div>
+	<?php } ?>
 	<!-- /.col -->
 </div>
 

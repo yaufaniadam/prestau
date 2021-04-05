@@ -13,6 +13,9 @@
 					Belum Diterbitkan
 				</a>
 			</div>
+			<div class="col-4 mt-2">
+				<a href="<?= base_url('admin/periode/tambah'); ?>" class="btn btn-primary">tambah periode</a>
+			</div>
 			<div class="card-body">
 				<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
 					<thead>
