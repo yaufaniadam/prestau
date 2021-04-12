@@ -75,7 +75,15 @@ $query_builder = TRUE;
 
 $db['dbsqlsrv'] = array(
 	'dsn'	=> '',
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+	'hostname' => 'ADAM-DELL-6430U\SQLEXPRESS',
+	'username' => 'toor',
+	'password' => 'root',
+	'database' => 'simkatmawa',
 	'hostname' => '10.0.1.65\DEV',
 	'username' => 'programmer',
 	'password' => 'programmer',
@@ -94,4 +102,5 @@ $db['dbsqlsrv'] = array(
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => TRUE
+
 );

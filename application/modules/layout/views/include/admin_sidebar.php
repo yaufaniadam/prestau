@@ -34,7 +34,7 @@
 	</li>
 
 	<li class="nav-item" id="semua_pengajuan">
-		<a class="nav-link" href="<?= base_url("admin/periode/index/"); ?>">
+		<a class="nav-link" href="<?= base_url("admin/periode/index/1"); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
 			<span>Periode</span>
 		</a>

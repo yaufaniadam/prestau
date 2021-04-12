@@ -27,7 +27,7 @@
 										<div id="collapse-1-<?= $rekognisi['Jenis_Pengajuan_Id']; ?>" class="collapse" data-parent="#accordion-1" aria-labelledby="heading-1-2">
 											<div class="card-body">
 												<?= $rekognisi['deskripsi']; ?>
-												<a class="btn btn-md" href="<?= base_url('mahasiswa/pengajuan/baru/' . $rekognisi['Jenis_Pengajuan_Id']); ?>">Ajukan Surat</a>
+												<a class="btn btn-md" href="<?= base_url('mahasiswa/pengajuan/baru/' . $rekognisi['Jenis_Pengajuan_Id']); ?>">Ajukan Prestasi</a>
 											</div>
 										</div>
 									</div>
@@ -50,7 +50,7 @@
 						<div id="collapse-<?= $kategori['Jenis_Pengajuan_Id']; ?>" class="collapse" aria-labelledby="heading-<?= $kategori['Jenis_Pengajuan_Id']; ?>" data-parent="#accordion">
 							<div class="card-body">
 								<?= $kategori['deskripsi']; ?>
-								<a class="btn btn-md" href="<?= base_url('mahasiswa/pengajuan/baru/' . $kategori['Jenis_Pengajuan_Id']); ?>">Ajukan Surat</a>
+								<a class="btn btn-md btn-warning" href="<?= base_url('mahasiswa/pengajuan/baru/' . $kategori['Jenis_Pengajuan_Id']); ?>">Ajukan Prestasi</a>
 							</div>
 						</div>
 					</div>

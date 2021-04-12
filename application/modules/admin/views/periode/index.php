@@ -3,19 +3,18 @@
 
 		<div class="card card-success card-outline">
 			<div class="card-header">
-				<a class="nav-s text-danger" href="<?= base_url("admin/periode/index/1"); ?>">
+				<a class="btn btn-sm btn-danger" href="<?= base_url("admin/periode/index/1"); ?>">
 					<i class="fas fa-fw fa-exclamation-circle"></i>
 					Sudah Diterbitkan
 				</a>
 				</a>&nbsp;
-				<a class=" nav-lilk" href="<?= base_url("admin/periode/index/0"); ?>">
+				<a class="btn btn-sm btn-warning" href="<?= base_url("admin/periode/index/0"); ?>">
 					<i class="fas fa-fw fa-envelope"></i>
 					Belum Diterbitkan
 				</a>
+				<a href="<?= base_url('admin/periode/tambah'); ?>" class="btn btn-sm btn-success float-right "><i class="fas fa-plus"></i> Buat Periode</a>
 			</div>
-			<div class="col-4 mt-2">
-				<a href="<?= base_url('admin/periode/tambah'); ?>" class="btn btn-primary">tambah periode</a>
-			</div>
+		
 			<div class="card-body">
 				<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
 					<thead>

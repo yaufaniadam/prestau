@@ -25,8 +25,8 @@ class Dashboard extends Mahasiswa_Controller
 			->order_by('id_notif', 'DESC')
 			->where(
 				[
-					'n.status' => null,
-					'n.status' => 0,
+					// 'n.status' => null,
+					// 'n.status' => 0,
 					'n.role' => 3,
 					'n.penerima' => $_SESSION['studentid']
 				]

@@ -42,7 +42,7 @@ class Periode extends Admin_Controller
 					'status' => '0'
 				];
 				if ($this->periode_model->tambahPeriode($data)) {
-					redirect(base_url('admin/periode/tambah'));
+					redirect(base_url('admin/periode/index/0'));
 				}
 			}
 		} else {
@@ -72,33 +72,67 @@ class Periode extends Admin_Controller
 			$this->db->where('id_periode', $id_periode);
 			$this->db->update('Tr_Periode_Penerbitan', $data);
 
-			// $this->db->select('*');
+			echo "<pre>";
+			echo "</pre>";
+
+			// echo "<pre>";
+			// print_r($this->input->post());
+			// echo "</pre>";
+			// die();
+
+			$pengajuan = $this->input->post('pengajuan[]');
+
+			// for ($i = 0; $i < count($pengajuan); $i++) {
+			// }
+			// $mahasiswa = array_merge($penerima, $pengajuan);
+			// foreach ($penerima as $dummy) {
+			// }
+
+			$penerima = $this->input->post()['pengajuan_id'];
+			$pengajuan = $this->input->post('pengajuan[]');
+
+			for ($i = 0; $i < count($penerima); $i++) {
+				$this_pengajuan = $this->db->get_where(
+					'Tr_Penerbitan_Pengajuan',
+					[
+						'STUDENTID' => $penerima[$i],
+						'id_periode' => $id_periode,
+						'id_pengajuan' => $pengajuan[$i]
+					]
+				)->row_array();
+
+				$data_for_notif = [
+					'pengirim' => $_SESSION['user_id'],
+					'penerima' => $penerima[$i],
+					'id_pengajuan' => $this_pengajuan['id_pengajuan'],
+					'role' => [3],
+					'id_status_notif' => 10,
+				];
+
+				$this->notif_model->send_notif($data_for_notif);
+			}
+			// die();
+
 			$this->db->select('id_pengajuan');
 			$this->db->distinct();
 			$this->db->from('Tr_Penerbitan_Pengajuan');
 			$this->db->where(['id_periode' => $id_periode]);
 			$this->db->group_by('id_pengajuan');
-			$result = $this->db->get()->result_array();
+			$pengajuan = $this->db->get()->result_array();
 
-			foreach ($result as $pengajuan) {
-				$this_pengajuan = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan['id_pengajuan']])->row_array();
-				$data_for_notif = [
-					'pengirim' => $_SESSION['userid'],
-					'penerima' => $this_pengajuan['nim'],
-					'id_pengajuan' => $pengajuan['id_pengajuan'],
-					'role' => [3],
-					'id_status_notif' => 10,
-				];
-				$this->notif_model->send_notif($data_for_notif);
-
+			foreach ($pengajuan as $pengajuan) {
 				$this->db->set('status_id', 10)
 					->set('pic', $this->session->userdata('user_id'))
 					->set('date', 'getdate()', FALSE)
 					->set('pengajuan_id', $pengajuan['id_pengajuan'])
 					->insert('Tr_Pengajuan_Status');
 			}
-			redirect(base_url('/admin/periode'));
+
+			redirect(base_url('/admin/periode/bulan/' . $id_periode));
 		} else {
+
+			// die();
+
 			$nama_periode = $this->db->get_where('Tr_Periode_Penerbitan', ['id_periode' => $id_periode])->row_object()->nama_periode;
 			$status_periode = $this->db->get_where('Tr_Periode_Penerbitan', ['id_periode' => $id_periode])->row_object()->status;
 			$data['daftar_pengajuan'] = $this->pengajuan_model->getPengajuanPerPeriode($id_periode);

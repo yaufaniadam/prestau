@@ -1,15 +1,26 @@
 <div class="row">
 	<div class="col-12">
-
 		<div class="card card-success card-outline">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-md-8">
+						<p class="mb-0">Nama mahasiswa yang memperoleh reward pada periode ini</p>
+					</div>
+					<div class="col-md-4">
+						<?php if ($status_periode == 0) { ?>
+							<?= form_open(base_url('admin/periode/bulan')); ?>
+							<input type="hidden" name="id_periode" value="<?= $id_periode; ?>">
+							<input type="submit" class="btn btn-sm btn-success mb-2 float-right" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> value="Terbitkan reward periode ini" name="submit">
+
+						<?php } ?>
+					</div>
+				</div>
+
+
+			</div>
 			<div class="card-body">
-				<?php if ($status_periode == 0) { ?>
-					<?= form_open(base_url('admin/periode/bulan')); ?>
-					<input type="hidden" name="id_periode" value="<?= $id_periode; ?>">
-					<input type="submit" class="btn btn-success mb-2" value="terbitkan" name="submit">
-					<?= form_close(); ?>
-				<?php } ?>
-				<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
+
+				<table id="pengajuan-descs" class="table table-bordered tb-pengajuans">
 					<thead>
 						<tr>
 							<th style="width:1%"><input type="checkbox" name="" id="check_all"></th>
@@ -23,19 +34,19 @@
 					</thead>
 					<tbody>
 						<?php foreach ($daftar_pengajuan as $pengajuan) { ?>
+							<input type="hidden" name="pengajuan[]" value="<?= $pengajuan['pengajuan_id']; ?>" id="">
 							<tr class="<? ($pengajuan['status_id'] == 2) ? 'proses' : ''; ?> <?= ($pengajuan['status_id'] == 4) ? 'perlu-revisi' : ''; ?>">
 								<td class="text-center align-middle">
-									<input type="checkbox" name="pengajuan_id[]" value="<?= $pengajuan['pengajuan_id']; ?>" class="check">
+									<input checked type="checkbox" name="pengajuan_id[]" value="<?= $pengajuan['STUDENTID']; ?>" class="check">
 								</td>
 								<td>
 									<a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
 										<?= $pengajuan['Jenis_Pengajuan']; ?></a>
 								</td>
-								<td class="table-<?= $pengajuan['badge']; ?>">
+								<td>
 									<?php echo get_meta_value('judul', $pengajuan['pengajuan_id'], false); ?>
 								</td>
-								<td class="table-<?= $pengajuan['badge']; ?>"><?= $pengajuan['status_id']; ?> -
-									<?= $pengajuan['status']; ?>
+								<td class="table-<?= $pengajuan['badge']; ?>"><?= $pengajuan['status']; ?>
 								</td>
 								<td>
 									<p class="m-0">
@@ -62,6 +73,7 @@
 						<?php } ?>
 					</tbody>
 				</table>
+				<?= form_close(); ?>
 			</div><!-- /.card-body -->
 		</div><!-- /.card -->
 	</div>

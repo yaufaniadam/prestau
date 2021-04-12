@@ -18,7 +18,7 @@
 								<div>
 									<h3>Selamat!</h3>
 									<p>Pengajuan prestasi Anda dinyatakan lolos seleksi dan berhak memperoleh penghargaan dari UMY.</p>
-									<p> <a href="" class="badge bg-success" style="color:#fff;">Klik</a> untuk informasi lebih lanjut.</p>
+									<!-- <p> <a href="" class="badge bg-success" style="color:#fff;">Klik</a> untuk informasi lebih lanjut.</p> -->
 								</div>
 							</div>
 						</div>

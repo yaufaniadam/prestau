@@ -26,11 +26,6 @@ class Pengajuan extends Admin_Controller
 			$daftar_pengajuan_id = $this->input->post('pengajuan_id[]');
 			$periode_id = $this->input->post('periode_id');
 
-			// echo "<pre>";
-			// print_r($daftar_pengajuan_id);
-			// echo "</pre>";
-			// die();
-
 			foreach ($daftar_pengajuan_id as $pengajuan_id) {
 
 				$jenis_pengajuan_id = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->Jenis_Pengajuan_Id;
@@ -54,15 +49,7 @@ class Pengajuan extends Admin_Controller
 						->set('date', 'getdate()', FALSE)
 						->set('pengajuan_id', $pengajuan_id)
 						->insert('Tr_Pengajuan_Status');
-					//dicomment karena dobel datanya
-					// $nim = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->nim;
-					// $data = [
-					// 	'id_periode' => $periode_id,
-					// 	'id_pengajuan' => $pengajuan_id,
-					// 	'pic' => $_SESSION['user_id'],
-					// 	'STUDENTID' => $nim
-					// ];
-					// $this->db->insert('Tr_Penerbitan_Pengajuan', $data);
+				
 				} else {
 					$nim = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->nim;
 					$data = [
@@ -86,11 +73,11 @@ class Pengajuan extends Admin_Controller
 			// 	->set('pengajuan_id', $pengajuan_id)
 			// 	->insert('Tr_Pengajuan_Status');
 
-			redirect(base_url('admin/pengajuan/verified'));
+			redirect(base_url('admin/periode/bulan/'.$periode_id));
 		} else {
 			$data['query'] = $this->pengajuan_model->getVerifiedPengajuan();
-			$data['title'] = 'Pengajuan lolos verifikasi';
-			$data['view'] = 'pengajuan/index';
+			$data['title'] = 'Pengajuan yang Lolos Verifikasi';
+			$data['view'] = 'pengajuan/verified';
 			$data['verified'] = true;
 			$data['daftar_periode'] = $this->periode_model->getPeriode('0');
 			$this->load->view('layout/layout', $data);
@@ -158,7 +145,10 @@ class Pengajuan extends Admin_Controller
 		// $pengajuan_id = $this->pengajuan_model->get_detail_pengajuan($spengajuan_id)['pengajuan_id'];
 		$jenis_pengajuan_id = $this->pengajuan_model->get_detail_pengajuan($pengajuan_id)['Jenis_Pengajuan_Id'];
 
-		$data['pengajuan'] = $this->pengajuan_model->get_detail_pengajuan($pengajuan_id);
+		$pengajuan = $this->pengajuan_model->get_detail_pengajuan($pengajuan_id);
+
+		
+		$data['pengajuan'] = $pengajuan;
 		$data['timeline'] = $this->db->query(
 			"SELECT 
 			*,
@@ -180,7 +170,7 @@ class Pengajuan extends Admin_Controller
 			ORDER BY urutan ASC"
 		)->result_array();
 
-		$data['title'] = 'Detail Pengajuan';
+		$data['title'] =  $pengajuan['Jenis_Pengajuan'];
 		$data['view'] = 'pengajuan/detail';
 
 		$this->load->view('layout/layout', $data);
@@ -238,24 +228,8 @@ class Pengajuan extends Admin_Controller
 			];
 			$this->notif_model->send_notif($data_for_notif);
 
-			// // buat notifikasi
-			// $data_notif = array(
-			// 	'pengajuan_id' => $pengajuan_id,
-			// 	'status_id' => $this->input->post('rev2'),
-			// 	'kepada' => $this->input->post('user_id'),
-			// 	'role' => $role
-			// );
-
-			// hapus notifikasi "menunggu verifikasi"
-			// $set_notif = $this->db->set('status', 1)
-			// 	->set('dibaca', 'NOW()', FALSE)
-			// 	->where(array('id' => $id_notif, 'status' => 0))
-			// 	->update('notif');
-
-			// $result = $this->notif_model->send_notif($data_notif);
-
 			// if ($result) {
-			$this->session->set_flashdata('msg', 'Surat sudah diperiksa oleh TU!');
+		//	$this->session->set_flashdata('msg', 'Pengajuan diperiksa oleh TU!');
 			redirect(base_url('admin/pengajuan/detail/' . $pengajuan_id));
 			// }
 		} else {

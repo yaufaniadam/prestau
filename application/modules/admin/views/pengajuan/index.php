@@ -3,18 +3,19 @@
 
 		<div class="card card-success card-outline">
 			<div class="card-header">
-				<a class="nav-s text-danger" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>">
+				<a class="btn btn-danger btn-sm" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>">
 					<i class="fas fa-fw fa-exclamation-circle"></i>
-					Tampilkan yang perlu diproses
+					Perlu Diproses
 				</a>
-				</a>&nbsp;
-				<a class=" nav-lilk" href="<?= base_url("admin/pengajuan/index/"); ?>">
+				
+				<a class="btn btn-sm btn-warning" href="<?= base_url("admin/pengajuan/index/"); ?>">
 					<i class="fas fa-fw fa-envelope"></i>
-					Tampilkan semua pengajuan
+					Semua Pengajuan
 				</a>
-				<a class=" nav-lilk" href="<?= base_url("admin/pengajuan/verified/"); ?>">
+
+				<a class="btn btn-sm btn-success" href="<?= base_url("admin/pengajuan/verified/"); ?>">
 					<i class="fas fa-fw fa-envelope"></i>
-					Pengajuan Telah Diverifikasi
+					Lolos Verifikasi
 				</a>
 			</div>
 			<div class="card-body">
@@ -72,16 +73,7 @@
 							<?php  } ?>
 						</tbody>
 					</table>
-					<?php if (isset($verified) == 1) { ?>
-						<div class="form-group row ml-0">
-							<select name="periode_id" class="form-control col-sm-2 col-form-label mr-2" id="exampleFormControlSelect1">
-								<?php foreach ($daftar_periode as $periode) { ?>
-									<option value="<?= $periode['id_periode']; ?>"><?= $periode['nama_periode']; ?></option>
-								<?php } ?>
-							</select>
-							<input type="submit" name="submit" class="btn btn-success" value="Simpan">
-						</div>
-					<?php } ?>
+					
 				<?php } ?>
 				<?php echo form_close() ?>
 			</div><!-- /.card-body -->

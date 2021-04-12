@@ -82,9 +82,9 @@
 							</tbody>
 							</tfoot>
 						</table>
-						<?php /* } else { */ ?>
+						<?php  } else { ?>
 
-						<p class="lead">Saat ini belum ada pengajuan yang perlu diproses</p>
+						<p>Belum ada data.</p>
 
 					<?php }
 					?>
