@@ -14,9 +14,9 @@ class Auth extends CI_Controller
 			redirect('auth/login');
 		} else {
 			if ($this->session->has_userdata('role') == 3) {
-				redirect('mahasiswa/surat');
+				redirect('mahasiswa/dashboard');
 			} else {
-				redirect('admin/surat');
+				redirect('admin/dashboardZ');
 			}
 		}
 	}
@@ -111,8 +111,6 @@ class Auth extends CI_Controller
 							LEFT JOIN Mstr_Department d on d.DEPARTMENT_ID = m.DEPARTMENT_ID
 							WHERE email ='$email' "
 						)->row_array();
-
-
 
 						$user_data = array(
 							'studentid' => $result['STUDENTID'],

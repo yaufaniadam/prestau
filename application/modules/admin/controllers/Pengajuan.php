@@ -40,7 +40,7 @@ class Pengajuan extends Admin_Controller
 							'id_pengajuan' => $pengajuan_id,
 							'pic' => $_SESSION['user_id'],
 							'STUDENTID' => $mahasiswa,
-							'prodi' => getProdiByNIM($mahasiswa)
+						//	'prodi' => getProdiByNIM($mahasiswa)
 						];
 						$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
 					}
