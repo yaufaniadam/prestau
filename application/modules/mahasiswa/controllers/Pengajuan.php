@@ -490,7 +490,7 @@ class Pengajuan extends Mahasiswa_Controller
 					'pengirim' => '',
 					'penerima' => '',
 					'id_pengajuan' => $pengajuan_id,
-					'role' => [2],
+					'role' => [2,3],
 					'id_status_notif' => 3,
 				];
 

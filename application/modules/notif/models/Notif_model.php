@@ -36,7 +36,7 @@ class Notif_model extends CI_Model
 			$notif[] = array(
 				"role" => $role,
 				"id_pengajuan" => $data['id_pengajuan'],
-				"pengirim" => $_SESSION['user_id'],
+				"pengirim" => $_SESSION['userid'],
 				"penerima" => $data['penerima'],
 				"tanggal_masuk" => $date,
 				'id_status_notif' => $data['id_status_notif']
