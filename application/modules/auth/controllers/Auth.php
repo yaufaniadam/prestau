@@ -12,13 +12,14 @@ class Auth extends CI_Controller
 	{
 		if (!$this->session->has_userdata('is_login')) {
 			redirect('auth/login');
-		} else {
-			if ($this->session->has_userdata('role') == 3) {
-				redirect('mahasiswa/dashboard');
-			} else {
-				redirect('admin/dashboardZ');
-			}
-		}
+		} 
+		// else {
+		// 	// if ($this->session->has_userdata('role') == 4) {
+		// 	// 	redirect('mahasiswa/dashboard');
+		// 	// } else {
+		// 	// 	redirect('admin/dashboard');
+		// 	// }
+		// }
 	}
 	//--------------------------------------------------------------
 	public function login($referrer = null)

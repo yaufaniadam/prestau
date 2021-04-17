@@ -407,6 +407,16 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
+	
+	<?php } elseif ($fields['type'] == 'tahun') {
+		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
+	?>
+		<fieldset>
+			<input type="number" class="form-control <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> min="2015" max="<?php echo date("Y"); ?>" />
+		</fieldset>
+
+		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
 
 	<?php } elseif ($fields['type'] == 'multi_select_anggota') {
 
@@ -768,6 +778,27 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 
 		<?php } ?>
 	<?php } elseif ($fields['type'] == 'number') { ?>
+		<div class="form-group">
+			<input type="number" class="form-control <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" disabled />
+		</div>
+
+		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
+			&& $CI->session->userdata('role') == 2
+		) { ?>
+
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($fields['verifikasi'] == 1) ? 'checked' : ''; ?> />
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+
+		<?php } ?>
+	<?php } elseif ($fields['type'] == 'tahun') { ?>
 		<div class="form-group">
 			<input type="number" class="form-control <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" disabled />
 		</div>
