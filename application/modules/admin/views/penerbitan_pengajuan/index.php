@@ -65,7 +65,7 @@
 									</p>
 								</td>
 								<td>
-									<button type="button" data-toggle="modal" class="btn btn-primary btn-sm" data-target="#exampleModal">
+									<button type="button" data-toggle="modal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>" class="btn btn-primary btn-sm btn-reward" data-target="#exampleModal">
 										edit reward
 									</button>
 								</td>
@@ -91,17 +91,18 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div> -->
-			<?= form_open('email/send'); ?>
+			<?= form_open('admin/periode/set_nominal'); ?>
 			<div class="modal-body">
 				<div class="form-group text-center">
 					<label for="exampleInputEmail1">Masukkan nominal reward</label>
 					<span id="emailHelp" class="form-text text-muted">contoh : 200000</span>
-					<input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+					<input type="number" name="nominal" id="nominal_reward" class="form-control">
+					<input type="hidden" name="id_prestasi" id="id_prestasi_value">
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
+				<input type="submit" class="btn btn-primary" value="Simpan">
 			</div>
 			<?= form_close(); ?>
 		</div>
@@ -118,5 +119,17 @@
 <script>
 	$(document).ready(function() {
 		$('#pengajuan-desc').DataTable({});
+	});
+
+	$(".btn-reward").click(function() {
+		console.log(this.id);
+		var id_prestasi = this.id;
+		$.ajax({
+			url: "<?= base_url('/admin/periode/reward/'); ?>" + id_prestasi,
+			success: function(data) {
+				$("#nominal_reward").val(data)
+				$("#id_prestasi_value").val(id_prestasi)
+			}
+		});
 	});
 </script>

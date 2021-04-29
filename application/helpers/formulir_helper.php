@@ -89,7 +89,7 @@ function field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, 
 
 	return array(
 		'value' => $value,
-		'valid' => $valid, 
+		'valid' => $valid,
 		'disabled' => $disabled
 	);
 }
@@ -109,7 +109,6 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 	$value = $CI->db->select('fv.value, fv.verifikasi')->from('Tr_Field_Value fv')
 		->where(array('field_id' => $field_id, 'pengajuan_id' => $pengajuan_id))
 		->get()->row_array();
-
 
 	$field_value = ($value) ? $value['value'] : '0';
 	$verifikasi = ($value) ? $value['verifikasi'] : '0';
@@ -326,7 +325,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 	?>
 
 		<fieldset>
-			<input type="text" class="form-control <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]"  <?= $check['disabled'];  ?> />
+			<input type="text" class="form-control <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 		</fieldset>
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
@@ -335,7 +334,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 		<fieldset>
-			<textarea class="form-control <?= $check['valid']; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]"  <?= $check['disabled'];  ?>><?= $check['value'];  ?></textarea>
+			<textarea class="form-control <?= $check['valid']; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?>><?= $check['value'];  ?></textarea>
 		</fieldset>
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
@@ -344,7 +343,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 		<fieldset>
-			<input type="text" class="form-control <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?>/>
+			<input type="text" class="form-control <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 		</fieldset>
 		<script type="text/javascript">
 			$(function() {
@@ -388,8 +387,8 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 
 	<?php } elseif ($fields['type'] == 'date') { ?>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-		<fieldset >
-			<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($pengajuan_status == 1 && $verifikasi == 0 || $pengajuan_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>/>
+		<fieldset>
+			<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($pengajuan_status == 1 && $verifikasi == 0 || $pengajuan_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 		</fieldset>
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
@@ -402,12 +401,12 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 		<fieldset>
-			<input type="number" class="form-control <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?>/>
+			<input type="number" class="form-control <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 		</fieldset>
 
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
-	
+
 	<?php } elseif ($fields['type'] == 'tahun') {
 		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
@@ -515,8 +514,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 			console.log(classe);
 		</script>
 
-	<?php
-	} elseif ($fields['type'] == 'select_pembimbing') {
+	<?php } elseif ($fields['type'] == 'select_pembimbing') {
 
 		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
 
@@ -562,11 +560,33 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 			});
 		</script>
 
-	<?php
+	<?php } elseif ($fields['type'] == 'select_prestasi') { ?>
+		<?php
+		$CI = &get_instance();
+		$capaian_prestasi = $CI->db->get('Mstr_Capaian_Prestasi')->result();
+		?>
+		<fieldset>
+			<select name="<?= $fields['key']; ?>" class="custom-select">
+				<?php foreach ($capaian_prestasi as $capaian_prestasi) { ?>
+					<option value="<?= $capaian_prestasi->Capaian_Prestasi_Id; ?>"><?= $capaian_prestasi->Capaian_Prestasi; ?></option>
+				<?php } ?>
+			</select>
+		</fieldset>
+	<?php } elseif ($fields['type'] == 'select_tingkat') { ?>
+		<?php
+		$CI = &get_instance();
+		$tingkat_prestasi = $CI->db->get('Mstr_Tingkat_Prestasi')->result();
+		?>
+		<fieldset>
+			<select name="<?= $fields['key']; ?>" class="custom-select">
+				<?php foreach ($tingkat_prestasi as $tingkat_prestasi) { ?>
+					<option value="<?= $tingkat_prestasi->Tingkat_Prestasi_Id; ?>"><?= $tingkat_prestasi->Tingkat_Prestasi; ?></option>
+				<?php } ?>
+			</select>
+		</fieldset>
+	<?php } ?>
 
-	} // endif file 
-}
-
+	<?php }
 //menampilkan kategori keterangan surat
 function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 {

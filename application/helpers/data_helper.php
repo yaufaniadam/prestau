@@ -20,12 +20,47 @@ function get_jumlah_pengajuan_per_jenis_pengajuan($jenis_pengajuan_id)
 {
 	$CI = &get_instance();
 
-	return $CI->db->query(
-		"SELECT * FROM Tr_Pengajuan p 
-		LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-		-- WHERE m.DEPARTMENT_ID = '1'
-		WHERE p.Jenis_Pengajuan_Id = '$jenis_pengajuan_id'"
-	)->num_rows();
+	// return $CI->db->query(
+	// 	"SELECT * FROM Tr_Pengajuan p 
+	// 	LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
+	// 	-- WHERE m.DEPARTMENT_ID = '1'
+	// 	WHERE p.Jenis_Pengajuan_Id = '$jenis_pengajuan_id'"
+	// )->num_rows();
+
+	return $CI->db->select('*')
+		->from('Tr_Penerbitan_Pengajuan pp')
+		->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
+		->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+		->where([
+			'jp.Jenis_Pengajuan_Id' => $jenis_pengajuan_id
+		])
+		->get()
+		->num_rows();
+}
+
+function get_jumlah_pengajuan_per_prodi()
+{
+	$CI = &get_instance();
+
+	$department = $CI->db->select('*')
+		->from('Mstr_Department')->get()->result_array();
+
+	foreach ($department as $department) {
+		$pengajuan_per_prodi[] = [
+			'nama_prodi' => $department['NAME_OF_DEPARTMENT'],
+			'jumlah_pengajuan' => $CI->db->select('*')
+				->from('Tr_Penerbitan_Pengajuan pp')
+				->join('V_Mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
+				->join('Mstr_Department d', 'd.DEPARTMENT_ID = m.DEPARTMENT_ID')
+				->where([
+					'm.DEPARTMENT_ID' => $department['DEPARTMENT_ID']
+				])
+				->get()
+				->num_rows()
+		];
+	}
+
+	return $pengajuan_per_prodi;
 }
 
 function printrs($var)

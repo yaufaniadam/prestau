@@ -33,7 +33,9 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					<div class="form-group row">
 						<label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm">Nominal</label>
 						<div class="col-sm-8">
-							<label class="col-sm-12 col-form-label col-form-label-sm"><?= $pengajuan['nominal']; ?></label>
+							<label class="col-sm-12 col-form-label col-form-label-sm">
+								<?= $pengajuan['nominal']; ?>
+							</label>
 						</div>
 					</div>
 					<div class="form-group row">

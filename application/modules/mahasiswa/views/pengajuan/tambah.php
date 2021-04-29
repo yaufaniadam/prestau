@@ -64,7 +64,6 @@
 								<?php generate_form_field($pengajuan_field['field_id'], $pengajuan_id, $pengajuan_status, 'mahasiswa/pengajuan'); ?>
 							</div>
 						</div>
-
 					<?php  }  ?>
 
 					<?php if ($pengajuan->status_id == 4) { ?>

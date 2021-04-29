@@ -185,7 +185,11 @@ class Pengajuan_model extends CI_Model
 
 	public function get_jenis_pengajuan_byid($id)
 	{
-		$query1 = $this->db->query("SELECT * FROM dbo.Mstr_Jenis_Pengajuan where Jenis_Pengajuan_Id='$id'");
+		$query1 = $this->db->query("SELECT 
+		* 
+		FROM dbo.Mstr_Jenis_Pengajuan jp
+		LEFT JOIN Mstr_Penghargaan_Rekognisi_Mahasiswa reward ON reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
+		where jp.Jenis_Pengajuan_Id='$id'");
 		$result1 = $query1->row_array();
 
 		$query2 = $this->db->query("SELECT field_id FROM Tr_Pengajuan_Field where Jenis_Pengajuan_Id=$id AND terpakai = 1");

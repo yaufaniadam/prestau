@@ -80,10 +80,20 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['Jenis_Pen
 				</div>
 
 				<div class="form-group row">
+					<label for="Jenis_Pengajuan" class="col-md-3 control-label">Nominal</label>
+					<div class="col-md-9">
+						<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : $kat['nominal'];  ?>" name="nominal" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="Jenis_Pengajuan">
+						<span class="invalid-feedback"><?php echo form_error('Jenis_Pengajuan'); ?></span>
+					</div>
+				</div>
+
+				<div class="form-group row">
 					<label for="deskripsi" class="col-md-3 control-label">Deskripsi</label>
 					<div class="col-md-9">
 
-						<div class="<?= (form_error('deskripsinya')) ? 'summernote-is-invalid' : ''; ?>"><textarea name="deskripsinya" class="textarea-summernote"><?= (validation_errors()) ? set_value('deskripsinya') : $kat['deskripsi'];  ?></textarea>
+						<div class="<?= (form_error('deskripsinya')) ? 'summernote-is-invalid' : ''; ?>">
+							<textarea name="deskripsinya" class="textarea-summernote"><?= (validation_errors()) ? set_value('deskripsinya') : $kat['deskripsi'];  ?>
+							</textarea>
 						</div>
 						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('deskripsinya'); ?></span>
 					</div>

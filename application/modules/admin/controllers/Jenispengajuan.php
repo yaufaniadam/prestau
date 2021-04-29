@@ -119,6 +119,14 @@ class Jenispengajuan extends Admin_Controller
 					'deskripsi' => $this->input->post('deskripsinya'),
 				);
 
+				date_default_timezone_set("Asia/Jakarta");
+				$date = new DateTime();
+
+				$this->db->set('nominal', $this->input->post('nominal'));
+				$this->db->set('update_date', $date->format('Y-m-d H:i:s'));
+				$this->db->where('Jenis_Pengajuan_Id', $id);
+				$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa');
+
 				$fields = $this->input->post('fields');
 				$expl = explode('&', $fields);
 				$arr = array();
@@ -183,6 +191,31 @@ class Jenispengajuan extends Admin_Controller
 			$this->load->view('admin/layout', $data);
 		}
 	}
+
+	public function nominal_penghargaan()
+	{
+		$penghargaan = $this->db->select('*')
+			->from('Mstr_Jenis_Pengajuan jp')
+			->join('Mstr_Penghargaan_Rekognisi_Mahasiswa penghargaan', 'penghargaan.Jenis_Pengajuan_Id=jp.Jenis_Pengajuan_Id')
+			->where([
+				'parent' => 12
+			])
+			->get()
+			->result_array();
+
+		$data = [
+			'penghargaan' => $penghargaan,
+			'view' => 'jenispengajuan/nominal'
+		];
+
+		$this->load->view('layout/layout', $data);
+
+		// echo "<pre>";
+		// print_r($penghargaan);
+		// echo "<pre/>";
+	}
+
+
 
 	// //kategori isian rules
 	// public function kat_keterangan_pengajuan_check()

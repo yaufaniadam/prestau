@@ -2,7 +2,6 @@
 	<div class="col-md-12">
 		<div class="card card-success card-outline">
 
-
 			<div class="card-body box-profile">
 				<table id="kategorisurat" class="table table-striped table-bordered">
 					<thead>

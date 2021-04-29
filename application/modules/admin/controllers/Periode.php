@@ -72,8 +72,8 @@ class Periode extends Admin_Controller
 			$this->db->where('id_periode', $id_periode);
 			$this->db->update('Tr_Periode_Penerbitan', $data);
 
-			echo "<pre>";
-			echo "</pre>";
+			// echo "<pre>";
+			// echo "</pre>";
 
 			// echo "<pre>";
 			// print_r($this->input->post());
@@ -130,9 +130,7 @@ class Periode extends Admin_Controller
 
 			redirect(base_url('/admin/periode/bulan/' . $id_periode));
 		} else {
-
 			// die();
-
 			$nama_periode = $this->db->get_where('Tr_Periode_Penerbitan', ['id_periode' => $id_periode])->row_object()->nama_periode;
 			$status_periode = $this->db->get_where('Tr_Periode_Penerbitan', ['id_periode' => $id_periode])->row_object()->status;
 			$data['daftar_pengajuan'] = $this->pengajuan_model->getPengajuanPerPeriode($id_periode);
@@ -143,5 +141,69 @@ class Periode extends Admin_Controller
 
 			$this->load->view('layout/layout', $data);
 		}
+	}
+
+	public function reward($id_prestasi)
+	{
+		$prestasi = $this->db->get_where('Tr_Penerbitan_Pengajuan', ['id_penerbitan_pengajuan' => $id_prestasi])
+			->row_object();
+
+		$field_anggota = $this->db->get_where('Tr_Field_Value', [
+			'pengajuan_id' => $prestasi->id_pengajuan,
+			'field_id' => 77
+		]);
+
+		$queryp = $this->db->select('*')
+			->from('Tr_Pengajuan p')
+			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id', 'left')
+			->where([
+				'p.pengajuan_id' => $prestasi->id_pengajuan
+			])
+			->get()
+			->row_object();
+		$tipe_reward = $queryp->fixed;
+
+		if (($tipe_reward == 1) || ($tipe_reward == 3)) {
+			$reward = $this->db->get_where('Mstr_Penghargaan_Rekognisi_Mahasiswa', [
+				'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id
+			])->row_object()->nominal;
+		} elseif ($tipe_reward == 2) {
+			if ($field_anggota->num_rows() > 0) {
+				$anggota = explode(',', $field_anggota->row_object()->value);
+				$urutan = array_search($prestasi->STUDENTID, $anggota);
+				$reward = $this->db->get_where('Mstr_Penghargaan_Rekognisi_Mahasiswa', [
+					'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id,
+					'order' => $urutan > 0 ? 2 : 1
+				])->row_object()->nominal;
+			}
+		} else {
+			$reward = get_meta_value('biaya_pribadi', $prestasi->id_pengajuan, false);
+		}
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($reward));
+
+		// $query = $this->db->select('*')
+		// 	->from('Tr_Penerbitan_Pengajuan pp')
+		// 	->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
+		// 	->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+		// 	->join('Mstr_Penghargaan_Rekognisi_Mahasiswa prm', 'prm.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id')
+		// 	->where([
+		// 		'pp.id_penerbitan_pengajuan' => $id_prestasi
+		// 	])
+		// 	->get()
+		// 	->row_object();
+	}
+
+	public function set_nominal()
+	{
+		$id_prestasi = $this->input->post('id_prestasi');
+		$id_periode = $this->db->get_where('Tr_Penerbitan_Pengajuan', ['id_penerbitan_pengajuan' => $id_prestasi])->row_object()->id_periode;
+
+		$this->db->set('nominal', $this->input->post('nominal'));
+		$this->db->where('id_penerbitan_pengajuan', $id_prestasi);
+		$this->db->update('Tr_Penerbitan_Pengajuan');
+		redirect(base_url('admin/periode/bulan/' . $id_periode));
 	}
 }
