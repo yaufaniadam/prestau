@@ -185,17 +185,29 @@ class Pengajuan_model extends CI_Model
 
 	public function get_jenis_pengajuan_byid($id)
 	{
-		$query1 = $this->db->query("SELECT 
-		* 
-		FROM dbo.Mstr_Jenis_Pengajuan jp
-		LEFT JOIN Mstr_Penghargaan_Rekognisi_Mahasiswa reward ON reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
-		where jp.Jenis_Pengajuan_Id='$id'");
+		// $query1 = $this->db->query("SELECT 
+		// * 
+		// FROM dbo.Mstr_Jenis_Pengajuan jp
+		// LEFT JOIN Mstr_Penghargaan_Rekognisi_Mahasiswa reward ON reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
+		// where jp.Jenis_Pengajuan_Id='$id'");
+		$query1 = $this->db->select("*,jp.Jenis_pengajuan_Id as jpi")
+			->from('dbo.Mstr_Jenis_Pengajuan jp')
+			->join("Mstr_Penghargaan_Rekognisi_Mahasiswa reward", "reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id", "LEFT")
+			->where([
+				'jp.Jenis_Pengajuan_Id' => $id
+			])
+			->get();
 		$result1 = $query1->row_array();
 
 		$query2 = $this->db->query("SELECT field_id FROM Tr_Pengajuan_Field where Jenis_Pengajuan_Id=$id AND terpakai = 1");
 		$result2 = $query2->result_array();
 
-		return array($result1, $result2);
+		$result3 = $this->db->get_where(
+			"Mstr_Penghargaan_Rekognisi_Mahasiswa",
+			["Jenis_Pengajuan_Id" => $id]
+		)->result_array();
+
+		return array($result1, $result2, $result3);
 	}
 
 	public function edit_kategori_pengajuan($data, $id)

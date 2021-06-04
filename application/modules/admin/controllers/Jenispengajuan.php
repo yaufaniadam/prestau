@@ -49,12 +49,46 @@ class Jenispengajuan extends Admin_Controller
 				$data = array(
 					'jenis_pengajuan' => $this->input->post('Jenis_Pengajuan'),
 					'deskripsi' => $this->input->post('deskripsinya'),
+					'fixed' => $this->input->post('tipe_reward'),
 				);
+				$tipe =  $this->input->post('tipe_reward');
+				// echo '<pre>';
+				// print_r($data);
+				// echo '</pre>';
 
+				// die();
 
 				$result = $this->pengajuan_model->tambah_jenis_pengajuan($data);
+
 				$id = $this->db->insert_id();
 				if ($result) {
+					if ($tipe == 2) {
+						$new_nominal = explode(",", $this->input->post('nominal'));
+						for ($i = 0; $i < count($new_nominal); $i++) {
+							$data_penghargaan = [
+								"nominal" => $new_nominal[$i],
+								"Jenis_Pengajuan_Id" => $id,
+								"order" => $i
+							];
+							$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan);
+						}
+					} else {
+						$data_penghargaan = [
+							"nominal" => $this->input->post('nominal'),
+							"Jenis_Pengajuan_Id" => $id
+						];
+					}
+
+					// echo '<pre>';
+					// print_r($data_penghargaan);
+					// echo '</pre>';
+
+					if ($tipe == 1 || $tipe == 3) {
+						// print_r($tipe);
+						// die();
+						$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan);
+					}
+
 					$fields = $this->input->post('fields');
 					$expl = explode('&', $fields);
 					foreach ($expl as $key => $exp) {
@@ -65,14 +99,16 @@ class Jenispengajuan extends Admin_Controller
 							'Jenis_Pengajuan_Id' => $id,
 							'field_id' => $exp[1],
 							'terpakai' => 1,
-							'urutan' => $key
+							'urutan' => $key,
 						);
 
 						$this->pengajuan_model->tambah_field_pengajuan($insert_field);
 
-						echo '<pre>';
-						print_r($insert_field);
-						echo '</pre>';
+						// echo '<pre>';
+						// print_r($insert_field);
+						// echo '</pre>';
+
+						// die();
 					}
 
 					$this->session->set_flashdata('msg', 'Kategori Pengajuan berhasil ditambah!');
@@ -117,15 +153,126 @@ class Jenispengajuan extends Admin_Controller
 				$data = array(
 					'jenis_pengajuan' => $this->input->post('Jenis_Pengajuan'),
 					'deskripsi' => $this->input->post('deskripsinya'),
+					'fixed' => $this->input->post('tipe_reward')
 				);
 
-				date_default_timezone_set("Asia/Jakarta");
-				$date = new DateTime();
+				if ($data['fixed'] == 2) {
 
-				$this->db->set('nominal', $this->input->post('nominal'));
-				$this->db->set('update_date', $date->format('Y-m-d H:i:s'));
-				$this->db->where('Jenis_Pengajuan_Id', $id);
-				$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa');
+					//cek order awal apkah dia null atau 0
+					$null_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+						"Jenis_Pengajuan_Id" => $id,
+						"order" => NULL
+					])->get()->result_array();
+
+					$new_nominal = $this->input->post('nominal[]');
+
+					if ($null_exist) {
+
+						echo "null exist";
+						// jika ada order yang NULL maka ubah dulu null ke 0
+						$this->db->where([
+							"Jenis_Pengajuan_Id" => $id,
+							"order" => NULL
+						]);
+
+						$updata_penghargaan = [
+							"order" => 0
+						];
+
+						$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $updata_penghargaan);
+
+						$insdata_penghargaan = [
+							"order" => 1,
+							"Jenis_Pengajuan_Id" => $id,
+						];
+						$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
+
+						//setelah itu baru insert sesuai foreach
+
+						foreach ($new_nominal as $key => $value) {
+							$this->db->where([
+								"Jenis_Pengajuan_Id" => $id,
+								"order" => $key
+							]);
+							$data_nominal = [
+								"nominal" => $value
+							];
+
+							$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+						}
+					} else {
+						echo "gada";
+
+						//cek order awal apkah ada yg nilainya 1
+						$nominal_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+							"Jenis_Pengajuan_Id" => $id,
+							"order" => 1
+						])->get()->result_array();
+
+						if ($nominal_exist) {
+							foreach ($new_nominal as $key => $value) {
+								$this->db->where([
+									"Jenis_Pengajuan_Id" => $id,
+									"order" => $key
+								]);
+								$data_nominal = [
+									"nominal" => $value
+								];
+
+								$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+							}
+						} else {
+							echo "gada 1";
+							$insdata_penghargaan = [
+								"order" => 1,
+								"Jenis_Pengajuan_Id" => $id,
+							];
+							$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
+							foreach ($new_nominal as $key => $value) {
+								$this->db->where([
+									"Jenis_Pengajuan_Id" => $id,
+									"order" => $key
+								]);
+								$data_nominal = [
+									"nominal" => $value
+								];
+
+								$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+							}
+						}
+					}
+				} else {
+
+					echo "bukan 2";
+
+
+					$new_nominal = $this->input->post('nominal[]');
+
+					print_r($new_nominal);
+					echo $new_nominal[0];
+					$data_penghargaan = [
+						"nominal" => $new_nominal[0]
+					];
+				}
+
+				if ($data['fixed'] == 1 || $data['fixed'] == 3) {
+					echo "1 dna 3";
+
+					$this->db->where([
+						"Jenis_Pengajuan_Id" => $id,
+					]);
+					$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan);
+				}
+
+				// die();
+
+				// date_default_timezone_set("Asia/Jakarta");
+				// $date = new DateTime();
+
+				// $this->db->set('nominal', $this->input->post('nominal'));
+				// $this->db->set('update_date', $date->format('Y-m-d H:i:s'));
+				// $this->db->where('Jenis_Pengajuan_Id', $id);
+				// $this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa');
 
 				$fields = $this->input->post('fields');
 				$expl = explode('&', $fields);
@@ -140,11 +287,11 @@ class Jenispengajuan extends Admin_Controller
 					'sent_fields_data' => $arr,
 				];
 
-				// print_r($data);
+				// // print_r($data);
 				$data = $this->security->xss_clean($data);
 				$result = $this->pengajuan_model->edit_jenis_pengajuan($data, $id);
 				if ($result) {
-					// print_r($data);
+					// 	// print_r($data);
 					$this->pengajuan_model->editFieldsPengajuan($dataFieldCheck, $id);
 					$this->session->set_flashdata('msg', 'Data kategory berhasil diubah!');
 					redirect(base_url('admin/jenispengajuan/edit/' . $id));

@@ -10,7 +10,10 @@
 						<?php if ($status_periode == 0) { ?>
 							<?= form_open(base_url('admin/periode/bulan')); ?>
 							<input type="hidden" name="id_periode" value="<?= $id_periode; ?>">
-							<input type="submit" class="btn btn-sm btn-success mb-2 float-right" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> value="Terbitkan reward periode ini" name="submit">
+							<button type="button" class="btn btn-sm btn-success mb-2 float-right" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> data-toggle="modal" data-target="#confirm-modal">
+								Terbitkan reward periode ini
+							</button>
+
 
 						<?php } ?>
 					</div>
@@ -28,8 +31,9 @@
 							<th style="width:35%">Judul Kegiatan</th>
 							<th style="width:25%">Status</th>
 							<th>Mahasiswa</th>
+							<th>nominal</th>
 							<th>Tanggal</th>
-							<th></th>
+							<!-- <th></th> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -58,28 +62,56 @@
 								</td>
 								<td>
 									<p class="m-0">
+										<?= $pengajuan['nominal'];	?>
+									</p>
+								</td>
+								<td>
+									<p class="m-0">
 										<?= $pengajuan['date'];	?>
 									</p>
 									<p class="badge m-0 badge-warning">
 										<?= $pengajuan['time'];	?>
 									</p>
 								</td>
-								<td>
+								<!-- <td>
 									<button type="button" data-toggle="modal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>" class="btn btn-primary btn-sm btn-reward" data-target="#exampleModal">
 										edit reward
 									</button>
-								</td>
+								</td> -->
 							</tr>
 						<?php } ?>
 					</tbody>
 				</table>
-				<?= form_close(); ?>
+
 			</div><!-- /.card-body -->
 		</div><!-- /.card -->
 	</div>
 	<!-- /.col -->
 </div>
 <!-- /.row -->
+
+<!-- Modal -->
+<div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirm-modalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="confirm-modalLabel">Konfirmasi</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				Aksi ini tidak dapat diulang lagi.
+				Lanjutkan?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+				<input type="submit" class="btn btn-danger float-right" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> value="Terbitkan" name="submit">
+			</div>
+		</div>
+	</div>
+</div>
+<?= form_close(); ?>
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

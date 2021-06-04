@@ -28,37 +28,114 @@ class Pengajuan extends Admin_Controller
 
 			foreach ($daftar_pengajuan_id as $pengajuan_id) {
 
-				$jenis_pengajuan_id = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->Jenis_Pengajuan_Id;
-				$is_field_anggota_exist = $this->db->get_where('Tr_Pengajuan_Field', ['Jenis_Pengajuan_Id' => $jenis_pengajuan_id, 'field_id' => 77])->num_rows();
+				$queryp = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object();
+				$jenis_pengajuan_id = $queryp->Jenis_Pengajuan_Id;
+				$is_field_anggota_exist = $this->db->get_where(
+					'Tr_Pengajuan_Field',
+					[
+						'Jenis_Pengajuan_Id' => $jenis_pengajuan_id,
+						'field_id' => 77
+					]
+				)->num_rows();
 
-				if ($is_field_anggota_exist > 0) {
-					$result = $this->db->get_where('Tr_Field_Value', ['pengajuan_id' => $pengajuan_id, 'field_id' => 77])->row_object()->value;
-					$anggota = explode(',', $result);
-					foreach ($anggota as $mahasiswa) {
+				$tipe_reward = $this->db->get_where(
+					'Mstr_Jenis_Pengajuan',
+					[
+						'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id
+					]
+				)->row_object()->fixed;
+
+				if ($tipe_reward == 2) {
+					if ($is_field_anggota_exist > 0) {
+						$result = $this->db->get_where('Tr_Field_Value', ['pengajuan_id' => $pengajuan_id, 'field_id' => 77])->row_object()->value;
+						$anggota = explode(',', $result);
+
+						foreach ($anggota as $mahasiswa) {
+							$urutan = array_search($mahasiswa, $anggota);
+							$data = [
+								'id_periode' => $periode_id,
+								'id_pengajuan' => $pengajuan_id,
+								'pic' => $_SESSION['user_id'],
+								'STUDENTID' => $mahasiswa,
+								'nominal' => $this->db->get_where('Mstr_Penghargaan_Rekognisi_Mahasiswa', [
+									'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id,
+									'order' => ($urutan >= 2 ? 1 : $urutan)
+								])->row_object()->nominal
+								//	'prodi' => getProdiByNIM($mahasiswa)
+							];
+							$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
+
+							// echo "<pre>";
+							// print_r($data);
+							// echo "</pre>";
+						}
+
+						// die();
+
+						$this->db->set('status_id', 9)
+							->set('pic', $this->session->userdata('user_id'))
+							->set('date', 'getdate()', FALSE)
+							->set('pengajuan_id', $pengajuan_id)
+							->insert('Tr_Pengajuan_Status');
+					} else {
+						$nim = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->nim;
 						$data = [
 							'id_periode' => $periode_id,
 							'id_pengajuan' => $pengajuan_id,
 							'pic' => $_SESSION['user_id'],
-							'STUDENTID' => $mahasiswa,
-							//	'prodi' => getProdiByNIM($mahasiswa)
+							'STUDENTID' => $nim,
+							'nominal' => $this->db->get_where('Mstr_Penghargaan_Rekognisi_Mahasiswa', [
+								'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id,
+							])->row_object()->nominal
 						];
 						$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
+
+						// print_r($data);
+						// die();
+
+						$this->db->set('status_id', 9)
+							->set('pic', $this->session->userdata('user_id'))
+							->set('date', 'getdate()', FALSE)
+							->set('pengajuan_id', $pengajuan_id)
+							->insert('Tr_Pengajuan_Status');
 					}
+				} elseif ($tipe_reward == 0) {
+					$nim = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->nim;
+					$data = [
+						'id_periode' => $periode_id,
+						'id_pengajuan' => $pengajuan_id,
+						'pic' => $_SESSION['user_id'],
+						'STUDENTID' => $nim,
+						'nominal' => $this->db->get_where('Tr_Field_Value', [
+							'pengajuan_id' => $pengajuan_id,
+							'field_id' => 81
+						])->row_object()->value
+					];
+					$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
+
+					// print_r($data);
+					// die();
 
 					$this->db->set('status_id', 9)
 						->set('pic', $this->session->userdata('user_id'))
 						->set('date', 'getdate()', FALSE)
 						->set('pengajuan_id', $pengajuan_id)
 						->insert('Tr_Pengajuan_Status');
-				} else {
+				} elseif ($tipe_reward == 1 || $tipe_reward == 3) {
 					$nim = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->nim;
 					$data = [
 						'id_periode' => $periode_id,
 						'id_pengajuan' => $pengajuan_id,
 						'pic' => $_SESSION['user_id'],
-						'STUDENTID' => $nim
+						'STUDENTID' => $nim,
+						'nominal' => $this->db->get_where('Mstr_Penghargaan_Rekognisi_Mahasiswa', [
+							'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id,
+						])->row_object()->nominal
 					];
 					$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
+
+					// print_r($data);
+					// die();
 
 					$this->db->set('status_id', 9)
 						->set('pic', $this->session->userdata('user_id'))
@@ -67,7 +144,8 @@ class Pengajuan extends Admin_Controller
 						->insert('Tr_Pengajuan_Status');
 				}
 			}
-			// $this->db->set('status_id', 9)
+
+			//  $this->db->set('status_id', 9)
 			// 	->set('pic', $this->session->userdata('user_id'))
 			// 	->set('date', 'getdate()', FALSE)
 			// 	->set('pengajuan_id', $pengajuan_id)
@@ -83,6 +161,52 @@ class Pengajuan extends Admin_Controller
 			$this->load->view('layout/layout', $data);
 		}
 	}
+
+	function reward($id_prestasi)
+	{
+		$prestasi = $this->db->get_where('Tr_Penerbitan_Pengajuan', ['id_penerbitan_pengajuan' => $id_prestasi])
+			->row_object();
+
+		$field_anggota = $this->db->get_where('Tr_Field_Value', [
+			'pengajuan_id' => $prestasi->id_pengajuan,
+			'field_id' => 77
+		]);
+
+		$queryp = $this->db->select('*')
+			->from('Tr_Pengajuan p')
+			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id', 'left')
+			->where([
+				'p.pengajuan_id' => $prestasi->id_pengajuan
+			])
+			->get()
+			->row_object();
+		$tipe_reward = $queryp->fixed;
+
+		if (($tipe_reward == 1) || ($tipe_reward == 3)) {
+			$reward = $this->db->get_where('Mstr_Penghargaan_Rekognisi_Mahasiswa', [
+				'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id
+			])->row_object()->nominal;
+		} elseif ($tipe_reward == 2) {
+			if ($field_anggota->num_rows() > 0) {
+				$anggota = explode(',', $field_anggota->row_object()->value);
+				$urutan = array_search($prestasi->STUDENTID, $anggota);
+				$reward = $this->db->get_where(
+					'Mstr_Penghargaan_Rekognisi_Mahasiswa',
+					[
+						'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id,
+						'order' => $urutan > 0 ? 2 : 1
+					]
+				)->row_object()->nominal;
+			}
+		} else {
+			$reward = get_meta_value('biaya_pribadi', $prestasi->id_pengajuan, false);
+		}
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($reward));
+	}
+
 
 	public function detail_prestasi($id_penerbitan_pengajuan = 0)
 	{
