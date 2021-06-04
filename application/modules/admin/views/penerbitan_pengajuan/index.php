@@ -21,8 +21,8 @@
 
 
 			</div>
-			<div class="card-body">
 
+			<div class="card-body">
 				<table id="pengajuan-descs" class="table table-bordered tb-pengajuans">
 					<thead>
 						<tr>
@@ -31,13 +31,17 @@
 							<th style="width:35%">Judul Kegiatan</th>
 							<th style="width:25%">Status</th>
 							<th>Mahasiswa</th>
-							<th>nominal</th>
-							<th>Tanggal</th>
+							<th>Nominal (Rp)</th>
+							<th>&nbsp;</th>
 							<!-- <th></th> -->
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ($daftar_pengajuan as $pengajuan) { ?>
+						<?php 
+						$total = 0;
+						foreach ($daftar_pengajuan as $pengajuan) { 
+							$nominal = $pengajuan['nominal'];	
+							?>
 							<input type="hidden" name="pengajuan[]" value="<?= $pengajuan['pengajuan_id']; ?>" id="">
 							<tr class="<? ($pengajuan['status_id'] == 2) ? 'proses' : ''; ?> <?= ($pengajuan['status_id'] == 4) ? 'perlu-revisi' : ''; ?>">
 								<td class="text-center align-middle">
@@ -61,25 +65,38 @@
 									</p> -->
 								</td>
 								<td>
-									<p class="m-0">
-										<?= $pengajuan['nominal'];	?>
+									<p class="m-0 text-right">
+										<?= number_format($nominal, 2);	?>
 									</p>
 								</td>
 								<td>
+								<a href="" style="color:#fff;" title="Hapus" class="delete btn btn-sm  btn-circle btn-danger" data-href="<?= base_url('admin/periode/hapus/' . $pengajuan['id_penerbitan_pengajuan'] . '/' . $pengajuan['id_periode'] . '/' . $pengajuan['pengajuan_id'] ); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+
+								</td>
+
+								<!-- <td>
 									<p class="m-0">
 										<?= $pengajuan['date'];	?>
 									</p>
 									<p class="badge m-0 badge-warning">
 										<?= $pengajuan['time'];	?>
 									</p>
-								</td>
+								</td> -->
 								<!-- <td>
 									<button type="button" data-toggle="modal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>" class="btn btn-primary btn-sm btn-reward" data-target="#exampleModal">
 										edit reward
 									</button>
 								</td> -->
 							</tr>
-						<?php } ?>
+						<?php 
+					
+					$total  += $nominal; 
+					
+					} ?>
+					<tr>
+						<th colspan="4" style="text-align: right;">Total</th>
+						<th colspan="2">Rp <span style="float:right;"><?= number_format($total,2); ?></span></th>
+					</tr>
 					</tbody>
 				</table>
 
@@ -110,6 +127,29 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+
+<div class="modal fade" id="confirm-delete">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Perhatian</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Tutuo">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Yakin ingin menghapus data ini?&hellip;</p>
+			</div>
+			<div class="modal-footer justify-content-between">
+				<button type="button" class="btn btn-dark" data-dismiss="modal">Batal</button>
+				<a class="btn btn-danger btn-ok">Hapus</a>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
 </div>
 <?= form_close(); ?>
 

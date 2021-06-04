@@ -206,4 +206,15 @@ class Periode extends Admin_Controller
 		$this->db->update('Tr_Penerbitan_Pengajuan');
 		redirect(base_url('admin/periode/bulan/' . $id_periode));
 	}
+
+	
+	public function hapus($id, $id_periode, $id_pengajuan)
+	{
+		$this->db->delete('Tr_Penerbitan_Pengajuan', array('id_penerbitan_pengajuan' => $id));
+		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
+
+		$this->db->delete('Tr_Pengajuan_Status', array('pengajuan_id' => $id_pengajuan, 'status_id'=> 9 ));
+		redirect(base_url('admin/periode/bulan/' . $id_periode));
+	}
+
 }

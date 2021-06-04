@@ -88,6 +88,7 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 					<label for="Jenis_Pengajuan" class="col-md-3 control-label">Tipe Nominal Reward</label>
 					<div class="col-md-9">
 						<select class="form-control" name="tipe_reward" id="tipe_reward">
+							<option value="">Pilih Tipe Nominal Reward</option>
 							<option <?= $kat['fixed'] == 1 ? 'selected' : ''; ?> value="1">1. Individu</option>
 							<option <?= $kat['fixed'] == 2 ? 'selected' : ''; ?> value="2">2. Kelompok (Ketua dan anggota memperoleh nominal yang berbeda)</option>
 							<option <?= $kat['fixed'] == 3 ? 'selected' : ''; ?> value="3">3. Kelompok (Reward diberikan kepada kelompok, bukan kepada tiap anggota)</option>
@@ -98,9 +99,9 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 				</div>
 
 				<div class="form-group row">
-					<label for="Jenis_Pengajuan" class="col-md-3 control-label">Nominal</label>
+					<label for="Jenis_Pengajuan" class="col-md-3 control-label">Nominal (Rp)</label>
 					<div class="col-md-9">
-						<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? $nominal[0]['nominal'] : $kat['nominal']);  ?>" name="nominal[]" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="nominal">
+						<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? $nominal[0]['nominal'] : $kat['nominal']);  ?>" name="nominal[]" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="nominal" >
 						<span class="invalid-feedback"><?php echo form_error('Jenis_Pengajuan'); ?></span>
 						<?php /*if ($kat['fixed'] == 2) {*/ ?>
 						<small id="nominalHelp" class="form-text text-muted">
@@ -202,6 +203,8 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 
 
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="<?= base_url() ?>public/plugins/inputmask/jquery.inputmask.bundle.js"></script>
+
 	<script>
 		$(function() {
 			$("#sortable1, #sortable2").sortable({
@@ -224,7 +227,8 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 
 		var update_tipe_reward = function() {
 			if ($("#tipe_reward").val() == 0) {
-				$("#nominal").prop("disabled", true)
+				$("#nominal").prop("disabled", true);
+				$("#nominal").val('')
 			} else(
 				$("#nominal").prop("disabled", false)
 			)
@@ -246,7 +250,13 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 			}
 		});
 		$('.checkbox_keterangan_surat:checked').parent('li.list-group-item').addClass('active');
+
+		// Initialize InputMask
+		$('#nominal1').inputmask("99-9999999");
+
 	</script>
+
+
 
 </div>
 <?php echo form_close(); ?>

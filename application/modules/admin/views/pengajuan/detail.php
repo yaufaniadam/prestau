@@ -19,7 +19,7 @@
 
 		<?php
 		if ($pengajuan['status_id'] == 7 && $this->session->userdata('role') == 2) { ?>
-			<div class="alert alert-orangepastel">
+			<div class="alert alert-success">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				Pengajuan berhasil diverifikasi. <a href="<?php echo base_url('admin/pengajuan/verified'); ?>">Klik di sini untuk proses selanjutnya</a>
 			</div>
@@ -227,11 +227,7 @@
 				</div>
 			</div>
 		</div>
-		<pre>
-		<?php
-		print_r($this->db->get_where('Tr_Penerbitan_Pengajuan', ['id_pengajuan' => $pengajuan['pengajuan_id']])->result_array());
-		?>
-		</pre>
+		
 	</div>
 	<!-- /.col -->
 </div>
