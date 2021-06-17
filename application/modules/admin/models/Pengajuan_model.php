@@ -185,11 +185,13 @@ class Pengajuan_model extends CI_Model
 
 	public function get_jenis_pengajuan_byid($id)
 	{
+
 		// $query1 = $this->db->query("SELECT 
 		// * 
 		// FROM dbo.Mstr_Jenis_Pengajuan jp
 		// LEFT JOIN Mstr_Penghargaan_Rekognisi_Mahasiswa reward ON reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
 		// where jp.Jenis_Pengajuan_Id='$id'");
+
 		$query1 = $this->db->select("*,jp.Jenis_pengajuan_Id as jpi")
 			->from('dbo.Mstr_Jenis_Pengajuan jp')
 			->join("Mstr_Penghargaan_Rekognisi_Mahasiswa reward", "reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id", "LEFT")

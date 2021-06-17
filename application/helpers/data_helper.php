@@ -5,15 +5,53 @@ function get_jumlah_pengajuan_perbulan($nama_bulan)
 {
 	$CI = &get_instance();
 
-	return $CI->db->query(
-		"SELECT * FROM Tr_Pengajuan_Status ps
-		LEFT JOIN Tr_Pengajuan p ON p.pengajuan_id = ps.pengajuan_id
-		LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-		WHERE ps.status_id = 2 
-		-- AND m.DEPARTMENT_ID = '1'
-		AND FORMAT (ps.date, 'MMMM') = '$nama_bulan'
-		AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())"
-	)->num_rows();
+	// $CI->db->query(
+	// 	"SELECT * FROM Tr_Pengajuan_Status ps
+	// 	LEFT JOIN Tr_Pengajuan p ON p.pengajuan_id = ps.pengajuan_id
+	// 	LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
+	// 	WHERE ps.status_id = 2 
+	// 	-- AND m.DEPARTMENT_ID = '1'
+	// 	AND FORMAT (ps.date, 'MMMM') = '$nama_bulan'
+	// 	AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())
+	// 	AND m.DEPARTMENT_ID = '$prodi_user'"
+	// 	// . $_SESSION['role'] == 5 ? "AND m.DEPARTMENT_ID = '$prodi_user'" : ""
+	// )->num_rows();
+
+
+
+	if ($_SESSION['role'] == 5) {
+		$prodi_user = $CI->db->select('prodi')
+			->from('users')
+			->where([
+				'id' => $_SESSION['user_id']
+			])
+			->get()
+			->row_object()
+			->prodi;
+
+		return $CI->db->select("*")
+			->from("Tr_Penerbitan_Pengajuan pp")
+			->join('V_Mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			->join('Tr_Pengajuan_Status ps', 'ps.pengajuan_id=pp.id_pengajuan')
+			->where([
+				"FORMAT (ps.date, 'MMMM') =" => $nama_bulan,
+				"ps.status_id" => 9,
+				"m.DEPARTMENT_ID" => $prodi_user
+			])
+			->get()
+			->num_rows();
+	} else {
+		return $CI->db->select("*")
+			->from("Tr_Penerbitan_Pengajuan pp")
+			->join('V_Mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			->join('Tr_Pengajuan_Status ps', 'ps.pengajuan_id=pp.id_pengajuan')
+			->where([
+				"FORMAT (ps.date, 'MMMM') =" => $nama_bulan,
+				"ps.status_id" => 9,
+			])
+			->get()
+			->num_rows();
+	}
 }
 
 function get_jumlah_pengajuan_per_jenis_pengajuan($jenis_pengajuan_id)
@@ -27,23 +65,65 @@ function get_jumlah_pengajuan_per_jenis_pengajuan($jenis_pengajuan_id)
 	// 	WHERE p.Jenis_Pengajuan_Id = '$jenis_pengajuan_id'"
 	// )->num_rows();
 
-	return $CI->db->select('*')
-		->from('Tr_Penerbitan_Pengajuan pp')
-		->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-		->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
-		->where([
-			'jp.Jenis_Pengajuan_Id' => $jenis_pengajuan_id
-		])
-		->get()
-		->num_rows();
+	if ($_SESSION['role'] == 5) {
+		$prodi_user = $CI->db->select('prodi')
+			->from('users')
+			->where([
+				'id' => $_SESSION['user_id']
+			])
+			->get()
+			->row_object()
+			->prodi;
+
+		return $CI->db->select('*')
+			->from('Tr_Penerbitan_Pengajuan pp')
+			->join('V_Mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
+			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->where([
+				"jp.Jenis_Pengajuan_Id" => $jenis_pengajuan_id,
+				"m.DEPARTMENT_ID" => $prodi_user
+			])
+			->get()
+			->num_rows();
+	} else {
+		return $CI->db->select('*')
+			->from('Tr_Penerbitan_Pengajuan pp')
+			->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
+			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->where([
+				'jp.Jenis_Pengajuan_Id' => $jenis_pengajuan_id
+
+			])
+			->get()
+			->num_rows();
+	}
 }
 
 function get_jumlah_pengajuan_per_prodi()
 {
 	$CI = &get_instance();
 
-	$department = $CI->db->select('*')
-		->from('Mstr_Department')->get()->result_array();
+	$prodi_user = $CI->db->select('prodi')
+		->from('users')
+		->where([
+			'id' => $_SESSION['user_id']
+		])
+		->get()
+		->row_object()
+		->prodi;
+
+	if ($_SESSION['role'] == 5) {
+		$department = $CI->db->select('*')
+			->from('Mstr_Department')
+			->where([
+				'DEPARTMENT_ID' => $prodi_user
+			])
+			->get()->result_array();
+	} else {
+		$department = $CI->db->select('*')
+			->from('Mstr_Department')->get()->result_array();
+	}
 
 	foreach ($department as $department) {
 		$pengajuan_per_prodi[] = [
@@ -53,13 +133,12 @@ function get_jumlah_pengajuan_per_prodi()
 				->join('V_Mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
 				->join('Mstr_Department d', 'd.DEPARTMENT_ID = m.DEPARTMENT_ID')
 				->where([
-					'm.DEPARTMENT_ID' => $department['DEPARTMENT_ID']
+					'm.DEPARTMENT_ID' => $department['DEPARTMENT_ID'],
 				])
 				->get()
 				->num_rows()
 		];
 	}
-
 	return $pengajuan_per_prodi;
 }
 
@@ -381,7 +460,8 @@ function tampil_notif()
 				</a>
 			<?php	}	?>
 
-			<a class="dropdown-item text-center medium text-gray-500" href="#<?//= base_url('notif'); ?>">Lihat semua Notifikasi</a>
+			<a class="dropdown-item text-center medium text-gray-500" href="#<? //= base_url('notif'); 
+																				?>">Lihat semua Notifikasi</a>
 		</div>
 	</li>
 	<script type="text/javascript">

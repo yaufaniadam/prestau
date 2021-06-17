@@ -46,12 +46,36 @@
 				</div>
 			</div>
 		</div>
-		
+
 	</div>
 	<div class="row">
 		<!-- Area Chart -->
 
 		<div class="col-xl-12 col-lg-12">
+			<div class="card shadow mb-4">
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold text-primary">Laporan Bulanan</h6>
+				</div>
+
+				<div>
+					<table id="data-pengajuan-table" class="table table-bordered tb-pengajuans">
+						<thead>
+							<tr>
+								<?php foreach ($nama_bulan as $bulan) { ?>
+									<th style="width:20%"><?php echo ($bulan['bulan']) ?></th>
+								<?php } ?>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<?php foreach ($nama_bulan as $bulan) { ?>
+									<th style="width:20%"><?php echo  get_jumlah_pengajuan_perbulan($bulan['bulan']) ?></th>
+								<?php } ?>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 			<div class="card shadow mb-4">
 				<!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -83,10 +107,41 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
 
 	<div class="row">
 		<div class="col-xl-12 col-lg-12">
+			<div class="card shadow mb-4">
+				<!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold text-primary">Kategori</h6>
+				</div>
+				<div class="card-body">
+					<div>
+						<table id="data-pengajuan-table" class="table table-bordered tb-pengajuans">
+							<thead>
+								<tr>
+									<th>kategori</th>
+									<th>jumlah</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($jenis_pengajuan as $pengajuan) { ?>
+									<tr>
+										<th>
+											<?= $pengajuan['Jenis_Pengajuan']; ?>
+										</th>
+										<th>
+											<?= get_jumlah_pengajuan_per_jenis_pengajuan($pengajuan['Jenis_Pengajuan_Id']); ?>
+										</th>
+									</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 			<div class="card shadow mb-4">
 				<!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -101,6 +156,40 @@
 
 	<div class="row">
 		<div class="col-xl-12 col-lg-12">
+			<div class="card shadow mb-4">
+				<!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold text-primary">Prodi</h6>
+				</div>
+				<div class="card-body">
+					<div>
+						<table id="data-pengajuan-table" class="table table-bordered tb-pengajuans">
+							<thead>
+								<tr>
+									<th>
+										Prodi
+									</th>
+									<th>
+										Jumlah
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach (get_jumlah_pengajuan_per_prodi() as $per_prodi) { ?>
+									<tr>
+										<th style="width:20%">
+											<?= $per_prodi['nama_prodi']; ?>
+										</th>
+										<th style="width:20%">
+											<?= $per_prodi['jumlah_pengajuan']; ?>
+										</th>
+									</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 			<div class="card shadow mb-4">
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 					<h6 class="m-0 font-weight-bold text-primary">Prodi</h6>
@@ -448,5 +537,14 @@
 				}]
 			}
 		}
+	});
+</script>
+
+<script>
+	$('#data-pengajuan-table').DataTable({
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bInfo": false,
 	});
 </script>

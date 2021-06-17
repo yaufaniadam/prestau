@@ -101,13 +101,15 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 				<div class="form-group row">
 					<label for="Jenis_Pengajuan" class="col-md-3 control-label">Nominal (Rp)</label>
 					<div class="col-md-9">
-						<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? $nominal[0]['nominal'] : $kat['nominal']);  ?>" name="nominal[]" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="nominal" >
+						<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? $nominal[0]['nominal'] : $kat['nominal']);  ?>" name="nominal[]" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="nominal">
+						<small class="form-text text-muted">
+							<span>Ketua</span>
+						</small>
 						<span class="invalid-feedback"><?php echo form_error('Jenis_Pengajuan'); ?></span>
-						<?php /*if ($kat['fixed'] == 2) {*/ ?>
 						<small id="nominalHelp" class="form-text text-muted">
 							<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? $nominal[1]['nominal'] : '');  ?>" name="nominal[]" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="nominal">
+							<span>Anggota</span>
 						</small>
-						<?php /*}*/ ?>
 					</div>
 				</div>
 
@@ -192,7 +194,7 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 				<div class="form-group row">
 					<label for="kode" class="col-md-3 control-label"></label>
 					<div class="col-md-9">
-						<input type="submit" name="submit" value="Edit Kategori Surat" class="btn btn-perak btn-block">
+						<input type="submit" name="submit" value="Edit Kategori Pengajuan" class="btn btn-perak btn-block">
 					</div>
 				</div>
 
@@ -253,7 +255,6 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), '
 
 		// Initialize InputMask
 		$('#nominal1').inputmask("99-9999999");
-
 	</script>
 
 

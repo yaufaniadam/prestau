@@ -701,10 +701,21 @@ class Pengajuan extends Admin_Controller
 		$this->output->set_content_type('application/json')->set_output(json_encode($output));
 	}
 
-
 	private function getProdiByNIM($nim)
 	{
 		$prodi = substr($nim, 4, 3);
 		return $prodi;
+	}
+
+	public function pencairan()
+	{
+		$id_penerbitan_pengajuan = $this->input->post('id_penerbitan_pengajuan');
+
+		$data = array(
+			'petugas' => $this->input->post('petugas'),
+		);
+
+		$this->db->where('id_penerbitan_pengajuan', $id_penerbitan_pengajuan);
+		$this->db->update('Tr_Penerbitan_Pengajuan', $data);
 	}
 }

@@ -20,7 +20,7 @@
 		</a>
 	</li>
 
-	<?php if ($this->session->userdata('role') != 3 || $this->session->userdata('role') != 4 ) { ?>
+	<?php if ($this->session->userdata('role') != 3 || $this->session->userdata('role') != 4) { ?>
 
 		<li class="nav-item" id="semua_pengajuan">
 			<a class="nav-link" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>">
