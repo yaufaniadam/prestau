@@ -39,6 +39,7 @@
 					</thead>
 					<tbody>
 						<?php
+						
 						$total = 0;
 						foreach ($daftar_pengajuan as $pengajuan) {
 							$nominal = $pengajuan['nominal'];
@@ -87,10 +88,14 @@
 									</td>
 								<?php } ?>
 								<?php if ($pengajuan['status_id'] === 10) { ?>
-									<td>								
+									<td>
+									<?php  if( $pengajuan['tanggal_pencairan'] == '') { ?>								
 										<button type="button" class="btn btn-primary btn-pencairan" data-toggle="modal" data-target="#pencairanModal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>">
-											cairkan
+											<i class="fas fa-cash-register"></i> Cairkan
 										</button>
+										<?php } else {
+											echo "<i class='fas fa-check-circle text-success'></i> sudah dicairkan";
+										} ?>
 									</td>
 								<?php } ?>
 

@@ -1,7 +1,5 @@
 <?php
 
-require_once "vendor/autoload.php";
-
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer
