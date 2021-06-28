@@ -1,3 +1,4 @@
+
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -75,12 +76,12 @@ $query_builder = TRUE;
 
 $db['dbsqlsrv'] = array(
 	'dsn'	=> '',
-	// 'hostname' => '10.0.1.65\DEV',
-	'hostname' => 'ADAM-DELL-6430U\SQLEXPRESS',
-	// 'username' => 'programmer',
-	'username' => 'toor',
-	// 'password' => 'programmer',
-	'password' => 'root',
+	'hostname' => '10.0.1.65\DEV',
+	//'hostname' => 'ADAM-DELL-6430U\SQLEXPRESS',
+	 'username' => 'programmer',
+	//'username' => 'toor',
+	 'password' => 'programmer',
+	//'password' => 'root',
 	'database' => 'simkatmawa',
 	'dbdriver' => 'sqlsrv',
 	'dbprefix' => '',
