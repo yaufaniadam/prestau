@@ -12,81 +12,50 @@ class Auth extends CI_Controller
 	{
 		if (!$this->session->has_userdata('is_login')) {
 			redirect('auth/login');
-		} 
-		// else {
-		// 	// if ($this->session->has_userdata('role') == 4) {
-		// 	// 	redirect('mahasiswa/dashboard');
-		// 	// } else {
-		// 	// 	redirect('admin/dashboard');
-		// 	// }
-		// }
+		} else {
+			if( $_SESSION['role'] != 3) {
+				redirect('admin/dashboard');
+			} else {
+				redirect('mahasiswa/dashboard');
+			}
+		}
 	}
 	//--------------------------------------------------------------
-	public function login($referrer = null)
+
+	public function login()
 	{
-		//check referer page
-		if (isset($referrer)) {
-			// jika referrernya non sso
-			if ($referrer === 'non-sso') {
-				if ($this->input->post('submit')) {
-					$this->form_validation->set_rules('username', 'Username', 'trim|required');
-					$this->form_validation->set_rules('password', 'Password', 'trim|required');
+		if ($this->input->post('submit')) {
+			$this->form_validation->set_rules('username', 'Username', 'trim|required');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
-					if ($this->form_validation->run() == FALSE) {
-						$data['ref'] = $referrer;
-						$this->load->view('auth/login', $data);
-					} else {
-						$data = array(
-							'username' => $this->input->post('username'),
-							'password' => $this->input->post('password')
-						);
-						$result = $this->auth_model->login($data);
-						if ($result) {
-							$user_data = array(
-								'user_id' => $result['id'],
-								'username' => $result['username'],
-								'fullname' => $result['fullname'],
-								'role' => $result['role'],
-								// 'id_prodi' => $result['id_prodi'],
-								'is_login' => TRUE,
-							);
-
-							$this->session->set_userdata($user_data);
-
-							if ($result['role'] != 3) {
-								redirect(base_url('admin/dashboard'), 'refresh');
-							} else {
-								redirect(base_url('mahasiswa/dashboard'), 'refresh');
-							}
-						} else {
-							$data['msg'] = 'Invalid Username or Password!';
-							$data['ref'] = $referrer;
-							$this->load->view('auth/login', $data);
-						}
-					}
-				} else {
-					$data['ref'] = $referrer;
-					$this->load->view('auth/login', $data);
-				}
-				// jika referrernya salah
+			if ($this->form_validation->run() == FALSE) {
+				$data['ref'] = '';
+				$this->load->view('auth/login', $data);
 			} else {
-				echo "404";
-			}
-			//jika tanpa referrer maka menggunakan SSO UMY
-		} else {
-			if ($this->input->post('submit')) {
-				$this->form_validation->set_rules('username', 'Username', 'trim|required');
-				$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
-				if ($this->form_validation->run() == FALSE) {
-					$data['ref'] = $referrer;
-					$this->load->view('auth/login', $data);
+				$data = array(
+					'username' => $this->input->post('username'),
+					'password' => $this->input->post('password')
+				);
+
+				$result = $this->auth_model->login($data);
+
+				if ($result) {
+					$user_data = array(
+						'user_id' => $result['id'],
+						'username' => $result['username'],
+						'fullname' => $result['fullname'],
+						'role' => $result['role'],
+						'id_prodi' => $result['prodi'],
+						'is_login' => TRUE,
+					);
+
+					$this->session->set_userdata($user_data);
+					redirect(base_url('admin/dashboard'), 'refresh');
+
 				} else {
 
-					$data = array(
-						'username' => $this->input->post('username'),
-						'password' => $this->input->post('password')
-					);
+					//periksa di tabel mhs
 
 					$params = http_build_query($data);
 
@@ -110,8 +79,8 @@ class Auth extends CI_Controller
 
 						$result = $this->db->query(
 							"SELECT * from V_Mahasiswa m
-							LEFT JOIN Mstr_Department d on d.DEPARTMENT_ID = m.DEPARTMENT_ID
-							WHERE email ='$email' "
+						LEFT JOIN Mstr_Department d on d.DEPARTMENT_ID = m.DEPARTMENT_ID
+						WHERE email ='$email' "
 						)->row_array();
 
 						$user_data = array(
@@ -131,15 +100,15 @@ class Auth extends CI_Controller
 
 						redirect(base_url('mahasiswa/dashboard'), 'refresh');
 					} else {
-						$data['ref'] = $referrer;
+						$data['ref'] = '';
 						$data['msg'] = 'Invalid Username or Password!';
 						$this->load->view('auth/login', $data);
 					}
 				}
-			} else {
-				$data['ref'] = $referrer;
-				$this->load->view('auth/login', $data);
 			}
+		} else {
+			$data['ref'] = '';
+			$this->load->view('auth/login', $data);
 		}
 	}
 

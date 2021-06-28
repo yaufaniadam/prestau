@@ -1,6 +1,6 @@
 <div class="col-12">
 	<div class="row">
-		<div class="col-xl-4 col-md-6 mb-4">
+		<div class="col-6 col-md-6 mb-4">
 			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
@@ -23,13 +23,13 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xl-4 col-md-6 mb-4">
+		<!-- <div class="col-6 col-md-6 mb-4">
 			<div class="card border-left-success shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
 						<div class="col mr-2">
 							<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-								Pengajuan Selesai
+								Jumlah Prestasi
 							</div>
 							<div class="h5 mb-0 font-weight-bold text-gray-800">
 								<?php if ($pengajuan_selesai > 0) { ?>
@@ -45,8 +45,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
+		</div> -->
 	</div>
 	<div class="row">
 		<!-- Area Chart -->
@@ -62,7 +61,7 @@
 						<thead>
 							<tr>
 								<?php foreach ($nama_bulan as $bulan) { ?>
-									<th style="width:20%"><?php echo ($bulan['bulan']) ?></th>
+									<th style="width:20%"><?php echo get_nama_bulan($bulan['bulan']) ?></th>
 								<?php } ?>
 							</tr>
 						</thead>
@@ -154,64 +153,65 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-xl-12 col-lg-12">
-			<div class="card shadow mb-4">
-				<!-- Card Header - Dropdown -->
-				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-					<h6 class="m-0 font-weight-bold text-primary">Prodi</h6>
-				</div>
-				<div class="card-body">
-					<div>
-						<table id="data-pengajuan-table" class="table table-bordered tb-pengajuans">
-							<thead>
-								<tr>
-									<th>
-										Prodi
-									</th>
-									<th>
-										Jumlah
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach (get_jumlah_pengajuan_per_prodi() as $per_prodi) { ?>
+	<?php if ($_SESSION['role'] != 5) { ?>
+		<div class="row">
+			<div class="col-xl-12 col-lg-12">
+				<div class="card shadow mb-4">
+					<!-- Card Header - Dropdown -->
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-primary">Prodi</h6>
+					</div>
+					<div class="card-body">
+						<div>
+							<table id="data-pengajuan-table" class="table table-bordered tb-pengajuans">
+								<thead>
 									<tr>
-										<th style="width:20%">
-											<?= $per_prodi['nama_prodi']; ?>
+										<th>
+											Prodi
 										</th>
-										<th style="width:20%">
-											<?= $per_prodi['jumlah_pengajuan']; ?>
+										<th>
+											Jumlah
 										</th>
 									</tr>
-								<?php } ?>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-			<div class="card shadow mb-4">
-				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-					<h6 class="m-0 font-weight-bold text-primary">Prodi</h6>
-				</div>
-				<div class="card-body">
-					<div class="chart-pie pt-4 pb-2">
-						<div class="chartjs-size-monitor">
-							<div class="chartjs-size-monitor-expand">
-								<div class=""></div>
-							</div>
-							<div class="chartjs-size-monitor-shrink">
-								<div class=""></div>
-							</div>
+								</thead>
+								<tbody>
+									<?php foreach (get_jumlah_pengajuan_per_prodi() as $per_prodi) { ?>
+										<tr>
+											<th style="width:20%">
+												<?= $per_prodi['nama_prodi']; ?>
+											</th>
+											<th style="width:20%">
+												<?= $per_prodi['jumlah_pengajuan']; ?>
+											</th>
+										</tr>
+									<?php } ?>
+								</tbody>
+							</table>
 						</div>
-						<canvas id="prodi" width="301" height="245" class="chartjs-render-monitor" style="display: block; width: 301px; height: 245px;"></canvas>
 					</div>
-					<div class="mt-4 text-center small">
+				</div>
+				<div class="card shadow mb-4">
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+						<h6 class="m-0 font-weight-bold text-primary">Prodi</h6>
+					</div>
+					<div class="card-body">
+						<div class="chart-pie pt-4 pb-2">
+							<div class="chartjs-size-monitor">
+								<div class="chartjs-size-monitor-expand">
+									<div class=""></div>
+								</div>
+								<div class="chartjs-size-monitor-shrink">
+									<div class=""></div>
+								</div>
+							</div>
+							<canvas id="prodi" width="301" height="245" class="chartjs-render-monitor" style="display: block; width: 301px; height: 245px;"></canvas>
+						</div>
+						<div class="mt-4 text-center small">
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- <div class="col-xl-6 col-lg-6">
+			<!-- <div class="col-xl-6 col-lg-6">
 			<div class="card shadow mb-4">
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 					<h6 class="m-0 font-weight-bold text-primary">Fakultas</h6>
@@ -233,7 +233,8 @@
 				</div>
 			</div>
 		</div> -->
-	</div>
+		</div>
+	<?php } ?>
 
 </div>
 
@@ -276,11 +277,11 @@
 		data: {
 			// labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 			labels: [
-				<?php foreach ($nama_bulan as $bulan) { ?> "<?php echo ($bulan['bulan']) ?>",
+				<?php foreach ($nama_bulan as $bulan) { ?> "<?php echo get_nama_bulan($bulan['bulan']) ?>",
 				<?php } ?>
 			],
 			datasets: [{
-				label: "Surat: ",
+				label: "Pengajuan: ",
 				lineTension: 0.3,
 				backgroundColor: "rgba(78, 115, 223, 0.05)",
 				borderColor: "rgba(78, 115, 223, 1)",

@@ -83,18 +83,78 @@ class Pengajuan_model extends CI_Model
 
 	public function pengajuan_perlu_diproses()
 	{
-		return $this->db->query("SELECT * FROM Tr_Pengajuan p 
-		LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-		WHERE ps.status_id != 1 
-		AND ps.status_id != 10")->num_rows();
+		// $this->db->query("SELECT * FROM Tr_Pengajuan p 
+		// LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
+		// WHERE ps.status_id != 1 
+		// AND ps.status_id != 10")->num_rows();
+
+		if ($_SESSION['role'] == 5) {
+			$prodi_user = $this->db->select('prodi')
+				->from('users')
+				->where([
+					'id' => $_SESSION['user_id']
+				])
+				->get()
+				->row_object()
+				->prodi;
+
+			return $this->db->select("*")
+				->from("Tr_Pengajuan p")
+				->join("V_Mahasiswa m", "m.STUDENTID=p.nim")
+				->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=p.pengajuan_id")
+				->where([
+					"m.DEPARTMENT_ID =" => $prodi_user,
+					"ps.status_id =" => 2
+				])
+				->get()
+				->num_rows();
+		} else {
+			return $this->db->select("*")
+				->from("Tr_Pengajuan p")
+				->join("V_Mahasiswa m", "m.STUDENTID=p.nim")
+				->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=p.pengajuan_id")
+				->where([
+					"ps.status_id =" => 2
+				])->get()
+				->num_rows();
+		}
 	}
 
 	public function pengajuan_selesai()
 	{
-		return $this->db->query("SELECT * FROM Tr_Pengajuan p 
-		LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-		WHERE ps.status_id != 1 
-		AND ps.status_id = 10")->num_rows();
+		// $this->db->query("SELECT * FROM Tr_Pengajuan p 
+		// LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
+		// WHERE ps.status_id != 1 
+		// AND ps.status_id = 10")->num_rows();
+
+
+		if ($_SESSION['role'] == 5) {
+			$prodi_user = $this->db->select('prodi')
+				->from('users')
+				->where([
+					'id' => $_SESSION['user_id']
+				])
+				->get()
+				->row_object()
+				->prodi;
+
+			return $this->db->select("*")
+				->from("Tr_Penerbitan_Pengajuan pp")
+				->join("V_Mahasiswa m", "m.STUDENTID=pp.STUDENTID")
+				// ->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=pp.id_pengajuan")
+				->where([
+					"m.DEPARTMENT_ID =" => $prodi_user,
+				])
+				->get()
+				->num_rows();
+		} else {
+			return $this->db->select("*")
+				->from("Tr_Penerbitan_Pengajuan pp")
+				->join("V_Mahasiswa m", "m.STUDENTID=pp.STUDENTID")
+				// ->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=pp.id_pengajuan")
+				->get()
+				->num_rows();
+		}
 	}
 
 	public function get_arsip_pengajuan($DEPARTMENT_ID = 0, $ID_JENIS_PENGAJUAN = 0)
@@ -123,13 +183,16 @@ class Pengajuan_model extends CI_Model
 	{
 		return $this->db->query(
 			"SELECT 
-			distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
+			-- distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
+			distinct(FORMAT (ps.date, 'MM')) AS bulan 
 			FROM Tr_Pengajuan_Status ps
 			WHERE ps.status_id = 2 
 			AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())
-			ORDER BY bulan DESC
+			ORDER BY bulan ASC
 			"
 		)->result_array();
+
+		
 
 		// SELECT 
 		// distinct(FORMAT (ps.date, 'MMMM')) AS bulan 

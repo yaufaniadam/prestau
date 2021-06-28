@@ -28,6 +28,7 @@ class Notif_model extends CI_Model
 	public function send_notif($data)
 	{
 		// $id_status = $data['id_status'];
+
 		date_default_timezone_set('Asia/Jakarta');
 		$date = date("Y/m/d h:i:s");
 
@@ -46,6 +47,9 @@ class Notif_model extends CI_Model
 			);
 		}
 		$result = $this->db->insert_batch('Tr_Notif', $notif);
+
+
+
 		return $result;
 	}
 
@@ -54,5 +58,11 @@ class Notif_model extends CI_Model
 	{
 		$status = $this->db->get_where('Tr_Pengajuan_Status', array('id_status' => $id_status))->row_array();
 		return $status['status_pengajuan_id'];
+	}
+
+	public function get_messages($role, $id_status)
+	{
+		$status = $this->db->get_where('Mstr_Status_Pesan', array('id_status' => $id_status, 'role' => $role))->row_array();
+		return $status;
 	}
 }

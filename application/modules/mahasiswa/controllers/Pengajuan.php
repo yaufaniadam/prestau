@@ -1,4 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
+
+use PHPMailer\PHPMailer\PHPMailer;
+
 class Pengajuan extends Mahasiswa_Controller
 {
 	public function __construct()
@@ -8,6 +11,7 @@ class Pengajuan extends Mahasiswa_Controller
 		$this->load->model('pengajuan_model', 'pengajuan_model');
 		$this->load->model('notif/Notif_model', 'notif_model');
 		$this->load->helper('formulir');
+		$this->load->library('mailer');
 	}
 
 	public function detail($id_surat = 0)
@@ -486,16 +490,23 @@ class Pengajuan extends Mahasiswa_Controller
 					}
 				}
 
+				//data utk kirim email & notif ke pegawai
 				$data_for_notif = [
-					'pengirim' => '',
+					'STUDENTID' => $data_user['STUDENTID'],
+					'STUDENTNAME' => $data_user['FULLNAME'],
 					'penerima' => '',
 					'id_pengajuan' => $pengajuan_id,
+					'judul_pengajuan' => $data['title'],
 					'role' => [2],
+					'link' => base_url('admin/pengajuan/detail/'. $pengajuan_id),
+					'subjek' => 'Ada Pengajuan Prestasi Baru dari ' . $data_user['FULLNAME'],
+					'isi' => 'Ada Pengajuan Prestasi Baru dari <strong>' . $data_user['FULLNAME'] . '</strong> kategori <strong>' . $data['title'] . '</strong> yang perlu diperiksa.',
 					'id_status_notif' => 3,
 				];
 
-				$this->notif_model->send_notif($data_for_notif);
-
+				//sendmail & notif
+				$this->mailer->send_mail($data_for_notif);			
+			
 				redirect(base_url('mahasiswa/pengajuan/tambah/' . $pengajuan_id));
 			}
 		} else {

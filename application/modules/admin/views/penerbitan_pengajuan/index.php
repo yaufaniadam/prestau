@@ -3,23 +3,21 @@
 		<div class="card card-success card-outline">
 			<div class="card-header">
 				<div class="row">
-					<div class="col-md-8">
+					<div class="col-md-6">
 						<p class="mb-0">Nama mahasiswa yang memperoleh reward pada periode ini</p>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-6 text-right">
 						<?php if ($status_periode == 0) { ?>
-							<?= form_open(base_url('admin/periode/bulan')); ?>
 							<input type="hidden" name="id_periode" value="<?= $id_periode; ?>">
-							<button type="button" class="btn btn-sm btn-success mb-2 float-right" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> data-toggle="modal" data-target="#confirm-modal">
+							<button type="button" class="btn btn-sm btn-success" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> data-toggle="modal" data-target="#confirm-modal"> <i class="fas fa-paper-plane"></i> 
 								Terbitkan reward periode ini
 							</button>
-
-
 						<?php } ?>
+				
+									
+						<a href="<?= base_url('admin/periode/export_excel/' . $id_periode); ?>" class="btn btn-warning btn-sm"><i class="fas fa-file-excel"></i> Export ke Excel</a>				
 					</div>
 				</div>
-
-
 			</div>
 
 			<div class="card-body">
@@ -88,11 +86,13 @@
 										<?= form_close(); ?>
 									</td>
 								<?php } ?>
-								<td>
-									<button type="button" class="btn btn-primary btn-pencairan" data-toggle="modal" data-target="#pencairanModal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>">
-										cairkan
-									</button>
-								</td>
+								<?php if ($pengajuan['status_id'] === 10) { ?>
+									<td>								
+										<button type="button" class="btn btn-primary btn-pencairan" data-toggle="modal" data-target="#pencairanModal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>">
+											cairkan
+										</button>
+									</td>
+								<?php } ?>
 
 								<!-- <td>
 									<button type="button" data-toggle="modal" id="<?/*= $pengajuan['id_penerbitan_pengajuan']; */ ?>" class="btn btn-primary btn-sm btn-reward" data-target="#exampleModal">
@@ -101,7 +101,6 @@
 								</td> -->
 							</tr>
 						<?php
-
 							$total  += $nominal;
 						} ?>
 						<tr>
@@ -120,6 +119,7 @@
 
 <!-- Modal -->
 
+<!-- Modal Pencairan -->
 <div class="modal fade" id="pencairanModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -129,26 +129,37 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
+			<?php echo form_open(base_url('admin/periode/pencairan_reward')) ?>
 			<div class="modal-body">
-				<?= form_open(base_url('admin/pengajuan/periode')); ?>
 				<div class="form-group row">
 					<input type="hidden" id="id_penerbitan_pengajuan_field" name="id_penerbitan_pengajuan">
-					<label for="inputEmail3" class="col-sm-2 col-form-label">Petugas</label>
+					<input type="hidden" name="id_periode" value="<?= $id_periode; ?>">
+					<label for="pegawai" class="col-sm-2 col-form-label">Pegawai</label>
+					<div class="col-sm-10 my-2">
+						<input type="text" id="pegawai" name="pegawai" class="form-control">
+					</div>
+					<label for="penerima" class="col-sm-2 col-form-label">Penerima</label>
 					<div class="col-sm-10">
-						<input type="text" name="petugas" class="form-control">
+						<input type="text" id="penerima" name="penerima" class="form-control">
 					</div>
 				</div>
-				<?= form_close(); ?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
+				<input class="btn btn-primary" type="submit" value="Submit">
 			</div>
+			<?= form_close(); ?>
 		</div>
 	</div>
 </div>
+<!-- Modal Pencairan -->
 
+<!-- Modal Penerbitan -->
 <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirm-modalLabel" aria-hidden="true">
+	<?= form_open(base_url('admin/periode/bulan')); ?>
+	<?php foreach ($daftar_pengajuan as $pengajuan) {	?>
+		<input type="hidden" name="pengajuan[]" value="<?= $pengajuan['pengajuan_id']; ?>" id="">
+	<?php } ?>
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -167,32 +178,9 @@
 			</div>
 		</div>
 	</div>
+	<?= form_close(); ?>
 </div>
-
-
-<div class="modal fade" id="confirm-delete">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">Perhatian</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Tutuo">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>Yakin ingin menghapus data ini?&hellip;</p>
-			</div>
-			<div class="modal-footer justify-content-between">
-				<button type="button" class="btn btn-dark" data-dismiss="modal">Batal</button>
-				<a class="btn btn-danger btn-ok">Hapus</a>
-			</div>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
-</div>
-<?= form_close(); ?>
-
+<!-- Modal Penerbitan -->
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
