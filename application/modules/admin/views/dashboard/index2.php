@@ -1,4 +1,5 @@
-<div class="row">
+<div class="col-12">
+	<div class="row">
 		<div class="col-6 col-md-6 mb-4">
 			<div class="card border-left-warning shadow h-100 py-2">
 				<div class="card-body">
@@ -8,11 +9,7 @@
 								Pengajuan Perlu Diproses
 							</div>
 							<div class="h5 mb-0 font-weight-bold text-gray-800">
-								<?php if ($pengajuan_perlu_diproses > 0) { ?>
-									<?= $pengajuan_perlu_diproses; ?>
-								<?php } else { ?>
-									tidak ada
-								<?php } ?>
+								
 							</div>
 						</div>
 						<div class="col-auto">
@@ -31,11 +28,7 @@
 								Jumlah Prestasi
 							</div>
 							<div class="h5 mb-0 font-weight-bold text-gray-800">
-								<?php if ($pengajuan_selesai > 0) { ?>
-									<?= $pengajuan_selesai; ?>
-								<?php } else { ?>
-									tidak ada
-								<?php } ?>
+						
 							</div>
 						</div>
 						<div class="col-auto">
@@ -46,15 +39,15 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="row">
+
 
 		<!-- Area Chart -->
 
 		<div class="col-xl-12 col-lg-12">
 			<div class="card shadow mb-4">
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-					<h6 class="m-0 font-weight-bold text-success">Dalam Satu Tahun</h6>
+					<h6 class="m-0 font-weight-bold text-primary">Dalam Satu Tahun</h6>
 				</div>
 
 				<div class="card-body">
@@ -82,22 +75,7 @@
 
 
 						</div>
-						<div class="tab-pane fade pt-4" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-							<table id="data-pengajuan-table" class="table table-bordered tb-pengajuans">
-								<thead>
-									<tr>
-										<?php foreach ($nama_bulan as $bulan) { ?>
-											<th style="width:20%"><?php echo get_nama_bulan($bulan['bulan']) ?></th>
-										<?php } ?>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										
-									</tr>
-								</tbody>
-							</table>
-						</div>
+					
 
 					</div>
 
@@ -109,10 +87,44 @@
 
 	</div>
 
-	
-	<script src="<?= base_url() ?>public/vendor/chart.js/Chart.min.js"></script>
+	<div class="row">
+		<div class="col-xl-12 col-lg-12">
+			<div class="card shadow mb-4">
+				<!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold text-primary">Berdasarkan Kategori</h6>
+				</div>
+				<div class="card-body">
+					<div>
+						<table id="data-pengajuan-table" class="table table-bordered tb-pengajuans">
+							<thead>
+								<tr>
+									<th>kategori</th>
+									<th>jumlah</th>
+								</tr>
+							</thead>
+							
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="card shadow mb-4">
+				<!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold text-primary">Kategori</h6>
+				</div>
+				<div class="card-body">
+					<canvas id="horizontalBarChartCanvas"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<!-- PERBULAN -->
+
+</div>
+
+<script src="<?= base_url() ?>public/vendor/chart.js/Chart.min.js"></script>
+<!-- PERBULAN -->
 <script>
 	// Set new default font family and font color to mimic Bootstrap's default styling
 	Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
@@ -148,42 +160,30 @@
 	var myLineChart = new Chart(ctx, {
 		type: 'line',
 		data: {
-			
 			labels: [
-				
-				<?php foreach($nama_bulan as $bulan) {
-					echo $bulan['bulan'] . ', ';
-				} ?>
-				
+				<?php foreach ($nama_bulan as $bulan) { ?> "<?php echo get_nama_bulan($bulan['bulan']) ?>",
+				<?php } ?>
 			],
+			
 			datasets: [{
 				label: "Pengajuan: ",
-				lineTension: 0,
-				backgroundColor: "rgba(6, 80, 56, 0.1)",
-				borderColor: "rgba(6, 80, 56, 1)",
+				lineTension: 0.3,
+				backgroundColor: "rgba(78, 115, 223, 0.05)",
+				borderColor: "rgba(78, 115, 223, 1)",
 				pointRadius: 3,
-				pointBackgroundColor: "rgba(6, 80, 56, 1)",
-				pointBorderColor: "rgba(6, 80, 56, 1)",
+				pointBackgroundColor: "rgba(78, 115, 223, 1)",
+				pointBorderColor: "rgba(78, 115, 223, 1)",
 				pointHoverRadius: 3,
-				pointHoverBackgroundColor: "rgba(6, 80, 56, 1)",
-				pointHoverBorderColor: "rgba(6, 80, 56, 1)",
+				pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+				pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 				pointHitRadius: 10,
 				pointBorderWidth: 2,
-				data: [
-					<?php	
-					foreach ($masuk as $masuk) {
-						for ($i = 1; $i < 13; $i++) {
-							if ($masuk['bulan'] == $i) {
-								echo  ($masuk['jumlah'] != '') ?	$masuk['jumlah'] : '0'; echo ", ";
-							}
-						}
-					} ?>
-				],
+				data: [1,2,3,3,5,6,9,3,6,7,11,11],
 			},
 			{
 				label: "Prestasi: ",
-				lineTension: 0,
-				backgroundColor: "rgba(255, 254, 148, 0.7)",
+				lineTension: 0.3,
+				backgroundColor: "rgba(251, 200, 0, 0.05)",
 				borderColor: "rgba(251, 200, 0, 1)",
 				pointRadius: 3,
 				pointBackgroundColor: "rgba(230, 174, 22, 1)",
@@ -193,16 +193,7 @@
 				pointHoverBorderColor: "rgba(251, 200, 0, 1)",
 				pointHitRadius: 10,
 				pointBorderWidth: 2,
-				data: [
-					<?php	
-					foreach ($reward as $reward) {
-						for ($i = 1; $i < 13; $i++) {
-							if ($reward['bulan'] == $i) {
-								echo  ($reward['jumlah'] != '') ?	$reward['jumlah'] : '0'; echo ", ";
-							}
-						}
-					} ?>
-				],
+				data: [0,1,3,2,4,4,8,2,6,5,9,10],
 			}],
 		},
 		options: {
@@ -273,3 +264,14 @@
 		}
 	});
 </script>
+
+
+
+<!-- <script>
+	$('#data-pengajuan-table').DataTable({
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bInfo": false,
+	});
+</script> -->

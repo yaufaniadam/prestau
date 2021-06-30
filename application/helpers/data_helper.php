@@ -62,18 +62,18 @@ function get_nama_bulan($no_urut)
 
 	$nama_bulan = [
 		1 =>
-		"January",
-		"February",
-		"March",
+		"Januari",
+		"Februari",
+		"Maret",
 		"April",
-		"May",
-		"June",
-		"July",
-		"August",
+		"Mei",
+		"Juni",
+		"Juli",
+		"Agustus",
 		"September",
 		"Oktober",
 		"November",
-		"December",
+		"Desember",
 	];
 
 	return $nama_bulan[$no];
@@ -161,13 +161,6 @@ function get_jumlah_pengajuan_per_prodi()
 	return $pengajuan_per_prodi;
 }
 
-function printrs($var)
-{
-	echo "<pre>";
-	print_r($var);
-	echo "</pre>";
-}
-
 function profPic($id, $w)
 {
 	if ($id) {
@@ -202,129 +195,6 @@ function bulan_romawi($bulan)
 	return  $bln[$bulan];
 }
 
-
-// -----------------------------------------------------------------------------
-function getUserbyId()
-{
-	$CI = &get_instance();
-	return  $CI->db->select('*')->from('profil')->where(array('id_user' => $CI->session->userdata("user_id")))->get()->row_array();
-}
-
-
-function getUserPhoto($id)
-{
-	$CI = &get_instance();
-	return $CI->db->get_where('profil', array('id_user' => $id))->row_array()['photo'];
-}
-
-
-function badge_status($status)
-{
-	$CI = &get_instance();
-	$status  = $CI->db->get_where('status', array('id' => $status))->row_array();
-
-	return '<span class="float-right badge-sm badge badge-' . $status['badge'] . '"> ' . $status['status'] . ' </span>';
-}
-function tgl_status_surat($id_surat, $status)
-{
-	$CI = &get_instance();
-	return  $status  = $CI->db->select("DATE_FORMAT(date,'%d %M %Y') as date, DATE_FORMAT(date,'%H:%i') as time")->from('surat_status')->where(array('id_surat' => $id_surat, 'id_status' => $status))->get()->row_array();
-}
-
-function cek_verifikasi($id_surat)
-{
-	$CI = &get_instance();
-	$verifikasi  = $CI->db->select("verifikasi")->from('keterangan_surat')->where(array('id_surat' => $id_surat))->get()->result_array();
-	if (array_search("0", array_column($verifikasi, 'verifikasi')) !== false) {
-		return true;
-	}
-}
-
-
-
-
-
-function get_dokumen_syarat($id_surat)
-{
-	$CI = &get_instance();
-	$dokumen = $CI->db->select("kat_keterangan_surat.id, kat_keterangan_surat.kat_keterangan_surat, keterangan_surat.value, media.file")
-		->from('kat_keterangan_surat')
-		->join('keterangan_surat', 'kat_keterangan_surat.id=keterangan_surat.id_kat_keterangan_surat', 'left')
-		->join('media', 'media.id=keterangan_surat.value', 'left')
-		->where(array('type' => "image", "id_surat" => $id_surat))
-		->get()
-		->result_array();
-
-	return $dokumen;
-
-}
-
-// fungsi ini memeriksa apakah mhs udah pernah buat surat, jika sudah maka tidak diperkenankan membuat lagi sampai surat tersebut selesai
-// cek juga jika mhs mengajukan surat yg berkaitan dgn durasi (contoh cuti kuliah), maka mhs tidak bs mengajukan cuti lagi sampai
-// dalam posisi mahasiswa aktif
-
-function cek_semester()
-{
-	$CI = &get_instance();
-	//ambil tahun
-	$cur_semester_angka = (date("n") <= 6) ?  2 : 1;
-	$semester = date("Y") . $cur_semester_angka;
-	$angkatan = substr($CI->session->userdata('username'), 0, 4);
-
-	if ($semester % 2 != 0) {
-		$a = (($semester + 10) - 1) / 10;
-		$b = $a - $angkatan;
-		$c = ($b * 2) - 1;
-	} else {
-		$a = (($semester + 10) - 2) / 10;
-		$b = $a - $angkatan;
-		$c = $b * 2;
-	}
-
-	return $c;
-}
-
-function cek_sudah_buat_surat($id_mahasiswa, $id_kategori_surat, $min_semester)
-{
-	//cek apakah ada kategori surat yg blm selesai
-	$CI = &get_instance();
-
-	$surat = $CI->db->query("SELECT s.*, ks.min_semester, ss.id_status FROM surat s
-		LEFT JOIN kategori_surat ks ON ks.id=s.id_kategori_surat
-		LEFT JOIN surat_status ss ON ss.id_surat=s.id
-		WHERE id_mahasiswa = $id_mahasiswa AND id_kategori_surat = $id_kategori_surat ORDER BY id
-		DESC LIMIT 1
-		")->row_array();
-
-	//jika ada surat yg belum selesai/ belum pernah mengajukan surat
-	if ($surat) {
-
-		$id_surat = $surat['id'];
-		// jika sdh mengajukan, cek status surat, jika statusnya blm selesai (>10) maka belum boleh membuat surat yg sama
-
-		$status = $CI->db->query("SELECT MAX(ss.id_status) as id_status, id_surat FROM surat_status ss
-  	WHERE id_surat = $id_surat
-		")->row_array();
-
-		if (($status['id_status'] == 10) || ($status['id_status']  == 6)) {
-			$diperbolehkan = 1;
-		} else {
-			$diperbolehkan = 2;
-		}
-	} else {
-		//cek apakah option min_semester ada
-		if ($min_semester > 0) {
-			if (cek_semester() >= $min_semester) {;
-				$diperbolehkan = 1;
-			} else {
-				$diperbolehkan = 3;
-			}
-		} else {
-			$diperbolehkan = 1;
-		}
-	}
-	return $diperbolehkan;
-}
 
 function tampil_notif()
 {
@@ -432,16 +302,6 @@ function tampil_notif()
 <?php
 }
 
-function tampil_alert($status, $role)
-{
-
-	$CI = &get_instance();
-	$alert = $CI->db->select('s.*,sp.*')->from('status s')
-		->join('status_pesan sp', 's.id=sp.id_status', 'left')
-		->where(array('s.id =' => $status, 'sp.role' => $role))->get()->row_array();
-?>
-	<p class="alert alert-<?= $alert['badge']; ?> mb-4"><i class="<?= $alert['icon']; ?>"></i> <?= $alert['alert']; ?></p>
-<?php }
 
 //periksa apakah jenis kategori ini memiliki child
 function check_child($id)

@@ -46,9 +46,11 @@ class Dashboard extends Mahasiswa_Controller
 		$prestasi_saya = $this->db
 			->select('*')
 			->from('Tr_Penerbitan_Pengajuan')
+			->join('Tr_Periode_Penerbitan', 'Tr_Periode_Penerbitan.id_periode = Tr_Penerbitan_Pengajuan.id_periode ', 'left' )
 			->where(
 				[
-					'STUDENTID' => $_SESSION['studentid'],
+					'Tr_Penerbitan_Pengajuan.STUDENTID' => $_SESSION['studentid'],
+					'Tr_Periode_Penerbitan.status' => '1'
 				]
 			)->get()
 			->num_rows();

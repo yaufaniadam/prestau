@@ -184,15 +184,13 @@ class Pengajuan_model extends CI_Model
 		return $this->db->query(
 			"SELECT 
 			-- distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
-			distinct(FORMAT (ps.date, 'MM')) AS bulan 
+			distinct(MONTH(ps.date)) AS bulan 
 			FROM Tr_Pengajuan_Status ps
 			WHERE ps.status_id = 2 
 			AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())
 			ORDER BY bulan ASC
 			"
 		)->result_array();
-
-		
 
 		// SELECT 
 		// distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
@@ -403,5 +401,23 @@ class Pengajuan_model extends CI_Model
 	public function edit_jenis_pengajuan($data, $id)
 	{
 		return $this->db->update('Mstr_Jenis_Pengajuan', $data, array('Jenis_Pengajuan_Id' => $id));
+	}
+
+	public function get_status_pengajuan_perbulan($status, $tahun) {
+		if ($_SESSION['role'] == 5) {
+			$where = 'AND ';
+		} else {
+			$where = '';
+		}
+		
+		//mengambil data keseluruhan pengajuan berdsarkan status
+		return $this->db->query("SELECT COUNT(status_pengajuan_id) jumlah, 
+		MONTH(date) bulan 
+		FROM Tr_Pengajuan_Status 
+		WHERE status_id IN($status) AND YEAR(date)=$tahun
+		GROUP BY MONTH(date) 
+		ORDER BY MONTH(date) ASC
+
+		")->result_array();
 	}
 }

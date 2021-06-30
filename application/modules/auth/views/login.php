@@ -38,7 +38,7 @@
 								<div class="p-5">
 									<div class="text-center">
 										<img src="<?= base_url('public/dist/img/logopps.png'); ?>" />
-										<h1 class="h4 text-gray-900 mb-4"><?= (!$ref) ? "Login SSO" : "Login non SSO"; ?></h1>
+										<h1 class="h5 text-gray-900 mb-4">Login</h1>
 
 									</div>
 
@@ -73,7 +73,7 @@
 										<input type="password" name="password" class="form-control form-control-user" id="password" placeholder="Password">
 									</div>
 
-									<input type="submit" name="submit" class="btn btn-danger btn-user btn-block" value="Login">
+									<input type="submit" name="submit" class="btn btn-success btn-user btn-block" value="Login">
 
 									<hr>
 
