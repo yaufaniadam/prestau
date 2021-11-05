@@ -2,23 +2,16 @@
 	<div class="col-12">
 
 		<div class="card card-success card-outline">
-			<div class="card-header">
-				<a class="nav-s text-danger" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>">
-					<i class="fas fa-fw fa-exclamation-circle"></i> Tampilkan yang perlu diproses</a>
-				</a>&nbsp;
-				<a class=" nav-lilk" href="<?= base_url("admin/pengajuan/index/"); ?>">
-					<i class="fas fa-fw fa-envelope"></i> Tampilkan semua pengajuan</a>
-			</div>
+	
 			<div class="card-body">
 				<?php
 				if ($query) {  ?>
 					<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
 						<thead>
-							<tr>
+							<tr>							
 								<th style="width:50%">Judul</th>
-								<th style="width:50%">Kategori</th>
-								<th style="width:20%">Jenis Pengajuan</th>
-								<th>Mahasiswa</th>
+								<th style="width:50%">Kategori</th>								
+								<th style="width:20%">Status</th>							
 								<th>Tanggal</th>
 							</tr>
 						</thead>
@@ -30,23 +23,15 @@
 							<?php
 							foreach ($query as $pengajuan) {  ?>
 								<tr class="<? ($pengajuan['status_id'] == 2) ? 'proses' : ''; ?> <?= ($pengajuan['status_id'] == 4) ? 'perlu-revisi' : ''; ?>">
-									<td>
-										<a class="judul" href="<?= base_url('mahasiswa/pengajuan/tambah/' . $pengajuan['pengajuan_id']); ?>">
-											<?= $pengajuan['Jenis_Pengajuan']; ?></a>
-									</td>
-									<td class="table-<?= $pengajuan['badge']; ?>"> <?= get_meta_value('judul', $pengajuan['pengajuan_id'], false) ?></a>
-									</td>
-									<td class="table-<?= $pengajuan['badge']; ?>"><?= $pengajuan['status_id']; ?> -
-										<?= $pengajuan['status']; ?>
+									<td> <a class="judul" href="<?= base_url('mahasiswa/pengajuan/tambah/' . $pengajuan['pengajuan_id']); ?>"><?= get_meta_value('judul', $pengajuan['pengajuan_id'], false) ?></a>
 									</td>
 									<td>
-										<p class="m-0">
-											<?= $pengajuan['FULLNAME']; ?>
-										</p>
-										<p class="badge m-0 badge-ijomuda">
-											<?= $pengajuan['NAME_OF_FACULTY']; ?>
-										</p>
+										
+											<?= $pengajuan['Jenis_Pengajuan']; ?>
+									</td>									
+									<td class="table-<?= (($pengajuan['status_id'] == 7) || ($pengajuan['status_id'] == 9)) ? 'birutua' : $pengajuan['badge']; ?>"><?= (($pengajuan['status_id'] == 7) || ($pengajuan['status_id'] == 9)) ? 'Awaiting Verification' : $pengajuan['status'];  ?>
 									</td>
+								
 									<td>
 										<p class="m-0">
 											<?= $pengajuan['date'];	?>

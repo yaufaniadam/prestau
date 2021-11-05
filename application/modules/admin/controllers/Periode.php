@@ -75,13 +75,14 @@ class Periode extends Admin_Controller
 				'tanggal' => $tanggal,
 				'status' => 1
 			];
+	
 
 			$this->db->where('id_periode', $id_periode);
 			$this->db->update('Tr_Periode_Penerbitan', $data);
 
 			$pengajuan = $this->input->post('pengajuan[]');
 
-			$penerima = $this->input->post()['pengajuan_id'];
+			$penerima = $this->input->post(['pengajuan_id']);
 			$pengajuan = $this->input->post('pengajuan[]');
 
 			for ($i = 0; $i < count($penerima); $i++) {
@@ -93,16 +94,6 @@ class Periode extends Admin_Controller
 						'id_pengajuan' => $pengajuan[$i]
 					]
 				)->row_array();
-
-				// $data_for_notif = [
-				// 	'pengirim' => $_SESSION['user_id'],
-				// 	'penerima' => $penerima[$i],
-				// 	'id_pengajuan' => $this_pengajuan['id_pengajuan'],
-				// 	'role' => [3],
-				// 	'id_status_notif' => 10,
-				// ];
-
-				// $this->notif_model->send_notif($data_for_notif);
 
 					//data utk kirim email & notif ke pegawai
 					$data_for_notif = [
@@ -138,6 +129,7 @@ class Periode extends Admin_Controller
 					->set('pengajuan_id', $pengajuan['id_pengajuan'])
 					->insert('Tr_Pengajuan_Status');
 			}
+
 
 			redirect(base_url('/admin/periode/bulan/' . $id_periode));
 		} else {

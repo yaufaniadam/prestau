@@ -72,13 +72,8 @@ class Pengajuan extends Mahasiswa_Controller
 			->join('Mstr_Jenis_Pengajuan jp', 'p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id')
 			->join('V_Mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
 			->join('Tr_Periode_Penerbitan per', 'per.id_periode = pp.id_periode')
-			->where(['pp.STUDENTID' => $user_nim])
+			->where(['pp.STUDENTID' => $user_nim, 'per.status' => 1])
 			->get()->result_array();
-
-		// echo "<pre>";
-		// print_r($data);
-		// echo "</pre>";
-		// die();
 
 		$this->load->view('layout/layout', $data);
 	}

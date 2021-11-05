@@ -9,13 +9,13 @@
 					<div class="col-md-6 text-right">
 						<?php if ($status_periode == 0) { ?>
 							<input type="hidden" name="id_periode" value="<?= $id_periode; ?>">
-							<button type="button" class="btn btn-sm btn-success" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> data-toggle="modal" data-target="#confirm-modal"> <i class="fas fa-paper-plane"></i> 
+							<button type="button" class="btn btn-sm btn-success" <?= (count($daftar_pengajuan) > 0) ? '' : 'disabled'; ?> data-toggle="modal" data-target="#confirm-modal"> <i class="fas fa-paper-plane"></i>
 								Terbitkan reward periode ini
 							</button>
 						<?php } ?>
-				
-									
-						<a href="<?= base_url('admin/periode/export_excel/' . $id_periode); ?>" class="btn btn-warning btn-sm"><i class="fas fa-file-excel"></i> Export ke Excel</a>				
+
+
+						<a href="<?= base_url('admin/periode/export_excel/' . $id_periode); ?>" class="btn btn-warning btn-sm"><i class="fas fa-file-excel"></i> Export ke Excel</a>
 					</div>
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 					</thead>
 					<tbody>
 						<?php
-						
+
 						$total = 0;
 						foreach ($daftar_pengajuan as $pengajuan) {
 							$nominal = $pengajuan['nominal'];
@@ -67,8 +67,12 @@
 									</p> -->
 								</td>
 								<td>
-									<p class="m-0 text-right">
-										<?= number_format($nominal, 2);	?>
+									<p class="m-0">
+										<?php if ($nominal == 0) {
+											echo 'Reward di ketua kelompok';
+										} else {
+											echo "<span class=' text-right'>" . number_format($nominal, 2) . "</span>";
+										}	?>
 									</p>
 								</td>
 
@@ -89,13 +93,18 @@
 								<?php } ?>
 								<?php if ($pengajuan['status_id'] === 10) { ?>
 									<td>
-									<?php  if( $pengajuan['tanggal_pencairan'] == '') { ?>								
-										<button type="button" class="btn btn-primary btn-pencairan" data-toggle="modal" data-target="#pencairanModal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>">
-											<i class="fas fa-cash-register"></i> Cairkan
-										</button>
+										<?php
+										if ($nominal != 0) {
+											if ($pengajuan['tanggal_pencairan'] == '') { ?>
+												<button type="button" class="btn btn-primary btn-pencairan" data-toggle="modal" data-target="#pencairanModal" id="<?= $pengajuan['id_penerbitan_pengajuan']; ?>">
+													<i class="fas fa-cash-register"></i> Cairkan
+												</button>
 										<?php } else {
-											echo "<i class='fas fa-check-circle text-success'></i> sudah dicairkan";
-										} ?>
+												echo "<i class='fas fa-check-circle text-success'></i> sudah dicairkan";
+											}
+										}
+
+										?>
 									</td>
 								<?php } ?>
 
@@ -164,6 +173,7 @@
 	<?= form_open(base_url('admin/periode/bulan')); ?>
 	<?php foreach ($daftar_pengajuan as $pengajuan) {	?>
 		<input type="hidden" name="pengajuan[]" value="<?= $pengajuan['pengajuan_id']; ?>" id="">
+		<input type="hidden" name="id_periode" value="<?= $id_periode; ?>" id="">
 	<?php } ?>
 	<div class="modal-dialog">
 		<div class="modal-content">

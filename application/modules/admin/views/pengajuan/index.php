@@ -2,6 +2,9 @@
 	<div class="col-12">
 
 		<div class="card card-success card-outline">
+		<?php 
+		
+		if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 ) {?>
 			<div class="card-header">
 				<a class="btn btn-danger btn-sm" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>">
 					<i class="fas fa-fw fa-exclamation-circle"></i>
@@ -18,9 +21,10 @@
 					Lolos Verifikasi
 				</a>
 			</div>
+			<?php } ?>
 			<div class="card-body">
 				<?php echo form_open_multipart(base_url("admin/pengajuan/verified/"), '') ?>
-				<?php if ($query) {  ?>
+		
 					<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
 						<thead>
 							<tr>
@@ -74,7 +78,7 @@
 						</tbody>
 					</table>
 					
-				<?php } ?>
+				
 				<?php echo form_close() ?>
 			</div><!-- /.card-body -->
 		</div><!-- /.card -->

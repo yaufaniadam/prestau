@@ -19,18 +19,8 @@
 								<td><a href="<?= base_url('mahasiswa/pengajuan/detail_prestasi/' . $prestasi['id_penerbitan_pengajuan']); ?>"><?= get_meta_value('judul', $prestasi['id_pengajuan'], false); ?></a></td>
 								<td><?= $prestasi['Jenis_Pengajuan']; ?></td>
 								<td><?= $prestasi['nama_periode']; ?></td>
-
-								<td class="text-right">
-								<?php if($prestasi['nominal'] != 0) {
-									echo "<span class='float-left'>Rp</span>" . number_format($prestasi['nominal'], 2);									
-								} else {
-									echo "<p class='text-left'><i class='fas fa-exclamation-triangle text-warning'></i> Reward di ketua kelompok.</p>";	
-								}
-								?>
-									
-								</td>
-								
-								<td><?= $prestasi['status_pencairan'] == 1 ? "<i class='fas fa-check-circle text-success'></i> Dicairkan oleh:<br> " .$prestasi['penerima'] . " (". $prestasi['tanggal_pencairan'] .")"  : "Belum dicairkan"; ?></td>
+								<td class="text-right"><?= "<span class='float-left'>Rp</span>" . number_format($prestasi['nominal'], 2); ?></td>
+								<td><?= $prestasi['status_pencairan'] == 1 ? "Sudah dicairkan pada: <br>" . $prestasi['tanggal_pencairan'] . "<br> oleh: " .$prestasi['penerima']  : "Belum dicairkan"; ?></td>
 							</tr>
 						<?php }
 						?>

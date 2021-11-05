@@ -34,7 +34,7 @@
 
 	<li class="nav-item" id="prestasi_saya">
 		<a class="nav-link" href="<?= base_url("/mahasiswa/pengajuan/prestasi_saya"); ?>">
-			<i class="fas fa-trophy"></i>
+			<i class="fas fa-medal"></i>
 			<span>Prestasi</span>
 		</a>
 	</li>

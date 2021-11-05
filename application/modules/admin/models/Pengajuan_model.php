@@ -46,20 +46,20 @@ class Pengajuan_model extends CI_Model
 	public function get_pengajuan($role)
 	{
 
-		if ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
+		if ($this->session->userdata('role') == 1 ) {
 			$prodi = '';
 		} else {
 			$prodi = "AND u.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
 		}
 
 		if ($role == '') {
-			$id_status = '';
+			$id_status = ' AND ps.status_id NOT IN (1)';
 		} else if ($role == 1) {
 			$id_status = "AND ps.status_id =  9";
 		} else if ($role == 2) {
 			$id_status = "AND (ps.status_id =  2 OR ps.status_id = 5 OR ps.status_id = 7)";
 		} else if ($role == 5) {
-			$id_status = "AND ps.status_id =  8";
+			$id_status = "AND ps.status_id NOT IN (1) AND m.DEPARTMENT_ID = " . $this->session->userdata('id_prodi');
 		} else if ($role == 6) {
 			$id_status = "AND (ps.status_id =  3 OR ps.status_id = 7)";
 		}
@@ -292,9 +292,7 @@ class Pengajuan_model extends CI_Model
 				'urutan' => $key
 			];
 
-			echo '<pre>';
-			print_r($data);
-			echo '</pre>';
+
 
 			// menambahkan field yang belum ada
 			$datafield_exist = $this->db->query(

@@ -1,7 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-
 use PHPMailer\PHPMailer\PHPMailer;
-
 class Dashboard extends Admin_Controller
 {
 	public function __construct()
@@ -22,34 +20,25 @@ class Dashboard extends Admin_Controller
 			FROM Tr_Pengajuan p 
 			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id"
 		)->result_array();
-
 		$data['title'] = 'Dashboard';
 		$data['view'] = 'dashboard/index';
 		$this->load->view('layout/layout', $data);
 	}
 	public function dasbor()
 	{
-		$data['pengajuan_perlu_diproses'] = $this->pengajuan_model->pengajuan_perlu_diproses();
-		$data['pengajuan_selesai'] = $this->pengajuan_model->pengajuan_selesai();
-		$data['nama_bulan'] = $this->pengajuan_model->getbulan();
-		$data['jenis_pengajuan'] = $this->db->query(
-			"SELECT 
-			DISTINCT(jp.Jenis_Pengajuan),
-			jp.Jenis_Pengajuan_Id
-			FROM Tr_Pengajuan p 
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id"
-		)->result_array();
-
-		$tahun = date('Y');
-
-		$data['masuk'] = $this->pengajuan_model->get_status_pengajuan_perbulan(2, $tahun);
-
-		$data['reward'] = $this->pengajuan_model->get_status_pengajuan_perbulan(10, $tahun);
-
+		// $data['pengajuan_perlu_diproses'] = $this->pengajuan_model->pengajuan_perlu_diproses();
+		// $data['pengajuan_selesai'] = $this->pengajuan_model->pengajuan_selesai();
+		// $data['nama_bulan'] = $this->pengajuan_model->getbulan();
+		// $data['jenis_pengajuan'] = $this->db->query(
+		// 	"SELECT 
+		// 	DISTINCT(jp.Jenis_Pengajuan),
+		// 	jp.Jenis_Pengajuan_Id
+		// 	FROM Tr_Pengajuan p 
+		// 	LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id"
+		// )->result_array();
 		$data['title'] = 'Dashboard';
-		$data['view'] = 'dashboard/index';
+		$data['view'] = 'dashboard/index2';
 		$this->load->view('layout/layout', $data);
-
-		
 	}
+
 }

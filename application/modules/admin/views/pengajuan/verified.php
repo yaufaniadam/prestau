@@ -6,8 +6,7 @@
         Berikut ini pengajuan yang lolos Verifikasi. Pilih pengajuan lalu pilih periode penerbitan.
       </div>
       <div class="card-body">
-        <?php echo form_open_multipart(base_url("admin/pengajuan/verified/"), '') ?>
-
+        <?php echo form_open_multipart(base_url("admin/pengajuan/verified/"), 'class="lolos" id="lolos"') ?>
         <table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
           <thead>
             <tr>
@@ -18,43 +17,42 @@
               <th>Tanggal</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="checkArray">
             <?php
 
-							foreach ($query as $pengajuan) {
-							?>
-            <tr
-              class="<? ($pengajuan['status_id'] == 2) ? 'proses' : ''; ?> <?= ($pengajuan['status_id'] == 4) ? 'perlu-revisi' : ''; ?>">
-              <td class="text-center align-middle">
-                <input type="checkbox" name="pengajuan_id[]" value="<?= $pengajuan['pengajuan_id']; ?>" class="check">
-              </td>
-              <td>
-                <a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
-                  <?= get_meta_value('judul', $pengajuan['pengajuan_id'], false) ?></a>
-              </td>
-              <td>
-                <a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
-                  <?= $pengajuan['Jenis_Pengajuan']; ?></a>
-              </td>
+            foreach ($query as $pengajuan) {
+            ?>
+              <tr class="<?= ($pengajuan['status_id'] == 2) ? 'proses' : ''; ?> <?= ($pengajuan['status_id'] == 4) ? 'perlu-revisi' : ''; ?>">
+                <td class="text-center align-middle">
+                  <input type="checkbox" name="pengajuan_id[]" value="<?= $pengajuan['pengajuan_id']; ?>" class="check">
+                </td>
+                <td>
+                  <a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
+                    <?= get_meta_value('judul', $pengajuan['pengajuan_id'], false) ?></a>
+                </td>
+                <td>
+                  <a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
+                    <?= $pengajuan['Jenis_Pengajuan']; ?></a>
+                </td>
 
-              <td>
-                <p class="m-0">
-                  <?= $pengajuan['FULLNAME']; ?>
-                </p>
-                <p class="badge m-0 badge-ijomuda">
-                  <?= $pengajuan['NAME_OF_DEPARTMENT']; ?>
-                </p>
-              </td>
-              <td>
-                <p class="m-0">
-                  <?= $pengajuan['date'];	?>
-                </p>
-                <p class="badge m-0 badge-warning">
-                  <?= $pengajuan['time'];	?>
-                </p>
-              </td>
-              </td>
-            </tr>
+                <td>
+                  <p class="m-0">
+                    <?= $pengajuan['FULLNAME']; ?>
+                  </p>
+                  <p class="badge m-0 badge-ijomuda">
+                    <?= $pengajuan['NAME_OF_DEPARTMENT']; ?>
+                  </p>
+                </td>
+                <td>
+                  <p class="m-0">
+                    <?= $pengajuan['date'];  ?>
+                  </p>
+                  <p class="badge m-0 badge-warning">
+                    <?= $pengajuan['time'];  ?>
+                  </p>
+                </td>
+                </td>
+              </tr>
             <?php  } ?>
           </tbody>
         </table>
@@ -64,12 +62,13 @@
           <div class="col-md-4">
             <select name="periode_id" class="form-control" id="exampleFormControlSelect1">
               <?php foreach ($daftar_periode as $periode) { ?>
-              <option value="<?= $periode['id_periode']; ?>"><?= $periode['nama_periode']; ?></option>
+                <option value="<?= $periode['id_periode']; ?>"><?= $periode['nama_periode']; ?></option>
               <?php } ?>
             </select>
           </div>
           <div class="col-md-4">
             <input type="submit" name="submit" class="btn btn-success" value="Simpan" />
+
           </div>
         </div>
 
@@ -88,26 +87,37 @@
 <script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <script>
-$(document).ready(function() {
-  var state = false
+  $(document).ready(function() {
+    var state = false
 
-  $('#check_all').click(function() {
-    if (state == false) {
-      state = true
-      $('.check').prop('checked', true);
-    } else {
-      state = false
-      $('.check').prop('checked', false);
-    }
-  });
+    $('#check_all').click(function() {
+      if (state == false) {
+        state = true
+        $('.check').prop('checked', true);
+      } else {
+        state = false
+        $('.check').prop('checked', false);
+      }
+    });
 
-  <?php if ($title != 'Pengajuan telah diverifikasi') { ?>
-  $('#pengajuan-desc').DataTable({
-    "bPaginate": false,
-    "bLengthChange": false,
-    "bFilter": false,
-    "bInfo": false,
+
+    $('#lolos').submit(function() {
+      var check = $('#checkArray').find('input[type=checkbox]:checked').length > 0;
+
+      if (check === false) {
+        alert('Centang minimal satu Judul pengajuan');
+        return false;
+      }
+    });
+
+
+    <?php if ($title != 'Pengajuan telah diverifikasi') { ?>
+      $('#pengajuan-desc').DataTable({
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false,
+      });
+    <?php } ?>
   });
-  <?php } ?>
-});
 </script>

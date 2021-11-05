@@ -280,7 +280,7 @@ function tampil_notif()
 			<?php	}	?>
 
 			<a class="dropdown-item text-center medium text-gray-500" href="#<? //= base_url('notif'); 
-																				?>">Lihat semua Notifikasi</a>
+																																				?>">Lihat semua Notifikasi</a>
 		</div>
 	</li>
 	<script type="text/javascript">
@@ -319,20 +319,23 @@ function get_meta_value($key, $id_pengajuan, $file)
 		->from('Mstr_Fields mf')
 		->join('Tr_Field_Value fv', 'mf.field_id=fv.field_id', 'left')
 		->where(array("mf.key" => $key, 'fv.pengajuan_id' => $id_pengajuan))
-		->get()
-		->row_array();
+		->get();
 
-	if ($file == true) {
-		$media = $CI->db->select("*")->from('Tr_Media')->where(array('id' => $value['value']))->get()->row_array();
-		$filename = explode('/dokumen/', $media['file']);
-		return array(
-			'file_id' => $media['id'],
-			'file' => $media['file'],
-			'thumb' => $media['thumb'],
-			'filename' => $filename[1],
-		);
+	if ($value->num_rows() > 0) {
+		if ($file == true) {
+			$media = $CI->db->select("*")->from('Tr_Media')->where(array('id' => $value->row_array()['value']))->get()->row_array();
+			$filename = explode('/dokumen/', $media['file']);
+			return array(
+				'file_id' => $media['id'],
+				'file' => $media['file'],
+				'thumb' => $media['thumb'],
+				'filename' => $filename[1],
+			);
+		} else {
+			return $value->row_array()['value'];
+		}
 	} else {
-		return $value['value'];
+		return 'gada';
 	}
 }
 function get_file($id)
@@ -357,24 +360,36 @@ function getUsersbyRole($role, $prodi)
 function konversiAngkaKeHuruf($angka)
 {
 
-    $huruf = array(
-        1 =>   'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-        'O',
-        'P'
-    );
+	$huruf = array(
+		1 =>   'A',
+		'B',
+		'C',
+		'D',
+		'E',
+		'F',
+		'G',
+		'H',
+		'I',
+		'J',
+		'K',
+		'L',
+		'M',
+		'N',
+		'O',
+		'P'
+	);
 
-    return  $huruf[$angka];
+	return  $huruf[$angka];
+}
+
+function pengajuan_verified() {
+
+	$CI = &get_instance();
+	return $CI->db->select("*")
+				->from("Tr_Pengajuan p")
+				->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=p.pengajuan_id")
+				->where([
+					"ps.status_id =" => 7
+				])->get()
+				->num_rows();
 }

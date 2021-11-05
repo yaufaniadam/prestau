@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
 
-
+    <p>Pilih kategori di bawah ini.</p>
     <div class="accordion" id="accordionExample">
 
       <?php foreach ($jenis_pengajuan as $kategori) : ?>
@@ -18,7 +18,7 @@
           <div id="collapse-<?= $kategori['Jenis_Pengajuan_Id']; ?>" class="collapse" aria-labelledby="heading-<?= $kategori['Jenis_Pengajuan_Id']; ?>" data-parent="#accordionExample">
             <div class="card-body">
               <?= $kategori['deskripsi']; ?>
-              <a class="btn btn-md" href="<?= base_url('mahasiswa/surat/baru/' . $kategori['Jenis_Pengajuan_Id']); ?>">Ajukan Surat</a>
+              <a class="btn btn-md btn-success" href="<?= base_url('mahasiswa/surat/baru/' . $kategori['Jenis_Pengajuan_Id']); ?>">Ajukan Surat</a>
 
 
 

@@ -30,14 +30,21 @@ class Pengajuan extends Admin_Controller
 
 				$queryp = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object();
 				$jenis_pengajuan_id = $queryp->Jenis_Pengajuan_Id;
+				//cek apakah pengajuan ini memiliki field anggota
 				$is_field_anggota_exist = $this->db->get_where(
 					'Tr_Pengajuan_Field',
 					[
 						'Jenis_Pengajuan_Id' => $jenis_pengajuan_id,
-						'field_id' => 77
+						'field_id' => 77 // field anggota
 					]
 				)->num_rows();
 
+				// mengambil tipe reward dari jenis pengajuan. ada 4 tipe reward			
+				// 1. Individu (id = 1)
+				// 2. Kelompok (Ketua dan anggota memperoleh nominal yang berbeda) (id = 2)
+				// 3. Kelompok (Reward diberikan kepada kelompok, bukan kepada tiap anggota) (id = 3)
+				// 4. Berdasarkan biaya yang dikeluarkan oleh mahasiswa (id = 0)
+				
 				$tipe_reward = $this->db->get_where(
 					'Mstr_Jenis_Pengajuan',
 					[
@@ -65,9 +72,6 @@ class Pengajuan extends Admin_Controller
 							];
 							$this->db->insert('Tr_Penerbitan_Pengajuan', $data);
 
-							// echo "<pre>";
-							// print_r($data);
-							// echo "</pre>";
 						}
 
 						// die();
@@ -145,12 +149,6 @@ class Pengajuan extends Admin_Controller
 				}
 			}
 
-			//  $this->db->set('status_id', 9)
-			// 	->set('pic', $this->session->userdata('user_id'))
-			// 	->set('date', 'getdate()', FALSE)
-			// 	->set('pengajuan_id', $pengajuan_id)
-			// 	->insert('Tr_Pengajuan_Status');
-
 			redirect(base_url('admin/periode/bulan/' . $periode_id));
 		} else {
 			$data['query'] = $this->pengajuan_model->getVerifiedPengajuan();
@@ -205,6 +203,25 @@ class Pengajuan extends Admin_Controller
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($reward));
+	}
+
+	public function prestasi_prodi()
+	{
+		$data['title'] = 'Prestasi Prodi';
+		$data['view'] = 'pengajuan/prestasi_prodi';
+		$prodi = $_SESSION['id_prodi'];
+
+		$data['prestasi'] =
+			$this->db->select('*')
+			->from('Tr_Penerbitan_Pengajuan pp')
+			->join('Tr_Pengajuan p', 'pp.id_pengajuan = p.pengajuan_id', 'left')
+			->join('Mstr_Jenis_Pengajuan jp', 'p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id')
+			->join('V_Mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
+			->join('Tr_Periode_Penerbitan per', 'per.id_periode = pp.id_periode')
+			->where(['m.DEPARTMENT_ID' => $prodi, 'per.status' => 1])
+			->get()->result_array();
+
+		$this->load->view('layout/layout', $data);
 	}
 
 
