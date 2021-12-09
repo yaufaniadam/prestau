@@ -1,27 +1,30 @@
 <div class="row">
 	<div class="col-12">
 
-		<div class="card card-success card-outline">
-		<?php 
-		
-		if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 ) {?>
-			<div class="card-header">
-				<a class="btn btn-danger btn-sm" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>">
-					<i class="fas fa-fw fa-exclamation-circle"></i>
-					Perlu Diproses
-				</a>
-				
-				<a class="btn btn-sm btn-warning" href="<?= base_url("admin/pengajuan/index/"); ?>">
-					<i class="fas fa-fw fa-envelope"></i>
-					Semua Pengajuan
-				</a>
 
-				<a class="btn btn-sm btn-success" href="<?= base_url("admin/pengajuan/verified/"); ?>">
-					<i class="fas fa-fw fa-envelope"></i>
-					Lolos Verifikasi
-				</a>
-			</div>
+		<div class="card card-success card-outline">
+			
+		<?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 ) { 
+			 $uri = $this->uri->uri_string();
+			?>
+
+			<ul class="nav nav-tabs pt-3 pl-4  bg-perak">
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/pengajuan/index/1') ? 'active' :''; ?>" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>"><i class="fas fa-fw fa-exclamation-circle"></i> Perlu Diproses</a>
+				</li>
+		
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/pengajuan/index') ? 'active' :''; ?>" href="<?= base_url("admin/pengajuan/index/"); ?>"><i class="fas fa-fw fa-envelope"></i> Semua Pengajuan</a>
+				</li>
+				
+				<li class="nav-item">
+					<a class="nav-link" href="<?= base_url("admin/pengajuan/verified/"); ?>"><i class="fas fa-fw fa-award"></i> Lolos Verifikasi</a>
+				</li>
+				
+			</ul>
+		
 			<?php } ?>
+
 			<div class="card-body">
 				<?php echo form_open_multipart(base_url("admin/pengajuan/verified/"), '') ?>
 		
@@ -34,6 +37,7 @@
 								<th style="width:20%">Status</th>
 								<th>Mahasiswa</th>
 								<th>Tanggal</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -72,6 +76,8 @@
 											<?= $pengajuan['time'];	?>
 										</p>
 									</td>
+									<td>
+									<a href="" style="color:#fff;" title="Hapus" class="delete btn btn-sm  btn-circle btn-danger" data-href="<?= base_url('admin/pengajuan/hapus/' . $pengajuan['pengajuan_id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 									</td>
 								</tr>
 							<?php  } ?>

@@ -50,7 +50,7 @@ class Pengajuan extends Mahasiswa_Controller
 			WHERE p.nim = $nim
 			AND ps.status_pengajuan_id = (SELECT MAX(status_pengajuan_id) 
 													FROM Tr_Pengajuan_Status  
-													WHERE pengajuan_id = p.pengajuan_id)"
+													WHERE pengajuan_id = p.pengajuan_id ) AND NOT ps.status_id=20"
 		)->result_array();
 
 		// print_r($data);
@@ -133,15 +133,20 @@ class Pengajuan extends Mahasiswa_Controller
 			'nim' => $this->session->userdata('studentid'),
 		);
 
+		//query ini buat apa ya? coba kita cek
 		$field = $this->db->select('*')->from('Tr_Pengajuan_Field')
 			->join('Mstr_Fields', 'Mstr_fields.field_id=Tr_Pengajuan_Field.field_id', 'left')
 			->where(array('Jenis_Pengajuan_Id' => $id))->get()
 			->result_array();
 
+			// echo '<pre>'; print_r($field); echo '</pre>';
+
 		$data = $this->security->xss_clean($data);
 		$result = $this->pengajuan_model->tambah($data);
+
 		//ambil last id surat yg baru diinsert
 		$insert_id = $this->db->insert_id();
+
 		// set status surat
 		$data_user = $this->session->userdata('user_id');
 		$this->db->set('pengajuan_id', $insert_id)
@@ -152,15 +157,17 @@ class Pengajuan extends Mahasiswa_Controller
 
 		// //ambil id surat berdasarkan last id status surat
 		$inserted_id = $this->db->select('pengajuan_id')->from('Tr_Pengajuan_Status')->where('status_pengajuan_id=', $this->db->insert_id())->get()->row_array();
-		// // ambil keterangan surat berdasar kategori surat
-		// $kat_surat = $this->db->select('kat_keterangan_surat')->from('kategori_surat')->where('id=', $id)->get()->row_array();
+
+
 		$field_id = $this->db->query(
 			"SELECT Tr_Pengajuan_Field.field_id  FROM Mstr_Jenis_Pengajuan
 			LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.Jenis_Pengajuan_Id = Mstr_Jenis_Pengajuan.Jenis_Pengajuan_Id
 			WHERE Mstr_Jenis_Pengajuan.Jenis_Pengajuan_Id = $id AND Tr_Pengajuan_Field.terpakai = 1"
 		)->result_array();
 
-		// // explode kterangan surat
+		// echo '<pre>'; print_r($field_id); echo '</pre>';
+
+		// // // explode kterangan surat
 
 		// // foreach keterangan surat, lalu masukkan nilai awal (nilai kosong) berdasakan keterangan dari kategori surat kedalam field_value
 		foreach ($field_id as $key => $id_kat) {
@@ -174,23 +181,13 @@ class Pengajuan extends Mahasiswa_Controller
 			);
 		}
 
+		$this->session->set_flashdata('msg', 'Berhasil!');
+		redirect(base_url('mahasiswa/pengajuan/tambah/' . $insert_id));
+
 		// foreach ($field_id as $ad) {
 		// 	print_r($ad['field_id']);
 		// }
 
-		// $data_notif = array(
-		// 	'id_surat' => $insert_id2['id_surat'],
-		// 	'id_status' => 1,
-		// 	'kepada' => $_SESSION['user_id'],
-		// 	'role' => array(3)
-		// );
-
-		// $results = $this->notif_model->send_notif($data_notif);
-
-		// if ($results) {
-		// 	$this->session->set_flashdata('msg', 'Berhasil!');
-		redirect(base_url('mahasiswa/pengajuan/tambah/' . $insert_id));
-		// }
 	}
 
 	public function getAnggota()
@@ -627,8 +624,8 @@ class Pengajuan extends Mahasiswa_Controller
 		echo json_encode(array(
 			"statusCode" => 200,
 			"id" => $id,
-			'thumb' => ($media['thumb']) ? $thumb : 'gada',
-			'file' => ($media['file']) ? $file : 'gada',
+			'thumb' => ($media['thumb']) ? $thumb : '',
+			'file' => ($media['file']) ? $file : '',
 			'hapus' => $hapus
 		));
 		//}
@@ -725,62 +722,17 @@ class Pengajuan extends Mahasiswa_Controller
 		}
 	}
 
-	// public function edit()
-	// {
-	//   $data['query'] = $this->pengajuan_model->get_surat();
-	//   $data['title'] = 'Ajukan Surat';
-	//   $data['view'] = 'surat/tambah';
-	//   $this->load->view('layout/layout', $data);
-	// }
-	// public function hapus($id_surat = 0)
-	// {
-	//   $surat_exist = $this->pengajuan_model->get_detail_surat($id_surat);
-	//   if ($surat_exist['id_status'] == 4) {
-	//     $this->db->delete('surat', array('id' => $id_surat));
-	//     $this->session->set_flashdata('msg', 'Surat berhasil dihapus');
-	//     redirect(base_url('mahasiswa/surat'));
-	//   } else {
-	//     $this->session->set_flashdata('msg', 'Surat Gagal dihapus');
-	//     redirect(base_url('mahasiswa/surat'));
-	//   }
-	// }
+	public function hapus($id)
+	{
+	
+		$hapus = $this->db->set('status_id', '20')
+					->set('date', date('Y-m-d h:m:s'))
+					->set('pengajuan_id', $id)
+					->set('pic', $this->session->userdata('studentid'))
+					->insert('Tr_Pengajuan_Status');
 
-	// public function tampil_surat($id_surat)
-	// {
-	//   $data['title'] = 'Tampil Surat';
-	//   $data['surat'] = $this->pengajuan_model->get_detail_surat($id_surat);
-	//   $data['no_surat'] = $this->pengajuan_model->get_no_surat($id_surat);
-	//   $kategori = $data['surat']['kategori_surat'];
-	//   $nim = $data['surat']['username'];
+		$this->session->set_flashdata('msg', 'Pengajuan berhasil dihapus!');
+		redirect(base_url('mahasiswa/pengajuan/pengajuan_saya'));
+	}
 
-	//   //$this->load->view('admin/surat/tampil_surat', $data);
-
-	//   $mpdf = new \Mpdf\Mpdf([
-	//     'tempDir' => __DIR__ . '/pdfdata',
-	//     'mode' => 'utf-8',
-	//     // 'format' => [24, 24],
-	//     'format' => 'A4',
-	//     'margin_left' => 0,
-	//     'margin_right' => 0,
-	//     'margin_bottom' => 20,
-	//     'margin_top' => 30,
-	//     'float' => 'left'
-	//   ]);
-
-	//   $view = $this->load->view('admin/surat/tampil_surat', $data, TRUE);
-
-	//   $mpdf->SetHTMLHeader('
-	// 	<div style="text-align: left; margin-left:2cm">
-	// 			<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
-	// 	</div>');
-	//   $mpdf->SetHTMLFooter('
-
-	// 	<div style="text-align:center; background:red;">
-	// 		<img width="" height="" src="' . base_url() . '/public/dist/img/footerkop-pasca.jpg" />
-	// 	</div>');
-
-	//   $mpdf->WriteHTML($view);
-
-	//   $mpdf->Output('Surat-' . $kategori . '-' . $nim . '.pdf', 'D');
-	// }
 }

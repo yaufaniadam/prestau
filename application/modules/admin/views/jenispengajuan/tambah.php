@@ -73,138 +73,18 @@ echo form_open_multipart(base_url('admin/jenispengajuan/tambah/'), 'class="form-
 						<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : '';  ?>" name="Jenis_Pengajuan" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="Jenis_Pengajuan">
 						<span class="invalid-feedback"><?php echo form_error('Jenis_Pengajuan'); ?></span>
 					</div>
-				</div>
-
-				<div class="form-group row">
-					<label for="Jenis_Pengajuan" class="col-md-3 control-label">Tipe Hadiah</label>
-					<div class="col-md-9">
-						<select class="form-control" name="tipe_reward" id="tipe_reward">
-							<option value="1">1. Individu</option>
-							<option value="2">2. Kelompok (per individu)</option>
-							<option value="3">3. Kelompok</option>
-							<option value="0">4. Hak cipta</option>
-						</select>
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label for="Jenis_Pengajuan" class="col-md-3 control-label">Nominal</label>
-					<div class="col-md-9">
-						<input type="text" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ''; ?>" name="nominal" class="form-control <?= (form_error('Jenis_Pengajuan')) ? 'is-invalid' : ''; ?>" id="nominal">
-						<span class="invalid-feedback"><?php echo form_error('Jenis_Pengajuan'); ?></span>
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label for="deskripsi" class="col-md-3 control-label">Deskripsi</label>
-					<div class="col-md-9">
-
-						<div class="<?= (form_error('deskripsinya')) ? 'summernote-is-invalid' : ''; ?>"><textarea name="deskripsinya" class="textarea-summernote"><?= (validation_errors()) ? set_value('deskripsinya') : '';  ?></textarea>
-						</div>
-						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('deskripsinya'); ?></span>
-					</div>
-				</div>
-
-				<div class="form-group row">
-					<label for="template" class="col-md-3 control-label">Form Field
-						<small id="" class="form-text text-muted">Seret lalu lepaskan form field yang tidak aktif ke kolom form field aktif.</small>
-					</label>
-					<div class="col-md-4">
-						<div class="card card-success card-outline">
-							<div class="card-header">Field terpakai</div>
-							<div class="card-body box-profile ">
-								<?php
-								$default_field = $this->db->get_where('Mstr_Fields', array('key' => 'judul'))->row_array();
-								?>
-								<ul id="sortable2" class="connectedSortable errorTxt">
-									<li class="ui-state-highlight" id="item-<?= $default_field['field_id']; ?>">
-										<?= $default_field['field']; ?>
-									</li>
-									<span id="errNm2"></span>
-								</ul>
-								<input type="hidden" name="fields" data-error="#errNm2" class="field_surat" id="" value="Sort=<?= $default_field['field_id']; ?>">
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-5">
-						<div class="card card-success card-outline">
-							<div class="card-header">Field tidak terpakai</div>
-							<div class="card-body box-profile">
-								<ul id="sortable1" style="list-style: none;" class="connectedSortable keterangan_surat list-group pl-0">
-									<?php
-									foreach ($all_fields as $field) {
-									?>
-										<li class="ui-state-highlight <?= ($field['field_id'] == 1) ? 'd-none' : ''; ?> static" id="item-<?= $field['field_id']; ?>">
-											<?= $field['field']; ?>
-										</li>
-									<?php  }  ?>
-								</ul>
-							</div>
-						</div>
-
-						<span class="text-danger" style="line-height:1.5rem;font-size: 80%;">
-							<?php echo form_error('kat_keterangan_surat[]'); ?>
-						</span>
-
-						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('template'); ?></span>
-					</div>
-				</div>
-
+				</div>	
+				
 				<div class="form-group row">
 					<label for="kode" class="col-md-3 control-label"></label>
 					<div class="col-md-9">
-						<input type="submit" name="submit" value="Edit Kategori Surat" class="btn btn-perak btn-block">
+						<input type="submit" name="submit" value="Tambah Kategori Surat" class="btn btn-perak btn-block">
 					</div>
 				</div>
 
 			</div>
 		</div>
 	</div>
-
-
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script>
-		$(function() {
-			$("#sortable1, #sortable2").sortable({
-				connectWith: ".connectedSortable"
-
-			}).disableSelection();
-		});
-
-		$("#sortable2").sortable({
-			placeholder: "ui-state-active",
-			cancel: ".disable-sort-item",
-			update: function(event, ui) {
-				var sorted = $("#sortable2").sortable("serialize", {
-					key: "sort"
-				});
-				console.log(sorted);
-				$('.field_surat').val(sorted);
-				$("#sortable2").css('border-color', '#eeeeee');
-				$("#errNm2").html('');
-			},
-		});
-
-		var update_tipe_reward = function() {
-			if ($("#tipe_reward").val() == 0) {
-				$("#nominal").prop("disabled", true)
-			} else(
-				$("#nominal").prop("disabled", false)
-			)
-		};
-		$(update_tipe_reward);
-		$("#tipe_reward").change(update_tipe_reward);
-
-		$(document).on('change', '.checkbox_keterangan_surat', function() {
-			if (this.checked) {
-				$(this).parent('li.list-group-item').addClass('active');
-			} else {
-				$(this).parent('li.list-group-item').removeClass('active');
-			}
-		});
-		$('.checkbox_keterangan_surat:checked').parent('li.list-group-item').addClass('active');
-	</script>
 
 </div>
 <?php echo form_close(); ?>

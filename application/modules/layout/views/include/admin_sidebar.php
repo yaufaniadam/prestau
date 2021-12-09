@@ -81,13 +81,13 @@
 					<span>Jenis Pengajuan</span>
 				</a>
 			</li>
-
+<!-- 
 			<li class="nav-item" id="menu_kategoripengajuan">
 				<a class="nav-link" href="<?= base_url("admin/jenispengajuan/nominal_penghargaan"); ?>">
 					<i class="fas fa-fw fa-list"></i>
 					<span>Nominal Reward</span>
 				</a>
-			</li>
+			</li> -->
 
 		<?php } ?>
 

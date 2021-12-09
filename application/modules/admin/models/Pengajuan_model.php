@@ -46,7 +46,7 @@ class Pengajuan_model extends CI_Model
 	public function get_pengajuan($role)
 	{
 
-		if ($this->session->userdata('role') == 1 ) {
+		if ($this->session->userdata('role') == 1) {
 			$prodi = '';
 		} else {
 			$prodi = "AND u.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
@@ -54,8 +54,9 @@ class Pengajuan_model extends CI_Model
 
 		if ($role == '') {
 			$id_status = ' AND ps.status_id NOT IN (1)';
+			
 		} else if ($role == 1) {
-			$id_status = "AND ps.status_id =  9";
+			$id_status = "AND ps.status_id =  2";
 		} else if ($role == 2) {
 			$id_status = "AND (ps.status_id =  2 OR ps.status_id = 5 OR ps.status_id = 7)";
 		} else if ($role == 5) {
@@ -76,7 +77,7 @@ class Pengajuan_model extends CI_Model
 			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
 			LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
 			WHERE ps.status_id = (SELECT MAX(status_id) FROM Tr_Pengajuan_Status ps WHERE ps.pengajuan_id = p.pengajuan_id) 
-			$id_status"
+			$id_status AND NOT ps.status_id=20"
 		);
 		return $result = $query->result_array();
 	}
@@ -292,8 +293,6 @@ class Pengajuan_model extends CI_Model
 				'urutan' => $key
 			];
 
-
-
 			// menambahkan field yang belum ada
 			$datafield_exist = $this->db->query(
 				"SELECT field_id FROM Tr_Pengajuan_Field 
@@ -390,10 +389,21 @@ class Pengajuan_model extends CI_Model
 		return $result = $query->result_array();
 	}
 
-	public function getAllFieldsPengajuan()
+	public function getAllFieldsPengajuan($jenis_pengajuan_id, $aktif)
 	{
-		$query = $this->db->query("SELECT * FROM Mstr_Fields");
+		$query = $this->db->query(
+			"SELECT * FROM Mstr_Fields
+		LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
+			WHERE Tr_Pengajuan_Field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
+				" AND Tr_Pengajuan_Field.terpakai=" . $aktif
+		);
+
 		return $result = $query->result_array();
+	}
+
+	public function edit_form_field($data, $id)
+	{
+		return $this->db->update('Mstr_Fields', $data, array('field_id' => $id));
 	}
 
 	public function edit_jenis_pengajuan($data, $id)
@@ -401,13 +411,14 @@ class Pengajuan_model extends CI_Model
 		return $this->db->update('Mstr_Jenis_Pengajuan', $data, array('Jenis_Pengajuan_Id' => $id));
 	}
 
-	public function get_status_pengajuan_perbulan($status, $tahun) {
+	public function get_status_pengajuan_perbulan($status, $tahun)
+	{
 		if ($_SESSION['role'] == 5) {
 			$where = 'AND ';
 		} else {
 			$where = '';
 		}
-		
+
 		//mengambil data keseluruhan pengajuan berdsarkan status
 		return $this->db->query("SELECT COUNT(status_pengajuan_id) jumlah, 
 		MONTH(date) bulan 

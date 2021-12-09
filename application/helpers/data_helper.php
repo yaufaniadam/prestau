@@ -321,22 +321,27 @@ function get_meta_value($key, $id_pengajuan, $file)
 		->where(array("mf.key" => $key, 'fv.pengajuan_id' => $id_pengajuan))
 		->get();
 
+
+
 	if ($value->num_rows() > 0) {
+
 		if ($file == true) {
 			$media = $CI->db->select("*")->from('Tr_Media')->where(array('id' => $value->row_array()['value']))->get()->row_array();
 			$filename = explode('/dokumen/', $media['file']);
-			return array(
+			$value = array(
 				'file_id' => $media['id'],
 				'file' => $media['file'],
 				'thumb' => $media['thumb'],
 				'filename' => $filename[1],
 			);
 		} else {
-			return $value->row_array()['value'];
+			$value = $value->row_array()['value'];
 		}
 	} else {
-		return 'gada';
+		$value = "Not found";
 	}
+
+	return $value;
 }
 function get_file($id)
 {
@@ -392,4 +397,22 @@ function pengajuan_verified() {
 					"ps.status_id =" => 7
 				])->get()
 				->num_rows();
+}
+
+//ambil nominal reward dari table berdasarkan urutan/order
+//order 0 adalah ketua
+//order 1 adlah anggota
+//khusus untuk jenis reward ke 2 (ketua kelompok dan anggota dapat nominal reward yg berbeda)
+function get_nominal_byorder($id_pengajuan, $order) {
+
+	$CI = &get_instance();
+
+	$nominal = $CI->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+		"Jenis_Pengajuan_Id" => $id_pengajuan,
+		"order" => $order
+	])->get()->row_array();
+
+	return $nominal['nominal'];
+
+
 }

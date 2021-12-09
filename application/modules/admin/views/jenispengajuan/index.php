@@ -7,13 +7,22 @@
 					<thead>
 						<tr>
 							<th>Jenis Pengajuan</th>
-							<th>Induk</th>
+							<!-- <th>Induk</th> -->
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ($jenis_pengajuan as $jenis) :
-							if ($jenis['parent'] == 0 && check_child($jenis['Jenis_Pengajuan_Id'])->num_rows() == 0) {
+						<?php foreach ($jenis_pengajuan as $jenis) : ?>
+
+							<tr>
+								<td><?= $jenis['Jenis_Pengajuan']; ?></td>
+								<td class="text-center"><a class="btn btn-info btn-sm" href="<?= base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) ;?>""><i class='fas fa-pencil-alt'></i> Edit</a></td>
+							</tr>
+
+
+							<?php						
+
+						/*	if ($jenis['parent'] == 0 && check_child($jenis['Jenis_Pengajuan_Id'])->num_rows() == 0) {
 
 
 								echo "<tr>";
@@ -41,7 +50,7 @@
 
 								echo "<td class='text-center'><a class='btn btn-info btn-sm' href='" . base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) . "'><i class='fas fa-pencil-alt'></i> Edit</a></td>";
 								echo "</tr>";
-							}
+							} */
 						endforeach;
 						?>
 

@@ -2,18 +2,23 @@
 	<div class="col-12">
 
 		<div class="card card-success card-outline">
-			<div class="card-header">
-				<a class="btn btn-sm btn-danger" href="<?= base_url("admin/periode/index/1"); ?>">
-					<i class="fas fa-fw fa-exclamation-circle"></i>
-					Sudah Diterbitkan
-				</a>
-				</a>&nbsp;
-				<a class="btn btn-sm btn-warning" href="<?= base_url("admin/periode/index/0"); ?>">
-					<i class="fas fa-fw fa-envelope"></i>
-					Belum Diterbitkan
-				</a>
-				<a href="<?= base_url('admin/periode/tambah'); ?>" class="btn btn-sm btn-success float-right "><i class="fas fa-plus"></i> Buat Periode</a>
-			</div>
+		<?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 ) { 
+			 $uri = $this->uri->uri_string();
+			?>
+
+			<ul class="nav nav-tabs pt-3 pl-4  bg-perak">
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/periode/index/1') ? 'active' :''; ?>" href="<?= base_url("admin/periode/index/1"); ?>"><i class="fas fa-fw fa-exclamation-circle"></i> Sudah Diterbitkan</a>
+				</li>
+		
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/periode/index/0') ? 'active' :''; ?>" href="<?= base_url("admin/periode/index/0"); ?>"><i class="fas fa-fw fa-envelope"></i> 	Belum Diterbitkan</a>
+				</li>
+			
+			</ul>
+		
+			<?php } ?>
+
 		
 			<div class="card-body">
 				<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">

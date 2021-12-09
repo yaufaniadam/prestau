@@ -4,8 +4,7 @@
 		<div class="card card-success card-outline">
 	
 			<div class="card-body">
-				<?php
-				if ($query) {  ?>
+				
 					<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
 						<thead>
 							<tr>							
@@ -13,21 +12,19 @@
 								<th style="width:50%">Kategori</th>								
 								<th style="width:20%">Status</th>							
 								<th>Tanggal</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
-							<!-- <pre>
-								<?php //print_r($query) 
-								?>
-							</pre> -->
-							<?php
+						
+							<?php 
 							foreach ($query as $pengajuan) {  ?>
 								<tr class="<? ($pengajuan['status_id'] == 2) ? 'proses' : ''; ?> <?= ($pengajuan['status_id'] == 4) ? 'perlu-revisi' : ''; ?>">
 									<td> <a class="judul" href="<?= base_url('mahasiswa/pengajuan/tambah/' . $pengajuan['pengajuan_id']); ?>"><?= get_meta_value('judul', $pengajuan['pengajuan_id'], false) ?></a>
 									</td>
 									<td>
-										
-											<?= $pengajuan['Jenis_Pengajuan']; ?>
+										<a class="judul" href="<?= base_url('mahasiswa/pengajuan/tambah/' . $pengajuan['pengajuan_id']); ?>">
+										<?= $pengajuan['Jenis_Pengajuan']; ?></a>
 									</td>									
 									<td class="table-<?= (($pengajuan['status_id'] == 7) || ($pengajuan['status_id'] == 9)) ? 'birutua' : $pengajuan['badge']; ?>"><?= (($pengajuan['status_id'] == 7) || ($pengajuan['status_id'] == 9)) ? 'Awaiting Verification' : $pengajuan['status'];  ?>
 									</td>
@@ -40,17 +37,15 @@
 											<?= $pengajuan['time'];	?>
 										</p>
 									</td>
+									<td>
+									<a href="" style="color:#fff;" title="Hapus" class="delete btn btn-sm  btn-circle btn-danger" data-href="<?= base_url('mahasiswa/pengajuan/hapus/' . $pengajuan['pengajuan_id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 									</td>
 								</tr>
 							<?php  } ?>
 						</tbody>
 						</tfoot>
 					</table>
-					<?php /* } else { */ ?>
-
-
-				<?php }
-				?>
+				
 			</div><!-- /.card-body -->
 		</div><!-- /.card -->
 	</div>

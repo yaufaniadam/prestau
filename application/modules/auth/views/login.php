@@ -20,7 +20,7 @@
 
 </head>
 
-<body class="bg-gradient-success">
+<body class="bg-gradient-primary">
 
 	<div class="container">
 
@@ -37,7 +37,7 @@
 							<div class="col-lg-6">
 								<div class="p-5">
 									<div class="text-center">
-										<img src="<?= base_url('public/dist/img/logopps.png'); ?>" />
+										<img src="<?= base_url('public/dist/img/logologin.png'); ?>" />
 										<h1 class="h5 text-gray-900 mb-4">Login</h1>
 
 									</div>

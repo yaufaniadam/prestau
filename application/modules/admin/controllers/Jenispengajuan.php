@@ -23,21 +23,11 @@ class Jenispengajuan extends Admin_Controller
 		if ($this->input->post('submit')) {
 
 			$this->form_validation->set_rules(
-				'deskripsinya',
-				'Deskripsi',
-				'trim|required',
-				array('required' => '%s wajib diisi.')
-			);
-			$this->form_validation->set_rules(
 				'Jenis_Pengajuan',
 				'Nama Jenis Pengajuan',
 				'trim|required',
 				array('required' => '%s wajib diisi.')
 			);
-
-			// echo '<pre>';
-			// print_r($this->input->post());
-			// echo '</pre>';
 
 			if ($this->form_validation->run() == FALSE) {
 				$data['all_fields'] = $this->pengajuan_model->getAllFieldsPengajuan();
@@ -47,69 +37,14 @@ class Jenispengajuan extends Admin_Controller
 			} else {
 
 				$data = array(
-					'jenis_pengajuan' => $this->input->post('Jenis_Pengajuan'),
-					'deskripsi' => $this->input->post('deskripsinya'),
-					'fixed' => $this->input->post('tipe_reward'),
+					// 'jenis_pengajuan' => $this->input->post('Jenis_Pengajuan')
+					'Jenis_Pengajuan' => $this->input->post('Jenis_Pengajuan')
 				);
-				$tipe =  $this->input->post('tipe_reward');
-				// echo '<pre>';
-				// print_r($data);
-				// echo '</pre>';
-
-				// die();
 
 				$result = $this->pengajuan_model->tambah_jenis_pengajuan($data);
 
 				$id = $this->db->insert_id();
 				if ($result) {
-					if ($tipe == 2) {
-						$new_nominal = explode(",", $this->input->post('nominal'));
-						for ($i = 0; $i < count($new_nominal); $i++) {
-							$data_penghargaan = [
-								"nominal" => $new_nominal[$i],
-								"Jenis_Pengajuan_Id" => $id,
-								"order" => $i
-							];
-							$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan);
-						}
-					} else {
-						$data_penghargaan = [
-							"nominal" => $this->input->post('nominal'),
-							"Jenis_Pengajuan_Id" => $id
-						];
-					}
-
-					// echo '<pre>';
-					// print_r($data_penghargaan);
-					// echo '</pre>';
-
-					if ($tipe == 1 || $tipe == 3) {
-						// print_r($tipe);
-						// die();
-						$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan);
-					}
-
-					$fields = $this->input->post('fields');
-					$expl = explode('&', $fields);
-					foreach ($expl as $key => $exp) {
-						$exp = explode("=", $exp);
-						echo $key . "=>" . $exp[1] . "<br>";
-
-						$insert_field = array(
-							'Jenis_Pengajuan_Id' => $id,
-							'field_id' => $exp[1],
-							'terpakai' => 1,
-							'urutan' => $key,
-						);
-
-						$this->pengajuan_model->tambah_field_pengajuan($insert_field);
-
-						// echo '<pre>';
-						// print_r($insert_field);
-						// echo '</pre>';
-
-						// die();
-					}
 
 					$this->session->set_flashdata('msg', 'Kategori Pengajuan berhasil ditambah!');
 					redirect(base_url('admin/jenispengajuan/edit/' . $id));
@@ -140,11 +75,17 @@ class Jenispengajuan extends Admin_Controller
 				'trim|required',
 				array('required' => '%s wajib diisi.')
 			);
+			$this->form_validation->set_rules(
+				'fields',
+				'Field formulir',
+				'trim|required|min_length[6]',
+				array('required' => '%s wajib diisi.', 'min_length' => 'Field tidak boleh kosong')
+			);
 
 			if ($this->form_validation->run() == FALSE) {
 				$data['kategori'] = $this->pengajuan_model->get_jenis_pengajuan_byid($id);
-				$data['all_fields'] = $this->pengajuan_model->getAllFieldsPengajuan();
-				$data['fields_pengajuan'] = $this->pengajuan_model->getAllFieldsPengajuan();
+				$data['all_fields'] = $this->pengajuan_model->getAllFieldsPengajuan($id, 0);
+				// $data['fields_pengajuan'] = $this->pengajuan_model->getAllFieldsPengajuan(getAllFieldsPengajuan($id, 1);
 
 				$data['view'] = 'jenispengajuan/edit';
 				$this->load->view('layout/layout', $data);
@@ -153,126 +94,7 @@ class Jenispengajuan extends Admin_Controller
 				$data = array(
 					'jenis_pengajuan' => $this->input->post('Jenis_Pengajuan'),
 					'deskripsi' => $this->input->post('deskripsinya'),
-					'fixed' => $this->input->post('tipe_reward')
 				);
-
-				if ($data['fixed'] == 2) {
-
-					//cek order awal apkah dia null atau 0
-					$null_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
-						"Jenis_Pengajuan_Id" => $id,
-						"order" => NULL
-					])->get()->result_array();
-
-					$new_nominal = $this->input->post('nominal[]');
-
-					if ($null_exist) {
-
-						echo "null exist";
-						// jika ada order yang NULL maka ubah dulu null ke 0
-						$this->db->where([
-							"Jenis_Pengajuan_Id" => $id,
-							"order" => NULL
-						]);
-
-						$updata_penghargaan = [
-							"order" => 0
-						];
-
-						$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $updata_penghargaan);
-
-						$insdata_penghargaan = [
-							"order" => 1,
-							"Jenis_Pengajuan_Id" => $id,
-						];
-						$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
-
-						//setelah itu baru insert sesuai foreach
-
-						foreach ($new_nominal as $key => $value) {
-							$this->db->where([
-								"Jenis_Pengajuan_Id" => $id,
-								"order" => $key
-							]);
-							$data_nominal = [
-								"nominal" => $value
-							];
-
-							$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
-						}
-					} else {
-						echo "gada";
-
-						//cek order awal apkah ada yg nilainya 1
-						$nominal_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
-							"Jenis_Pengajuan_Id" => $id,
-							"order" => 1
-						])->get()->result_array();
-
-						if ($nominal_exist) {
-							foreach ($new_nominal as $key => $value) {
-								$this->db->where([
-									"Jenis_Pengajuan_Id" => $id,
-									"order" => $key
-								]);
-								$data_nominal = [
-									"nominal" => $value
-								];
-
-								$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
-							}
-						} else {
-							echo "gada 1";
-							$insdata_penghargaan = [
-								"order" => 1,
-								"Jenis_Pengajuan_Id" => $id,
-							];
-							$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
-							foreach ($new_nominal as $key => $value) {
-								$this->db->where([
-									"Jenis_Pengajuan_Id" => $id,
-									"order" => $key
-								]);
-								$data_nominal = [
-									"nominal" => $value
-								];
-
-								$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
-							}
-						}
-					}
-				} else {
-
-					echo "bukan 2";
-
-
-					$new_nominal = $this->input->post('nominal[]');
-
-					print_r($new_nominal);
-					echo $new_nominal[0];
-					$data_penghargaan = [
-						"nominal" => $new_nominal[0]
-					];
-				}
-
-				if ($data['fixed'] == 1 || $data['fixed'] == 3) {
-					echo "1 dna 3";
-
-					$this->db->where([
-						"Jenis_Pengajuan_Id" => $id,
-					]);
-					$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan);
-				}
-
-				// die();
-
-				// date_default_timezone_set("Asia/Jakarta");
-				// $date = new DateTime();
-
-				// $this->db->set('nominal', $this->input->post('nominal'));
-				// $this->db->set('update_date', $date->format('Y-m-d H:i:s'));
-				// $this->db->where('Jenis_Pengajuan_Id', $id);
-				// $this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa');
 
 				$fields = $this->input->post('fields');
 				$expl = explode('&', $fields);
@@ -287,26 +109,281 @@ class Jenispengajuan extends Admin_Controller
 					'sent_fields_data' => $arr,
 				];
 
-				// // print_r($data);
 				$data = $this->security->xss_clean($data);
 				$result = $this->pengajuan_model->edit_jenis_pengajuan($data, $id);
+
 				if ($result) {
-					// 	// print_r($data);
-					$this->pengajuan_model->editFieldsPengajuan($dataFieldCheck, $id);
-					$this->session->set_flashdata('msg', 'Data kategory berhasil diubah!');
+
+					$fields = $this->pengajuan_model->editFieldsPengajuan($dataFieldCheck, $id);
+
+					$this->session->set_flashdata('msg', 'Jenis Pengajuan berhasil diubah!');
 					redirect(base_url('admin/jenispengajuan/edit/' . $id));
 				}
 			}
 		} else {
 			$data['kategori'] = $this->pengajuan_model->get_jenis_pengajuan_byid($id);
-			$data['all_fields'] = $this->pengajuan_model->getAllFieldsPengajuan();
-			$data['fields_pengajuan'] = $this->pengajuan_model->getAllFieldsPengajuan();
+			$data['all_fields'] = $this->pengajuan_model->getAllFieldsPengajuan($id, 0);
+			// $data['fields_pengajuan'] = $this->pengajuan_model->getAllFieldsPengajuan();
 
 			$data['title'] = 'Edit Jenis Pengajuan';
 			$data['view'] = 'jenispengajuan/edit';
 			$this->load->view('layout/layout', $data);
 		}
 	}
+
+	//tambah field baru
+	public function tambah_field($id_kat)
+	{
+
+		//cek id terakhir
+		$query =  $this->db->query('SELECT TOP 1 field_id FROM Mstr_Fields
+		ORDER BY field_id DESC')->row_array();
+
+		$data = [
+			"field" => "Nama Field " . $query['field_id'],
+		];
+
+		$this->db->insert('Mstr_Fields', $data);
+		$last_id = $this->db->insert_id();
+		if ($last_id) {
+
+			$data = [
+				"field_id" => $last_id,
+				"Jenis_Pengajuan_Id" => $id_kat,
+				"terpakai" => 0,
+			];
+
+			$this->db->insert('Tr_Pengajuan_Field', $data);
+
+			echo json_encode(array("status" => "Sukses"));
+		}
+	}
+
+
+	public function edit_field($id)
+	{
+
+		// if ($this->input->post()) {
+
+		$this->form_validation->set_rules(
+			'field',
+			'Nama Field',
+			'trim|required',
+			array('required' => '%s wajib diisi')
+		);
+		$this->form_validation->set_rules(
+			'key',
+			'Key',
+			'trim|required|callback_alpha_dash_space',
+			array('required' => '%s wajib diisi')
+		);
+		$this->form_validation->set_rules(
+			'type',
+			'Jenis Field',
+			'required',
+			array('required' => '%s wajib diisi')
+		);
+
+		if ($this->form_validation->run() == FALSE) {
+			$error = [
+				'field' => form_error('field'),
+				'key' => form_error('key'),
+				'type' => form_error('type')
+			];
+			echo json_encode(array("status" => "Error", "error" => $error));
+		} else {
+
+			$data = [
+				"required" => $this->input->post('required'),
+				"field" => $this->input->post('field'),
+				"placeholder" => $this->input->post('placeholder'),
+				"key" => $this->input->post('key'),
+				"deskripsi" => $this->input->post('deskripsi'),
+				"type" => $this->input->post('type'),
+			];
+
+
+			$query = $this->pengajuan_model->edit_form_field($data, $id);
+
+			if ($query) {
+				echo json_encode(array("status" => 'Success', 'data' => $data['field']));
+			} else {
+				echo json_encode(array("status" => "Error Updating"));
+			}
+		}
+
+
+		// }
+	}
+
+	public function edit_nominal($id)
+	{
+		$tipe_reward = $this->input->post('tipe_reward');
+
+		$this->form_validation->set_rules(
+			'tipe_reward',
+			'Tipe Reward',
+			'trim|required',
+			array('required' => '%s wajib diisi')
+		);
+
+		if ($tipe_reward != '') {
+
+			if ($tipe_reward != 4) {
+
+				$this->form_validation->set_rules(
+					'nominal1',
+					'Nominal 1',
+					'trim|required',
+					array('required' => '%s wajib diisi')
+				);
+
+				if ($tipe_reward == 2) {
+					$this->form_validation->set_rules(
+						'nominal2',
+						'Nominal 2',
+						'trim|required',
+						array('required' => '%s wajib diisi')
+					);
+				}
+			}
+		}
+
+		if ($this->form_validation->run() == FALSE) {
+
+			$error = [
+				'nominal1' => form_error('nominal1'),
+				'nominal2' => form_error('nominal2'),
+				'tipe_reward' => form_error('tipe_reward')
+			];
+			echo json_encode(array("status" => "Error", "error" => $error));
+		} else {
+
+			$this->db->update('Mstr_Jenis_Pengajuan', ["fixed" => $tipe_reward], array('Jenis_Pengajuan_Id' => $id));
+
+			$new_nominal = array(
+				"0" => $this->input->post('nominal1'),
+				"1" => $this->input->post('nominal2')
+			);
+
+
+			if ($tipe_reward == 2) {
+				// buat masukin nominal reward ke table
+				//cek nominal1 awal, ada atau tidak
+				$null_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+					"Jenis_Pengajuan_Id" => $id,
+					"order" => NULL
+				])->get()->result_array();
+
+				if ($null_exist) {
+					// jika ada order yang NULL maka ubah dulu null ke 0
+					$this->db->where([
+						"Jenis_Pengajuan_Id" => $id,
+						"order" => NULL
+					]);
+
+					$updata_penghargaan = [
+						"order" => 0
+					];
+
+					$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $updata_penghargaan);
+
+					$insdata_penghargaan = [
+						"order" => 1,
+						"Jenis_Pengajuan_Id" => $id,
+					];
+					$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
+
+					//setelah itu baru insert sesuai foreach
+
+					foreach ($new_nominal as $key => $value) {
+						$this->db->where([
+							"Jenis_Pengajuan_Id" => $id,
+							"order" => $key
+						]);
+						$data_nominal = [
+							"nominal" => $value
+						];
+
+						$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+					}
+				} else {
+
+
+					//cek order awal apkah ada yg nilainya 1
+					$nominal_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+						"Jenis_Pengajuan_Id" => $id,
+						"order" => 1
+					])->get()->result_array();
+
+					if ($nominal_exist) {
+						foreach ($new_nominal as $key => $value) {
+							$this->db->where([
+								"Jenis_Pengajuan_Id" => $id,
+								"order" => $key
+							]);
+							$data_nominal = [
+								"nominal" => $value
+							];
+
+							$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+						}
+					} else {
+
+						$insdata_penghargaan = [
+							"order" => 1,
+							"Jenis_Pengajuan_Id" => $id,
+						];
+						$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
+						foreach ($new_nominal as $key => $value) {
+							$this->db->where([
+								"Jenis_Pengajuan_Id" => $id,
+								"order" => $key
+							]);
+							$data_nominal = [
+								"nominal" => $value
+							];
+
+							$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+						}
+					}
+				}
+			} else {
+
+				$new_nominal = $this->input->post('nominal1');
+
+				$data_penghargaan = [
+					"nominal" => $new_nominal
+				];
+			}
+
+			if ($tipe_reward == 1 || $tipe_reward == 3) {
+
+				//cek nominal1 awal, ada atau tidak
+				$nom_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+					"Jenis_Pengajuan_Id" => $id
+				])->get()->num_rows();
+
+				if($nom_exist > 0) {
+				
+					$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan, array('Jenis_Pengajuan_Id' => $id));
+				} else {
+			
+					$insdata_penghargaan = [
+						"order" => NULL,
+						"Jenis_Pengajuan_Id" => $id,
+						"nominal" => $new_nominal
+					];
+					$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
+				}
+			}
+
+
+
+			echo json_encode(array("status" => "sukses"));
+		}
+	}
+
 
 	public function store_kategori()
 	{
@@ -362,6 +439,15 @@ class Jenispengajuan extends Admin_Controller
 		// echo "<pre/>";
 	}
 
+	function alpha_dash_space($fullname)
+	{
+		if (!preg_match('/^[a-z\_]+$/', $fullname)) {
+			$this->form_validation->set_message('alpha_dash_space', 'Hanya huruf kecil dan tanpa spasi, spasi boleh diganti underscore (_)');
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
 
 
 	// //kategori isian rules
