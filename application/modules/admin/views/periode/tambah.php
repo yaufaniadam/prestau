@@ -10,8 +10,28 @@
 		<?php endif; ?>
 	</div>
 
-	<div class="col-md-6">
+	<div class="col-md-12">
 		<div class="card card-success card-outline">
+		<?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 ) { 
+			 $uri = $this->uri->uri_string();
+			?>
+
+			<ul class="nav nav-tabs pt-3 pl-4  bg-perak">
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/periode/index/1') ? 'active' :''; ?>" href="<?= base_url("admin/periode/index/1"); ?>"><i class="fas fa-fw fa-exclamation-circle"></i> Sudah Diterbitkan</a>
+				</li>
+		
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/periode/index/0') ? 'active' :''; ?>" href="<?= base_url("admin/periode/index/0"); ?>"><i class="fas fa-fw fa-envelope"></i> 	Belum Diterbitkan</a>
+				</li>
+			
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/periode/tambah') ? 'active' :''; ?>" href="<?= base_url("admin/periode/tambah"); ?>"><i class="fas fa-fw fa-plus"></i> 	Tambah Periode</a>
+				</li>
+			
+			</ul>
+		
+			<?php } ?>
 			<div class="card-body box-profile">
 
 				<?php echo form_open_multipart(base_url('admin/periode/tambah'), '') ?>

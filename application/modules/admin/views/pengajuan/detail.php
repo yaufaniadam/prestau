@@ -1,3 +1,4 @@
+<?php call_styles(); ?>
 <div class="row">
 	<div class="col-8">
 		<?php if (isset($msg) || validation_errors() !== '') : ?>
@@ -62,7 +63,7 @@
 
 					<?php } ?>
 
-					<?php if (($pengajuan['status_id'] == 2 || $pengajuan['status_id'] == 5) && $this->session->userdata('role') == 2) { ?>
+					<?php if (($pengajuan['status_id'] == 2 || $pengajuan['status_id'] == 5) && (($this->session->userdata('role') == 2) || ($this->session->userdata('role') == 1))) { ?>
 						<div class="form-row pt-3">
 							<div class="col-md-12">
 
@@ -253,3 +254,5 @@
 		</div>
 	</div>
 </div>
+
+<?php call_scripts(); ?>

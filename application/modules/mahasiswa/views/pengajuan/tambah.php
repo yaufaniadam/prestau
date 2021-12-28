@@ -94,8 +94,10 @@
 					<div class="card-body pl-2">
 
 						<div class="timeline timeline-xs">
-							<?php foreach ($timeline as $tl) { ?>
-								<div class="timeline-item <?= ($tl['status_id'] === 2 || $tl['status_id'] === 7 || $tl['status_id'] === 9) ? 'd-none' : '' ?>">
+							<?php		
+							
+							foreach ($timeline as $tl) { ?>
+								<div class="timeline-item <?= ($tl['status_id'] === 7 || $tl['status_id'] === 9) ? 'd-none' : '' ?>">
 									<div class="timeline-item-marker">
 										<div class="timeline-item-marker-text"><?= $tl['date']; ?></div>
 										<div class="timeline-item-marker-indicator bg-<?= $tl['badge']; ?>"></div>

@@ -145,7 +145,7 @@ class Periode extends Admin_Controller
 			$this->load->view('layout/layout', $data);
 		}
 	}
-
+/*
 	public function export_excel($id_periode = 0) {
 
 		$nama_periode = $this->db->get_where('Tr_Periode_Penerbitan', ['id_periode' => $id_periode])->row_object()->nama_periode;
@@ -258,6 +258,41 @@ class Periode extends Admin_Controller
 		redirect('./uploads/excel/' . $fileName);
 	
 	}
+*/
+
+
+public function export_excel($id_periode = 0)
+{
+	$nama_periode = $this->db->get_where('Tr_Periode_Penerbitan', ['id_periode' => $id_periode])->row_object()->nama_periode;
+	$status_periode = $this->db->get_where('Tr_Periode_Penerbitan', ['id_periode' => $id_periode])->row_object()->status;
+
+	$daftar_pengajuan = $this->pengajuan_model->getPengajuanPerPeriode($id_periode);
+
+	// echo "<pre>";
+	// print_r($daftar_pengajuan);
+	// echo "</pre>";
+
+	foreach ($daftar_pengajuan as $pengajuan) {
+		$new_daftar_pengajuan[] = [
+			'judul_kegiatan' => get_meta_value('judul', $pengajuan['id_pengajuan'], false),
+			'jenis_pengajuan' => $pengajuan['Jenis_Pengajuan'],
+			'penerima' => $pengajuan['FULLNAME'],
+			'nim' => $pengajuan['STUDENTID'],
+			'prodi' => $pengajuan['NAME_OF_DEPARTMENT'],
+			// 'nominal' => $pengajuan['nominal'],
+			'file' => $this->ngambil_field_file($pengajuan['id_pengajuan'])
+		];
+	}
+	// echo "<pre>";
+	// print_r($new_daftar_pengajuan);
+	// echo "</pre>";
+	// die();
+
+	$data['pengajuan'] = $new_daftar_pengajuan;
+	$data['title'] = 'Daftar Pengajuan Periode ' . $nama_periode;
+	$data['view'] = 'admin/penerbitan_pengajuan/cetak';
+	$this->load->view('admin/penerbitan_pengajuan/cetak', $data);
+}
 
 
 	public function reward($id_prestasi)
@@ -357,4 +392,29 @@ class Periode extends Admin_Controller
 		$this->db->update('Tr_Penerbitan_Pengajuan');
 		redirect(base_url('admin/periode/bulan/' . $this->input->post('id_periode')));
 	}
+	
+	public function ngambil_field_file($pengajuan_id)
+	{
+		$data = $this->db->select('*')->from("Tr_Pengajuan p")
+			->join("Mstr_Jenis_Pengajuan jp", "jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id", "left")
+			->join("Tr_Pengajuan_Field pf", "pf.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id", "left")
+			->join("Mstr_Fields mf", "mf.field_id=pf.field_id", "left")
+			// ->join("Tr_Field_Value fv", "fv.field_id=pf.field_id", "left")
+			->where([
+				"mf.type" => "file",
+				"p.pengajuan_id" => $pengajuan_id
+			])->get()
+			->result_array();
+		
+			$files= array();
+		foreach ($data as $data) {
+			$files[] = get_meta_value($data['key'], $data['pengajuan_id'], true);
+		}
+		return $files;
+		// print_r($data);
+	}
+
+
 }
+
+

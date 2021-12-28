@@ -330,26 +330,32 @@ class Pengajuan extends Admin_Controller
 	{
 		if ($this->input->post('submit')) {
 			$verifikasi = $this->input->post('verifikasi'); //ambil nilai 
+			$catatan = $this->input->post('catatan'); //ambil nilai 
 			$pengajuan_id = $this->input->post('pengajuan_id');
 			$id_notif = $this->input->post('id_notif');
 			//set status
-			$this->db->set('status_id', $this->input->post('rev2'))
-				->set('pic', $this->session->userdata('user_id'))
-				->set('date', 'getdate()', FALSE)
-				->set('pengajuan_id', $pengajuan_id)
-				->insert('Tr_Pengajuan_Status');
+			// $this->db->set('status_id', $this->input->post('rev2'))
+			// 	->set('pic', $this->session->userdata('user_id'))
+			// 	->set('date', 'getdate()', FALSE)
+			// 	->set('pengajuan_id', $pengajuan_id)
+			// 	->insert('Tr_Pengajuan_Status');
 
-			foreach ($verifikasi as $id => $value_verifikasi) {
-				$this->db->where(array('field_id' => $id, 'pengajuan_id' => $pengajuan_id))
-					->update(
-						'Tr_Field_Value',
-						array(
-							'verifikasi' =>  $value_verifikasi,
-						)
-					);
-			}
 
-			redirect(base_url('admin/pengajuan/detail/' . $pengajuan_id));
+				echo '<pre>'; print_r($verifikasi); echo '</pre>';
+				echo '<pre>'; print_r($catatan); echo '</pre>';
+
+			// foreach ($verifikasi as $id => $value_verifikasi) {
+			// 	$this->db->where(array('field_id' => $id, 'pengajuan_id' => $pengajuan_id))
+			// 		->update(
+			// 			'Tr_Field_Value',
+			// 			array(
+			// 				'verifikasi' =>  $value_verifikasi,
+			// 				'value' => $dokumen
+			// 			)
+			// 		);
+			// }
+
+			// redirect(base_url('admin/pengajuan/detail/' . $pengajuan_id));
 			// }
 		} else {
 			$data['title'] = 'Forbidden';

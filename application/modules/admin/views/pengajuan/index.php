@@ -1,7 +1,6 @@
 <div class="row">
 	<div class="col-12">
 
-
 		<div class="card card-success card-outline">
 			
 		<?php if($_SESSION['role'] == 1 || $_SESSION['role'] == 2 ) { 

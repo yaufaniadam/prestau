@@ -15,6 +15,10 @@
 					<a class="nav-link <?= 	($uri == 'admin/periode/index/0') ? 'active' :''; ?>" href="<?= base_url("admin/periode/index/0"); ?>"><i class="fas fa-fw fa-envelope"></i> 	Belum Diterbitkan</a>
 				</li>
 			
+				<li class="nav-item">
+					<a class="nav-link <?= 	($uri == 'admin/periode/tambah') ? 'active' :''; ?>" href="<?= base_url("admin/periode/tambah"); ?>"><i class="fas fa-fw fa-plus"></i> 	Tambah Periode</a>
+				</li>
+			
 			</ul>
 		
 			<?php } ?>

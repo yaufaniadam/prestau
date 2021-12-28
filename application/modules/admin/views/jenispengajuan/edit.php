@@ -156,7 +156,7 @@ $selected_kat = array_column($result, 'field_id');
 													</div>
 													<div class="mb-2">
 														<label for="key" class="form-label">Key (wajib, tanpa spasi, huruf kecil semua)</label>
-														<input class="form-control field-key" type="text" value="<?= $result['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
+														<input class="form-control field-key" type="text" value="<?= $result['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" <?= ($result['type'] == 'judul') ? 'readonly="readonly"' : ''; ?>/>
 													</div>
 													<div class="mb-2">
 														<label for="deskripsi" class="form-label">Deskripsi</label>
@@ -168,6 +168,7 @@ $selected_kat = array_column($result, 'field_id');
 														<select class="form-control field-type" name="type">
 															<option value="">Pilih jenis field</option>
 															<option value='text' <?= ($result['type'] == 'text') ? 'selected="selected"' : ''; ?>>Teks singkat</option>
+															<option value='judul' <?= ($result['type'] == 'judul') ? 'selected="selected"' : ''; ?>>Judul</option>
 															<option value='number' <?= ($result['type'] == 'number') ? 'selected="selected"' : ''; ?>>Angka</option>
 															<option value='textarea' <?= ($result['type'] == 'textarea') ? 'selected="selected"' : ''; ?>>Teks panjang</option>
 															<option value='wysiwyg' <?= ($result['type'] == 'wysiwyg') ? 'selected="selected"' : ''; ?>>Teks editor</option>
@@ -176,8 +177,11 @@ $selected_kat = array_column($result, 'field_id');
 															<option value='sem' <?= ($result['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
 															<option value='ta' <?= ($result['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date' <?= ($result['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
+															<!-- <option value='date_range' <?= ($result['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option> -->
 															<option value='url' <?= ($result['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
 															<option value='file' <?= ($result['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
+															<option value='select_tingkat' <?= ($result['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan Prestasi</option>
+															<option value='select_nasional_internasional' <?= ($result['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option>
 														</select>
 													</div>
 
@@ -236,7 +240,7 @@ $selected_kat = array_column($result, 'field_id');
 													</div>
 													<div class="mb-2">
 														<label for="key" class="form-label">Key (wajib, tanpa spasi, huruf kecil semua)</label>
-														<input class="form-control field-key" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
+														<input class="form-control field-key" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field"  <?= ($field['type'] == 'judul') ? 'readonly="readonly"' : ''; ?>/>
 													</div>
 													<div class="mb-2">
 														<label for="deskripsi" class="form-label">Deskripsi</label>
@@ -248,6 +252,7 @@ $selected_kat = array_column($result, 'field_id');
 														<select class="form-control field-type" name="type">
 															<option value="">Pilih jenis field</option>
 															<option value='text' <?= ($field['type'] == 'text') ? 'selected="selected"' : ''; ?>>Teks singkat</option>
+															<option value='judul' <?= ($field['type'] == 'judul') ? 'selected="selected"' : ''; ?>>Judul</option>
 															<option value='number' <?= ($field['type'] == 'number') ? 'selected="selected"' : ''; ?>>Angka</option>
 															<option value='textarea' <?= ($field['type'] == 'textarea') ? 'selected="selected"' : ''; ?>>Teks panjang</option>
 															<option value='wysiwyg' <?= ($field['type'] == 'wysiwyg') ? 'selected="selected"' : ''; ?>>Teks editor</option>
@@ -256,8 +261,12 @@ $selected_kat = array_column($result, 'field_id');
 															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
 															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date' <?= ($field['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
-															<option value='url' <?= ($field['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
-															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
+															<!-- <option value='date_range' <?= ($result['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option> -->
+															<option value='url' <?= ($result['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
+															<option value='file' <?= ($result['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
+															<option value='select_tingkat' <?= ($result['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan Prestasi</option>
+															<option value='select_nasional_internasional' <?= ($result['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option>
+															
 														</select>
 													</div>
 
@@ -346,6 +355,20 @@ $selected_kat = array_column($result, 'field_id');
 
 				<script>
 					$(document).ready(function() {
+						
+						$('select[name="type"]').on('change', function() {
+							var val = $(this).val();
+							var typeId = $(this).closest(".ui-state-highlights").attr("id");						
+
+							if(val == 'judul') {
+								$("#" + typeId).find("input[name='key']").attr('readonly', true);
+								$("#" + typeId).find("input[name='key']").val('judul');
+							} else {
+								$("#" + typeId).find("input[name='key']").attr('readonly', false);
+								$("#" + typeId).find("input[name='key']").val('');
+							}						
+						});
+
 						//sembunyikan alert berhasil simpan
 						$('.sukses_simpan').hide();
 

@@ -6,6 +6,7 @@ function call_styles()
 	<link href="<?= base_url() ?>public/plugins/dm-uploader/dist/css/jquery.dm-uploader.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <?php
 }
 
@@ -230,7 +231,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 				 */
 				$('#drag-and-drop-zone-<?= $id; ?>').dmUploader({ //
 					url: '<?= base_url($fungsi_upload); ?>/doupload',
-					maxFileSize: 3000000, // 3 Megs 
+					maxFileSize: 5000000, // 5 Mega
 					extFilter: ['jpg', 'jpeg', 'png', 'pdf'],
 					onDragEnter: function() {
 						// Happens when dragging something over the DnD area
@@ -319,9 +320,8 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 		</script>
 
 
-	<?php } elseif ($fields['type'] == 'text') {
+	<?php } elseif (($fields['type'] == 'text') || ($fields['type'] == 'judul') ) {
 		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
-
 	?>
 
 		<fieldset>
@@ -349,7 +349,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
 
-	<?php } elseif ($fields['type'] == 'date_range') {
+	<?php } elseif ($fields['type'] == 'date_ranges') {
 		$check = field_value_checker($field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 		<fieldset>
@@ -361,7 +361,8 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 				$('#input-<?= $id; ?>').daterangepicker({
 					autoUpdateInput: false,
 					locale: {
-						cancelLabel: 'Clear'
+						cancelLabel: 'Clear',
+						format: 'MM DD YY'
 					}
 				});
 
@@ -396,7 +397,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 		<span class="<?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? '' : 'd-none'; ?> text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['field'] ?> Perlu direvisi.</span>
 
 	<?php } elseif ($fields['type'] == 'date') { ?>
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		
 		<fieldset>
 			<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($pengajuan_status == 1 && $verifikasi == 0 || $pengajuan_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 		</fieldset>
@@ -596,26 +597,53 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 				<?php } ?>
 			</select>
 		</fieldset>
+	
+	<?php } elseif ($fields['type'] == 'select_nasional_internasional') { ?>
+	
+		<fieldset>
+			<select name="<?= $fields['key']; ?>" class="custom-select">
+			
+					<option value="nasional">Nasional</option>
+					<option value="internasional">Internasional</option>
+				
+			</select>
+		</fieldset>
 	<?php } ?>
 
 	<?php }
-//menampilkan kategori keterangan surat
+
+/*
+=====================================
+
+menampilkan kategori keterangan surat
+
+=====================================
+*/
+
 function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 {
 	$id = $field_id;
 	$CI = &get_instance();
-	$fields = $CI->db->select('*')->from('Mstr_Fields f')
+	$field = $CI->db->select('*')->from('Mstr_Fields f')
 		->join('Tr_Field_Value fv', 'fv.field_id=f.field_id', 'left')
 		->where(array('f.field_id' => $id))
 		->where(array('fv.pengajuan_id' => $id_surat))
-		->get()->row_array();
+		->get();
+
+		if($field->num_rows() > 0) {
+			echo "ada";
+		} else {
+			echo "gada";
+		}
+
+		$fields= $field->row_array();
 
 	if ($fields['type'] == 'textarea') { ?>
 
-		<textarea class="form-control mb-2" id="input-<?= $id; ?>" disabled><?= $fields['value'];  ?></textarea>
+		<textarea class="form-control mb-2" id="input-<?= $id; ?>" ><?= $fields['value'];  ?></textarea>
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 			<div class="d-inline">
 				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
@@ -629,12 +657,12 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 			</div>
 
 		<?php }
-	} elseif (($fields['type'] == 'text') || ($fields['type'] == 'url')) { ?>
+	} elseif (($fields['type'] == 'text') || ($fields['type'] == 'url') || ($fields['type'] == 'judul')) { ?>
 
-		<input type="text" class="form-control mb-2  <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" disabled value="<?= $fields['value'];  ?>" />
+		<input type="text" class="form-control mb-2  <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" value="<?= $fields['value'];  ?>" />
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 
 			<div class="mb-2">			
@@ -653,12 +681,12 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 			</div>
 
 		<?php }
-	} elseif ($fields['type'] == 'date_range') { ?>
+	} elseif ($fields['type'] == 'date_ranges') { ?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $fields['value'];  ?>" />
+		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" value="<?= $fields['value'];  ?>" />
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 
 			<div class="d-inline">
@@ -675,9 +703,9 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 		<?php }
 	} elseif ($fields['type'] == 'sem') { ?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $fields['value'];  ?>"></input>
+		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>"  value="<?= $fields['value'];  ?>"></input>
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 			<div class="d-inline">
 				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
@@ -693,10 +721,10 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 		<?php }
 	} elseif ($fields['type'] == 'ta') { ?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $fields['value'];  ?>"></input>
+		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>"  value="<?= $fields['value'];  ?>"></input>
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 			<div class="d-inline">
 				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
@@ -716,10 +744,10 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 
 		?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
+		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>"  value="<?= $dosen['nama'];  ?>"></input>
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 			<div class="d-inline">
 				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
@@ -798,7 +826,7 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 		</div>
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 
 			<div class="d-inline">
@@ -815,11 +843,11 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 		<?php } ?>
 	<?php } elseif ($fields['type'] == 'number') { ?>
 		<div class="form-group">
-			<input type="number" class="form-control <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" disabled />
+			<input type="number" class="form-control <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]"  />
 		</div>
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 
 			<div class="d-inline">
@@ -836,11 +864,11 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 		<?php } ?>
 	<?php } elseif ($fields['type'] == 'tahun') { ?>
 		<div class="form-group">
-			<input type="number" class="form-control <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" disabled />
+			<input type="number" class="form-control <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]"  />
 		</div>
 
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 
 			<div class="d-inline">
@@ -856,20 +884,24 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 
 		<?php } ?>
 	<?php } elseif ($fields['type'] == 'date') { ?>
-
-		<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($pengajuan_status == 1 && $fields['verifikasi'] == 0 || $pengajuan_status == 4 && $fields['verifikasi'] == 0) ? "" : "disabled"; ?> />
+asdasd
+		<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($fields['verifikasi'] == 0) && ($pengajuan_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]"  />
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<div class="mt-2"></div>
 
 		<script>
 			$(function() {
-				$("#input-<?= $id; ?>").datepicker();
+				$("#input-<?= $id; ?>").datepicker( {
+					dateFormat: "d MM yy"
+				});
 			});
 		</script>
 
+		
+
 		<?php if ((($pengajuan_status == 2 && $fields['verifikasi'] == 0) || ($pengajuan_status == 5 && $fields['verifikasi'] == 0))
-			&& $CI->session->userdata('role') == 2
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) { ?>
 
 			<div class="d-inline">
