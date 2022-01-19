@@ -191,6 +191,7 @@ $selected_kat = array_column($result, 'field_id');
 															<option value='select_mahasiswa' <?= ($result['type'] == 'select_mahasiswa') ? 'selected="selected"' : ''; ?>>Pilih Mahasiswa</option>
 															<option value='sem' <?= ($result['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
 															<option value='ta' <?= ($result['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
+															<option value='tahun' <?= ($result['type'] == 'tahun') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date' <?= ($result['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
 															<!-- <option value='date_range' <?= ($result['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option> -->
 															<option value='url' <?= ($result['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
@@ -280,6 +281,7 @@ $selected_kat = array_column($result, 'field_id');
 															<option value='select_pembimbing' <?= ($field['type'] == 'select_pembimbing') ? 'selected="selected"' : ''; ?>>Pilih Dosen</option>
 															<option value='select_mahasiswa' <?= ($field['type'] == 'select_mahasiswa') ? 'selected="selected"' : ''; ?>>Pilih Mahasiswa</option>
 															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
+															<option value='tahun' <?= ($field['type'] == 'tahun') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date' <?= ($field['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
 															<!-- <option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option> -->
