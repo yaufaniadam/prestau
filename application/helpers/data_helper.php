@@ -235,10 +235,6 @@ function tampil_notif()
 		->where(['n.status' => 0])
 		->get();
 
-		echo "<pre>";
-		print_r($notif->result_array());
-		echo "</pre>";
-
 ?>
 	<!-- Nav Item - Alerts -->
 	<li class="nav-item dropdown no-arrow mx-1">
