@@ -40,8 +40,8 @@
 						<table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
 							<thead>
 								<tr>
-									<th style="width:50%">Perihal</th>
-									<th style="width:20%">Jenis Pengajuan</th>
+									<th style="width:50%">Jenis Pengajuan</th>
+									<th style="width:20%">Status</th>
 									<th>Mahasiswa</th>
 									<th>Tanggal</th>
 								</tr>
@@ -57,7 +57,7 @@
 											<a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
 												<?= $pengajuan['Jenis_Pengajuan']; ?></a>
 										</td>
-										<td class="table-<?= $pengajuan['badge']; ?>"><?= $pengajuan['status_id']; ?> -
+										<td class="table-<?= $pengajuan['badge']; ?>">
 											<?= $pengajuan['status']; ?>
 										</td>
 										<td>

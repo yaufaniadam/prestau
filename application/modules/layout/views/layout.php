@@ -144,12 +144,12 @@
 	<!-- page script -->
 	<script>
 		// menu sidebar
-		if ($("#menu_<?= $this->router->fetch_class(); ?>").hasClass('has_child')) {
-			$("#menu_<?= $this->router->fetch_class(); ?>").addClass('active');
-			$("#sub_<?= $this->router->fetch_class(); ?>").addClass('show');
-			$("#sub_<?= $this->router->fetch_class(); ?> div .<?= $this->router->fetch_method(); ?>").addClass('active');
+		if ($("#menu_<?= (isset($menu)) ? $menu : ''; ?>").hasClass('has_child')) {
+			$("#menu_<?= (isset($menu)) ? $menu : ''; ?>").addClass('active');
+			$("#sub_<?= (isset($menu)) ? $menu : ''; ?>").addClass('show');
+			$("#sub_<?= (isset($menu)) ? $menu : ''; ?> div .<?= $this->router->fetch_method(); ?>").addClass('active');
 		} else {
-			$("#menu_<?= $this->router->fetch_class(); ?>").addClass('active');
+			$("#menu_<?= (isset($menu)) ? $menu : ''; ?>").addClass('active');
 		}
 
 		window.setTimeout(function() {

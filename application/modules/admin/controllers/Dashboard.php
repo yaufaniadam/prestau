@@ -22,6 +22,7 @@ class Dashboard extends Admin_Controller
 		)->result_array();
 		$data['title'] = 'Dashboard';
 		$data['view'] = 'dashboard/index';
+		$data['menu'] = 'dashboard';
 		$this->load->view('layout/layout', $data);
 	}
 	public function dasbor()

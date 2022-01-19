@@ -48,7 +48,7 @@
             ?>
               <tr class="<?= ($pengajuan['status_id'] == 2) ? 'proses' : ''; ?> <?= ($pengajuan['status_id'] == 4) ? 'perlu-revisi' : ''; ?>">
                 <td class="text-center align-middle">
-                  <input type="checkbox" name="pengajuan_id[]" value="<?= $pengajuan['pengajuan_id']; ?>" class="check">
+                  <input type="checkbox" name="pengajuan_id[]" value="<?= $pengajuan['pengajuan_id']; ?>" class="check" <?= (set_select('pengajuan_id[]', $pengajuan['pengajuan_id'])) ?>>
                 </td>
                 <td>
                   <a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
@@ -84,19 +84,19 @@
         <div class="form-group row ml-0 mt-3">
           <label for="" class="col-md-3">Pilih Periode Penerbitan</label>
           <div class="col-md-5">
-            <select name="periode_id" class="form-control" id="exampleFormControlSelect1">
+            <select name="periode_id" class="form-control <?= (form_error('periode_id')) ? 'is-invalid' : ''; ?>" id="periode">
+              <option value="">Pilih Periode Penerbitan</option>
+        
               <?php foreach ($daftar_periode as $periode) { ?>
-                <option value="<?= $periode['id_periode']; ?>"><?= $periode['nama_periode']; ?></option>
+                <option value="<?= $periode['id_periode']; ?>" <?= (set_select('periode_id', $periode['id_periode'])) ?>><?= $periode['nama_periode']; ?></option>
               <?php } ?>
             </select>
+            <span class="text-danger"><?php echo form_error('periode_id'); ?></span>
           </div>
           <div class="col-md-4">
             <input type="submit" name="submit" class="btn btn-success" value="Simpan" />
-
           </div>
         </div>
-
-
         <?php echo form_close() ?>
       </div><!-- /.card-body -->
     </div><!-- /.card -->
@@ -122,13 +122,14 @@
         state = false
         $('.check').prop('checked', false);
       }
-    });
-
+    });  
 
     $('#lolos').submit(function() {
-      var check = $('#checkArray').find('input[type=checkbox]:checked').length > 0;
 
-      if (check === false) {
+      var check = $('#checkArray').find('input[type=checkbox]:checked').length > 0;
+      var periode = $('#periode').val();
+      
+      if ((check === false) ) {
         alert('Centang minimal satu Judul pengajuan');
         return false;
       }

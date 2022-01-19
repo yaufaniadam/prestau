@@ -27,28 +27,24 @@ class Notif_model extends CI_Model
 
 	public function send_notif($data)
 	{
-		// $id_status = $data['id_status'];
+		$id_status = $data['id_status'];
 
-		date_default_timezone_set('Asia/Jakarta');
-		$date = date("Y/m/d h:i:s");
+
+		$date = date("Y-m-d h:m:s");
 
 		$notif = array();
 		foreach ($data['role'] as $role) {
 			$notif[] = array(
 				"role" => $role,
 				"id_pengajuan" => $data['id_pengajuan'],
-				// "pengirim" => $_SESSION['userid'],
 				"pengirim" => '',
 				"penerima" => $data['penerima'],
 				"tanggal_masuk" => $date,
-				'id_status_notif' => $data['id_status_notif']
-				// "id_prodi" => $_SESSION['id_prodi'],
-				// "id_status_pesan" => $this->get_status_pesan($role, $id_status),
+				'id_status_notif' => $data['id_status_notif'],
+				'status' => 0,
 			);
 		}
 		$result = $this->db->insert_batch('Tr_Notif', $notif);
-
-
 
 		return $result;
 	}

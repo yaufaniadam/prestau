@@ -90,7 +90,11 @@ class Pengajuan_model extends CI_Model
 
 	public function rekognisi()
 	{
-		return $this->db->query("SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent = 12")->result_array();
+		return $this->db->query("SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent = 1")->result_array();
+	}
+	public function prestasi()
+	{
+		return $this->db->query("SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent = 2")->result_array();
 	}
 
 	public function get_detail_pengajuan($pengajuan_id)

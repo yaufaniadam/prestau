@@ -38,7 +38,9 @@
 										</p>
 									</td>
 									<td>
-									<a href="" style="color:#fff;" title="Hapus" class="delete btn btn-sm  btn-circle btn-danger" data-href="<?= base_url('mahasiswa/pengajuan/hapus/' . $pengajuan['pengajuan_id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+										<?php if ($pengajuan['status_id'] < 3) { ?>
+											<a href="" style="color:#fff;" title="Hapus" class="delete btn btn-sm  btn-circle btn-danger" data-href="<?= base_url('mahasiswa/pengajuan/hapus/' . $pengajuan['pengajuan_id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+										<?php } ?>
 									</td>
 								</tr>
 							<?php  } ?>

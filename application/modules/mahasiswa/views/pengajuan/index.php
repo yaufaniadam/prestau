@@ -49,26 +49,44 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			
+			<div class="accordion" id="prestasi">
+				<div class="card">
+					<div class="card-header" id="prestasi-2">
+						<h5 class="h6 mb-0"> 
+							<a role="button" data-toggle="collapse" href="#collapse2" aria-expanded="true" aria-controls="collapse2">
+							<i class="fas"></i>	Prestasi 
+							</a>
+						</h5>
+					</div>
+					<div id="collapse2" class="collapse" data-parent="#accordion" aria-labelledby="prestasi-2">
+						<div class="card-body">
+							<div id="accordion-2">
 
-				<?php foreach ($jenis_pengajuan as $kategori) { ?>
-					<div class="card">
-						<div class="card-header" id="heading-<?= $kategori['Jenis_Pengajuan_Id']; ?>">
-							<h5 class="h6 mb-0"> 
-								<a href="#" data-toggle="collapse" data-target="#collapse-<?= $kategori['Jenis_Pengajuan_Id']; ?>" aria-expanded="true" aria-controls="collapse-<?= $kategori['Jenis_Pengajuan_Id']; ?>">
-									<i class="fas"></i> <?= $kategori['Jenis_Pengajuan']; ?> 
-								</a>
-							</h5>
-						</div>
-
-						<div id="collapse-<?= $kategori['Jenis_Pengajuan_Id']; ?>" class="collapse" aria-labelledby="heading-<?= $kategori['Jenis_Pengajuan_Id']; ?>" data-parent="#accordion">
-							<div class="card-body">
-								<?= $kategori['deskripsi']; ?>
-								<a class="btn btn-md btn-warning" href="<?= base_url('mahasiswa/pengajuan/baru/' . $kategori['Jenis_Pengajuan_Id']); ?>">Ajukan Prestasi</a>
+							<p>Pilih sub kategori prestasi di bawah ini.</p>
+								<?php foreach ($prestasi as $prestasi) { ?>
+									<div class="card">
+										<div class="card-header" id="prestasi-2-2">
+											<h5 class="h6 mb-0"> 
+												<a class="collapsed" role="button" data-toggle="collapse" href="#collapse2-<?= $prestasi['Jenis_Pengajuan_Id']; ?>" aria-expanded="false" aria-controls="collapse2-2">
+													<i class="fas"></i> <?= $prestasi['Jenis_Pengajuan']; ?>
+												</a>
+												
+											</h5>
+										</div>
+										<div id="collapse2-<?= $prestasi['Jenis_Pengajuan_Id']; ?>" class="collapse" data-parent="#accordion-2" aria-labelledby="prestasi-2-2">
+											<div class="card-body">
+												<?= $prestasi['deskripsi']; ?>
+												<a class="btn btn-md btn-warning" href="<?= base_url('mahasiswa/pengajuan/baru/' . $prestasi['Jenis_Pengajuan_Id']); ?>">Ajukan Prestasi</a>
+											</div>
+										</div>
+									</div>
+								<?php } ?>
 							</div>
 						</div>
 					</div>
-				<?php } ?>
-
+				</div>
 			</div>
 		</div>
 	</div>

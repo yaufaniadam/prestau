@@ -19,14 +19,15 @@
 		<?php endif; ?>
 
 		<?php
-		if ($pengajuan['status_id'] == 7 && $this->session->userdata('role') == 2) { ?>
+		if ($pengajuan['status_id'] == 7 && ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 2)) { ?>
 			<div class="alert alert-success">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				Pengajuan berhasil diverifikasi. <a href="<?php echo base_url('admin/pengajuan/verified'); ?>">Klik di sini untuk proses selanjutnya</a>
 			</div>
 		<?php }
 
-		if (($pengajuan['status_id'] == 2 || $pengajuan['status_id'] == 5) && $this->session->userdata('role') == 2) {
+		if (($pengajuan['status_id'] == 2 || $pengajuan['status_id'] == 5) && (($this->session->userdata('role') == 1) || ($this->session->userdata('role') == 2) )) {
+		
 			echo form_open('admin/pengajuan/verifikasi');
 		}
 
@@ -40,10 +41,10 @@
 		<?php } ?>
 
 		<div class="card shadow">
-			<a href="#collKeterangan" class="d-block card-header pt-3 pb-2 bg-abumuda <?= (($pengajuan['status_id'] == 9 || $pengajuan['status_id'] == 10) && $this->session->userdata('role') == 1) ? "collapsed" : "" ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collKeterangan">
+			<a href="#collKeterangan" class="d-block card-header pt-3 pb-2 bg-abumuda <?= (($pengajuan['status_id'] == 9 || $pengajuan['status_id'] == 10) && $this->session->userdata('role') == 1) ? "collapseds" : "" ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collKeterangan">
 				<p class="h6 font-weight-bold text-white">Keterangan</p>
 			</a>
-			<div class="collapse<?= (($pengajuan['status_id'] == 9 || $pengajuan['status_id'] == 10) && $this->session->userdata('role') == 1) ? "" : " show" ?>" id="collKeterangan">
+			<div class="collapsdse<?= (($pengajuan['status_id'] == 9 || $pengajuan['status_id'] == 10) && $this->session->userdata('role') == 1) ? "" : " show" ?>" id="collKeterangan">
 				<div class="card-body">
 					<input type="hidden" name="pengajuan_id" value="<?= $pengajuan['pengajuan_id']; ?>">
 
@@ -81,10 +82,10 @@
 											</li>
 
 											<li class="list-group-item"><input type="radio" name="rev2" id="ditolak" value="6" /> Ditolak
-												<?php if ($pengajuan['status_id'] == 2) { ?>
+											
 											<li class="list-group-item"><input type="radio" name="rev2" id="revisi" value="4" /> Perlu direvisi kembali
 											</li>
-										<?php } ?> </li>
+										
 										</ul>
 
 

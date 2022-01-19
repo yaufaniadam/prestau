@@ -15,74 +15,74 @@ class Mailer
 
     $this->_CI->notif_model->send_notif($data);
 
-    $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
+    // $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
 
-    $mail->From = 'noreply.simkatmawa@umy.ac.id';
-    $mail->FromName = "LPKA UMY - SIMKATMAWA";
-    //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-    $mail->isSMTP();                                            // Send using SMTP
-    $mail->Host       = 'pod51003.outlook.com';                    // Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    $mail->Username   = 'noreply.simkatmawa@umy.ac.id';                     // SMTP username
-    $mail->Password   = 'UMYbsi21';
-    // $mail->Password   = decrypt_url($this->get_settings('password_email'));
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-    $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+    // $mail->From = 'noreply.simkatmawa@umy.ac.id';
+    // $mail->FromName = "LPKA UMY - SIMKATMAWA";
+    // //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+    // $mail->isSMTP();                                            // Send using SMTP
+    // $mail->Host       = 'pod51003.outlook.com';                    // Set the SMTP server to send through
+    // $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    // $mail->Username   = 'noreply.simkatmawa@umy.ac.id';                     // SMTP username
+    // $mail->Password   = 'UMYbsi21';
+    // // $mail->Password   = decrypt_url($this->get_settings('password_email'));
+    // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+    // $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
-    $mail->setFrom('noreply.simkatmawa@umy.ac.id', 'LPKA UMY - SIMKATMAWA');
-    $mail->isHTML(true);
+    // $mail->setFrom('noreply.simkatmawa@umy.ac.id', 'LPKA UMY - SIMKATMAWA');
+    // $mail->isHTML(true);
 
-    $role = $data['role'];
+    // $role = $data['role'];
 
-    foreach ($role as $role) {
+    // foreach ($role as $role) {
 
-      $mail->Subject = $data['subjek'];
+    //   $mail->Subject = $data['subjek'];
 
-      if ($role == 2) {
-        $users = getUsersbyRole($role, '');
+    //   if ($role == 2) {
+    //     $users = getUsersbyRole($role, '');
 
-        $studentid = $data['STUDENTID'];
-        //ambil email mahasiswa berdasarkan nim
+    //     $studentid = $data['STUDENTID'];
+    //     //ambil email mahasiswa berdasarkan nim
 
-        // $email = '';
-        foreach ($users as $user) {
+    //     // $email = '';
+    //     foreach ($users as $user) {
 
-          $isi_email = array(
-            'penerima' => $user['fullname'],
-            'link' => $data['link'],
-            'isi' => $data['isi'],
-          );
+    //       $isi_email = array(
+    //         'penerima' => $user['fullname'],
+    //         'link' => $data['link'],
+    //         'isi' => $data['isi'],
+    //       );
 
-          $mail->Body = $this->email_template($isi_email);
-          $mail->addAddress($user['email']);
-          $mail->send();
-          $mail->ClearAddresses();
-        }
-      } elseif ($role == 3) {
+    //       $mail->Body = $this->email_template($isi_email);
+    //       $mail->addAddress($user['email']);
+    //       $mail->send();
+    //       $mail->ClearAddresses();
+    //     }
+    //   } elseif ($role == 3) {
 
-        $mail->Subject = $data['subjek'];
+    //     $mail->Subject = $data['subjek'];
 
-        $sp = $this->_CI->notif_model->get_messages($data['id_status_notif'], $role);
-        // $subject = $sp['judul_notif'];
+    //     $sp = $this->_CI->notif_model->get_messages($data['id_status_notif'], $role);
+    //     // $subject = $sp['judul_notif'];
 
-        $mail->addAddress('yaufani@gmail.com');
+    //     $mail->addAddress('yaufani@gmail.com');
 
-        $mail->Subject = "Pengajuan Baru";
+    //     $mail->Subject = "Pengajuan Baru";
 
-        $isi_email = array(
-          'penerima' => $data['STUDENTNAME'],
-          'link' => $data['link'],
-          'isi' => $data['isi'],
-        );
-        $mail->Body = $this->email_template($isi_email);
+    //     $isi_email = array(
+    //       'penerima' => $data['STUDENTNAME'],
+    //       'link' => $data['link'],
+    //       'isi' => $data['isi'],
+    //     );
+    //     $mail->Body = $this->email_template($isi_email);
 
-        $mail->send();
+    //     $mail->send();
 
-        $mail->ClearAddresses();
-      } else {
-        echo "admin";
-      }
-    }
+    //     $mail->ClearAddresses();
+    //   } else {
+    //     echo "admin";
+    //   }
+    // }
   }
 
 

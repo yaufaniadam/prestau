@@ -18,7 +18,7 @@ class Pengguna extends Admin_Controller
 		$data['role'] = $this->pengguna_model->get_role();
 		$data['title'] = 'Semua Pengguna';
 		$data['view'] = 'admin/pengguna/list';
-
+		$data['menu'] = 'pengguna';
 		$this->load->view('layout/layout', $data);
 	}
 

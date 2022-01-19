@@ -5,18 +5,6 @@
 
 	Catatan :
 	- notif muncul pada tiap role yang terlibat
-	- mhs :
-			- menerima notif yg berkaitan dengan proses surat setiap tahap
-	- admin tu
-			- menerima notif jika ada surat yg perlu verifikasi TU
-	- kaprodi
-			- menerima notif jika ada surat yang perlu diacc kaprodi
-	- direktur pasca
-			- menerima notif jika ada surat yg perlu diacc direktur 
-	- admin pasca
-			- menerima notif jika ada surat yg sudah diacc direktur pasca
-	- semua role :
-			- menerima notif jika surat tadi sudah selesai
 */
 
 class Notif extends MY_Controller

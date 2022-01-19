@@ -1,36 +1,4 @@
 <div class="row">
-
-	<!-- Earnings (Monthly) Card Example -->
-	<div class="col-xl-6 col-md-6 mb-4">
-
-		<div class="card shadow mb-4">
-			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary">Informasi Terbaru</h6>
-			</div>
-			<div class="card-body">
-				<div class="timeline timeline-xs">
-					<!-- Timeline Item 1-->
-					<?php foreach ($notif as $notif) { ?>
-						<div class="timeline-item">
-							<div class="timeline-item-marker">
-								<div class="timeline-item-marker-text">
-									<?= $notif['bulan_masuk_surat']; ?>
-									<?= $notif['tanggal_masuk_surat']; ?>
-								</div>
-								<div class="timeline-item-marker-indicator bg-<?= $notif['badge']; ?>"></div>
-							</div>
-							<div class="timeline-item-content">
-								<a class="font-weight-bold text-dark notif" name="<?= $notif['id_pengajuan']; ?>" id="<?= $notif['id_notif']; ?>" href="#">
-									<?= $notif['judul_notif']; ?>.
-								</a>
-							</div>
-						</div>
-					<?php } ?>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<!-- Earnings (Monthly) Card Example -->
 	<div class="col-xl-6 col-md-6 mb-4">
 		<div class="row">
@@ -68,8 +36,6 @@
 				</div>
 			</div>
 
-
-
 		</div>
 
 		<div class="card shadow mb-4">
@@ -91,17 +57,37 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="col-xl-6 col-md-6 mb-4">
+
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-primary">Informasi Terbaru</h6>
+			</div>
+			<div class="card-body">
+				<div class="timeline timeline-xs">
+					<!-- Timeline Item 1-->
+					<?php foreach ($notif as $notif) { ?>
+						<div class="timeline-item">
+							<div class="timeline-item-marker">
+								<div class="timeline-item-marker-text">
+									<?= $notif['bulan_masuk_surat']; ?>
+									<?= $notif['tanggal_masuk_surat']; ?>
+								</div>
+								<div class="timeline-item-marker-indicator bg-<?= $notif['badge']; ?>"></div>
+							</div>
+							<div class="timeline-item-content">
+								<a class="font-weight-bold text-dark notif" name="<?= $notif['id_pengajuan']; ?>" id="<?= $notif['id_notif']; ?>" href="#">
+									<?= $notif['judul_notif']; ?>.
+								</a>
+							</div>
+						</div>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 
-<script type="text/javascript">
-	$(".notif").click(function() {
-		var nid = this.id
-		var pid = this.name
-		$.ajax({
-			url: "<?= base_url('notif/read_notif/'); ?>" + nid,
-			success: function() {
-				window.location.href = "<?= base_url('mahasiswa/pengajuan/tambah/'); ?>" + pid
-			}
-		});
-	});
-</script>
+

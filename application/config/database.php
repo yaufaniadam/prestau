@@ -82,9 +82,8 @@ $db['dbsqlsrv'] = array(
 	'username' => 'programmer',
 	// 'username' => 'adam',
 	'password' => 'programmer',
-	// 'password' => 'adamadam',
+	// 'password' => '',
 	'database' => 'simkatmawa',
-
 	'dbdriver' => 'sqlsrv',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

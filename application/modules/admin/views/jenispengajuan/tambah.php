@@ -65,6 +65,14 @@ echo form_open_multipart(base_url('admin/jenispengajuan/tambah/'), 'class="form-
 
 	<div class="col-md-12">
 		<div class="card card-success card-outline">
+			<ul class="nav nav-tabs pt-3 pl-4  bg-perak">
+				<li class="nav-item">
+					<a class="nav-link" href="<?= base_url('admin/jenispengajuan'); ?>"><i class="fas fa-fw fa-table"></i> Jenis pengajuan</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="<?= base_url('admin/jenispengajuan/tambah'); ?>"><i class="fas fa-fw fa-plus"></i> Tambah Jenis pengajuan</a>
+				</li>			
+			</ul>
 			<div class="card-body box-profile">
 
 				<div class="form-group row">
@@ -78,7 +86,7 @@ echo form_open_multipart(base_url('admin/jenispengajuan/tambah/'), 'class="form-
 				<div class="form-group row">
 					<label for="kode" class="col-md-3 control-label"></label>
 					<div class="col-md-9">
-						<input type="submit" name="submit" value="Tambah Kategori Surat" class="btn btn-perak btn-block">
+						<input type="submit" name="submit" value="Tambah Jenis Pengajuan" class="btn btn-perak btn-block">
 					</div>
 				</div>
 

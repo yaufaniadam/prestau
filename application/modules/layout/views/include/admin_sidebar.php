@@ -19,10 +19,10 @@
 			<span>Dashboard</span>
 		</a>
 	</li>
-	<li class="nav-item" id="semua_pengajuan">
+	<li class="nav-item" id="menu_pengajuan">
 		<a class="nav-link" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
-			<span>Pengajuan</span>
+			<span>Pengajuan </span>
 		</a>
 	</li>
 
@@ -39,21 +39,24 @@
 
 	<?php if (($this->session->userdata('role') == 1) || ($this->session->userdata('role') == 2)) { ?>
 
-		<li class="nav-item" id="semua_pengajuan">
+		<li class="nav-item" id="menu_verified">
 			<a class="nav-link" href="<?= base_url("admin/pengajuan/verified"); ?>">
-				<i class=" fas fa-fw fa-envelope"></i>
-				<span>Lolos Verifikasi</span>
+				<i class=" fas fa-fw fa-check-circle"></i>
+				<span>Lolos Verifikasi
+					 <!-- <span class="float-right badge badge-warning">2</span> -->					
+				</span>
+				
 			</a>
 		</li>
 
-		<li class="nav-item" id="semua_pengajuan">
+		<li class="nav-item" id="menu_periode">
 			<a class="nav-link" href="<?= base_url("admin/periode/index/1"); ?>">
-				<i class="fas fa-fw fa-envelope"></i>
+				<i class="fas fa-fw fa-calendar-alt"></i>
 				<span>Periode</span>
 			</a>
 		</li>
 
-		<li class="nav-item" id="semua_pengajuan">
+		<li class="nav-item" id="menu_arsip">
 			<a class="nav-link" href="<?= base_url("admin/pengajuan/arsip/0/0") ?>">
 				<i class="fas fa-file-archive"></i>
 				<span>Arsip Pengajuan</span>
@@ -75,7 +78,7 @@
 				</a>
 			</li>
 
-			<li class="nav-item" id="menu_kategoripengajuan">
+			<li class="nav-item" id="menu_jenispengajuan">
 				<a class="nav-link" href="<?= base_url("admin/jenispengajuan"); ?>">
 					<i class="fas fa-fw fa-list"></i>
 					<span>Jenis Pengajuan</span>

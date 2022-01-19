@@ -391,12 +391,21 @@ class Pengajuan_model extends CI_Model
 
 	public function getAllFieldsPengajuan($jenis_pengajuan_id, $aktif)
 	{
-		$query = $this->db->query(
-			"SELECT * FROM Mstr_Fields
-		LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
-			WHERE Tr_Pengajuan_Field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
-				" AND Tr_Pengajuan_Field.terpakai=" . $aktif
-		);
+		if($jenis_pengajuan_id) {
+			$query = $this->db->query(
+				"SELECT * FROM Mstr_Fields
+			LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
+				WHERE Tr_Pengajuan_Field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
+					" AND Tr_Pengajuan_Field.terpakai=" . $aktif
+			);
+		} else {
+			$query = $this->db->query(
+				"SELECT * FROM Mstr_Fields
+			LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
+			AND Tr_Pengajuan_Field.terpakai=" . $aktif
+			);
+
+		}
 
 		return $result = $query->result_array();
 	}

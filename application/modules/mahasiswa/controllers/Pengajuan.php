@@ -25,6 +25,7 @@ class Pengajuan extends Mahasiswa_Controller
 	public function pengajuan_saya()
 	{
 		$nim = $_SESSION['studentid'];
+
 		$data['title'] = 'Pengajuan Saya';
 		$data['view'] = 'pengajuan/pengajuan_saya';
 		$data['query'] = $this->db->query(
@@ -47,14 +48,11 @@ class Pengajuan extends Mahasiswa_Controller
 			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
 			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
-			WHERE p.nim = $nim
+			WHERE p.nim = '$nim'
 			AND ps.status_pengajuan_id = (SELECT MAX(status_pengajuan_id) 
 													FROM Tr_Pengajuan_Status  
 													WHERE pengajuan_id = p.pengajuan_id ) AND NOT ps.status_id=20"
 		)->result_array();
-
-		// print_r($data);
-		// die();
 
 		$this->load->view('layout/layout', $data);
 	}
@@ -108,21 +106,14 @@ class Pengajuan extends Mahasiswa_Controller
 
 	public function index($id_jenis_pengajuan = 0)
 	{
-		if ($id_jenis_pengajuan == 0) {
-			// $data['jenis_pengajuan'] = $this->pengajuan_model->get_jenis_pengajuan($id_jenis_pengajuan);
+		
 			$data['rekognisi'] = $this->pengajuan_model->rekognisi();
-			$data['jenis_pengajuan'] = $this->db->query(
-				"SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent IS NULL"
-			)->result_array();
+			$data['prestasi'] = $this->pengajuan_model->prestasi();
+		
 			$data['title'] = 'Ajukan Prestasi';
 			$data['all'] = true;
 			$data['view'] = 'pengajuan/index';
-		} else {
-			$data['jenis_pengajuan'] = $this->pengajuan_model->get_jenis_pengajuan($id_jenis_pengajuan);
-			$data['title'] = 'Ajukan Prestasi';
-			$data['all'] = false;
-			$data['view'] = 'pengajuan/index';
-		}
+	
 		$this->load->view('layout/layout', $data);
 	}
 
@@ -139,7 +130,7 @@ class Pengajuan extends Mahasiswa_Controller
 			->where(array('Jenis_Pengajuan_Id' => $id))->get()
 			->result_array();
 
-			// echo '<pre>'; print_r($field); echo '</pre>';
+		// echo '<pre>'; print_r($field); echo '</pre>';
 
 		$data = $this->security->xss_clean($data);
 		$result = $this->pengajuan_model->tambah($data);
@@ -152,7 +143,7 @@ class Pengajuan extends Mahasiswa_Controller
 		$this->db->set('pengajuan_id', $insert_id)
 			->set('status_id', 1)
 			->set('pic', $data_user['STUDENTID'])
-			->set('date', date('Y-m-d h:m:s'))
+			->set('date', 'getdate()', FALSE)
 			->insert('Tr_Pengajuan_Status');
 
 		// //ambil id surat berdasarkan last id status surat
@@ -183,10 +174,6 @@ class Pengajuan extends Mahasiswa_Controller
 
 		$this->session->set_flashdata('msg', 'Berhasil!');
 		redirect(base_url('mahasiswa/pengajuan/tambah/' . $insert_id));
-
-		// foreach ($field_id as $ad) {
-		// 	print_r($ad['field_id']);
-		// }
 
 	}
 
@@ -428,21 +415,55 @@ class Pengajuan extends Mahasiswa_Controller
 				$next_status = 5;
 			}
 
-			// echo $id_status;
-			// echo $next_status;
 
 			$data_user = $this->session->userdata('user_id');
 
+
+			// generate validation
 			foreach ($pengajuan_fields as $pengajuan_field) {
-				$this->form_validation->set_rules(
-					'dokumen[' . $pengajuan_field['field_id'] . ']',
-					$this->getNamaField($pengajuan_field['field_id']),
-					'trim|required',
-					[
-						'required' => '%s wajib diisi',
-					]
-				);
+				//cek apakah field ini wajib
+				//jika wajib
+				if ($pengajuan_field['required'] == 1) {
+
+
+
+					if ($pengajuan_field['type'] == 'url') {
+						$callback = '|callback_url_check';
+					} else {
+						$callback = '';
+					}
+
+					$this->form_validation->set_rules(
+						'dokumen[' . $pengajuan_field['field_id'] . ']',
+						$this->getNamaField($pengajuan_field['field_id']),
+						'trim|required' . $callback,
+						[
+							'required' => '%s wajib diisi!'
+						]
+
+					);
+				} else {
+
+					//jika tidak wajib, jika field typenya url, tetap dicek utk memeriksa urlnya benar atau salah
+					if ($pengajuan_field['type'] == 'url') {
+
+
+						$this->form_validation->set_rules(
+							'dokumen[' . $pengajuan_field['field_id'] . ']',
+							$this->getNamaField($pengajuan_field['field_id']),
+							'trim|callback_url_check_notrequired',
+
+						);
+					}
+				}
 			}
+
+			$this->form_validation->set_rules(
+				'id_pengajuan',
+				'id_pengajuan',
+				'trim|required',
+				array('required' => 'Id Pengajuan wajib diisi')
+			);
 
 			if ($this->form_validation->run() == false) {
 				$data['pengajuan_fields'] = $pengajuan_fields;
@@ -457,7 +478,7 @@ class Pengajuan extends Mahasiswa_Controller
 					$insert = $this->db->set('pengajuan_id', $pengajuan_id)
 						->set('status_id', $next_status)
 						->set('pic', $data_user['STUDENTID'])
-						->set('date', date('Y-m-d h:m:s'))
+						->set('date', 'getdate()', FALSE)
 						->insert('Tr_Pengajuan_Status');
 				}
 
@@ -485,20 +506,21 @@ class Pengajuan extends Mahasiswa_Controller
 				//data utk kirim email & notif ke pegawai
 				$data_for_notif = [
 					'STUDENTID' => $data_user['STUDENTID'],
+					'pengirim' => $data_user['STUDENTID'],
 					'STUDENTNAME' => $data_user['FULLNAME'],
-					'penerima' => '',
+					'penerima' => '2',
 					'id_pengajuan' => $pengajuan_id,
 					'judul_pengajuan' => $data['title'],
-					'role' => [2],
-					'link' => base_url('admin/pengajuan/detail/'. $pengajuan_id),
+					'role' => [1,2],
+					'link' => base_url('admin/pengajuan/detail/' . $pengajuan_id),
 					'subjek' => 'Ada Pengajuan Prestasi Baru dari ' . $data_user['FULLNAME'],
 					'isi' => 'Ada Pengajuan Prestasi Baru dari <strong>' . $data_user['FULLNAME'] . '</strong> kategori <strong>' . $data['title'] . '</strong> yang perlu diperiksa.',
-					'id_status_notif' => 3,
+					'id_status_notif' => 2,
 				];
 
 				//sendmail & notif
-				$this->mailer->send_mail($data_for_notif);			
-			
+				$this->mailer->send_mail($data_for_notif);
+
 				redirect(base_url('mahasiswa/pengajuan/tambah/' . $pengajuan_id));
 			}
 		} else {
@@ -538,64 +560,26 @@ class Pengajuan extends Mahasiswa_Controller
 
 			$filename = $this->upload->data('file_ext');
 
-			// // cek apakah gambar atau bukan
 
-			if (($filename === '.jpg') || ($filename === '.jpeg') || ($filename === '.png') || ($filename === '.gif')) {
+			$this->db->insert(
+				'Tr_Media',
+				array(
+					'nim' => $this->session->userdata('studentid'),
+					'file' =>  $upload_path . '/' . $data['file_name'],
 
-				// 	//$filename = 'gambar';
-				// 	// jka gambar, buatkan thumbnail
-				$this->_create_thumbs($data['file_name']);
+				)
+			);
 
-				// $result = 
-				$this->db->insert(
-					'Tr_Media',
-					array(
-						'nim' => $this->session->userdata('studentid'),
-						'file' =>  $upload_path . '/' . $data['file_name'],
-						//	'file' =>  $filename,
-						'thumb' =>  $upload_path . '/' . $data['raw_name'] . '_thumb' . $data['file_ext']
-
-					)
-				);
-
-				$thumb = $data['raw_name'] . '_thumb' . $data['file_ext'];
-			} else {
-				$thumb = '';
-				// $result = 
-				$this->db->insert(
-					'Tr_Media',
-					array(
-						'nim' => $this->session->userdata('studentid'),
-						'file' =>  $upload_path . '/' . $data['file_name'],
-						'thumb' => $thumb
-					)
-				);
-			}
 
 			echo json_encode(
 				[
 					'status' => 'Ok',
 					'id' => $this->db->insert_id(),
 					// 'path' => $upload_path . '/' . $data['file_name'],
-					'thumb' => $thumb,
 					'orig' => $upload_path . '/' . $data['file_name'],
 					'filename' => $data['file_name']
 				]
 			);
-
-
-			// $this->_create_thumbs($data['file_name']);
-
-			// // $result = 
-			// $this->db->insert(
-			// 	'Tr_Media',
-			// 	array(
-			// 		'nim' => $this->session->userdata('studentid'),
-			// 		'file' =>  $upload_path . '/' . $data['file_name'],
-			// 		'thumb' =>  $upload_path . '/' . $data['raw_name'] . '_thumb' . $data['file_ext']
-			// 	)
-			// );
-
 
 		}
 	}
@@ -604,14 +588,8 @@ class Pengajuan extends Mahasiswa_Controller
 	{
 		$id = $_POST['id'];
 		$media = $this->db->get_where('Tr_Media', array('id' => $id))->row_array();
-		$exist = is_file($media['thumb']);
 
-		if ($media['thumb']) {
-			if (is_file($media['thumb'])) {
-				unlink($media['thumb']);
-				$thumb = 'deleted';
-			}
-		}
+
 		if ($media['file']) {
 			if (is_file($media['file'])) {
 				unlink($media['file']);
@@ -624,7 +602,6 @@ class Pengajuan extends Mahasiswa_Controller
 		echo json_encode(array(
 			"statusCode" => 200,
 			"id" => $id,
-			'thumb' => ($media['thumb']) ? $thumb : '',
 			'file' => ($media['file']) ? $file : '',
 			'hapus' => $hapus
 		));
@@ -712,27 +689,51 @@ class Pengajuan extends Mahasiswa_Controller
 		}
 	}
 
-	function anggota_check($str)
+	function url_check($str)
 	{
-		if (is_array($str)) {
-			$this->form_validation->set_message('Anggota', 'The {field} field can not be the word "test"');
-			return true;
+
+
+		$pattern = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
+		if ($str != '') {
+			if (!preg_match($pattern, $str)) {
+				$this->form_validation->set_message('url_check', 'Format URL tidak valid. Contoh format URL yang benar: http://umy.ac.id atau https://umy.ac.id');
+				return false;
+			} else {
+				return true;
+			}
 		} else {
+			$this->form_validation->set_message('url_check', 'URL tidak boloh kosong');
 			return false;
+		}
+	}
+	function url_check_notrequired($str)
+	{
+
+
+		$pattern = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
+		if ($str != '') {
+			if (!preg_match($pattern, $str)) {
+				$this->form_validation->set_message('url_check_notrequired', 'Format URL tidak valid. Contoh format URL yang benar: http://umy.ac.id atau https://umy.ac.id');
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+
+			return true;
 		}
 	}
 
 	public function hapus($id)
 	{
-	
+
 		$hapus = $this->db->set('status_id', '20')
-					->set('date', date('Y-m-d h:m:s'))
-					->set('pengajuan_id', $id)
-					->set('pic', $this->session->userdata('studentid'))
-					->insert('Tr_Pengajuan_Status');
+			->set('date', 'getdate()', FALSE)
+			->set('pengajuan_id', $id)
+			->set('pic', $this->session->userdata('studentid'))
+			->insert('Tr_Pengajuan_Status');
 
 		$this->session->set_flashdata('msg', 'Pengajuan berhasil dihapus!');
 		redirect(base_url('mahasiswa/pengajuan/pengajuan_saya'));
 	}
-
 }

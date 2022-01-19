@@ -42,7 +42,7 @@ header("Expires: 0");
 				<div class="card-header">
 					<div class="row">
 						<div class="col-12 text-center">
-							<h1 class="mb-0">Nama mahasiswa yang memperoleh reward pada periode ini</h1>
+							<h3 class="mb-0">Nama mahasiswa yang memperoleh reward pada periode <?= $nama_periode; ?></h3>
 						</div>
 					</div>
 				</div>
@@ -53,8 +53,10 @@ header("Expires: 0");
 							<tr>
 								<!-- <th style="width:1%"><input type="checkbox" name="" id="check_all"></th> -->
 								<th style="width:30%">Mahasiswa</th>
-								<th style="width:20%">Perihal</th>
-								<th style="width:35%">Judul Kegiatan</th>
+								<th style="width:30%">Prodi</th>
+								<th style="width:20%">Kategori</th>
+								<th style="width:35%">Judul </th>
+								<th style="width:35%">Nominal Reward </th>
 								<th style="width:25%">Dokumen Pengajuan</th>
 							</tr>
 						</thead>
@@ -62,12 +64,14 @@ header("Expires: 0");
 							<?php foreach ($pengajuan as $pengajuan) { ?>
 								<tr>
 									<td><?= $pengajuan['penerima']; ?></td>
+									<td><?= $pengajuan['prodi']; ?></td>
 									<td><?= $pengajuan['jenis_pengajuan']; ?></td>
 									<td><?= $pengajuan['judul_kegiatan']; ?></td>
+									<td><?= $pengajuan['nominal']; ?></td>
 									<td>
 										<?php foreach ($pengajuan['file'] as $file) { ?>
 											<p class="">
-												<a class="p-2 badge badge-primary badge-pill" href="<?= $file['file']; ?>"><?= $file['filename']; ?></a>
+												<a class="p-2 badge badge-primary badge-pill" href="<?= base_url($file['file']); ?>"><?= $file['filename']; ?></a>
 											</p>
 										<?php } ?>
 									</td>

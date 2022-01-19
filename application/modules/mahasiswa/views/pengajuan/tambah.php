@@ -47,6 +47,7 @@
 
 						<div class="col-md-7">
 							<input type="text" value="<?= $pengajuan->Jenis_Pengajuan; ?>" disabled class="form-control">
+							<input type="hidden" value="<?= $pengajuan->pengajuan_id; ?>" name="id_pengajuan">
 						</div>
 					</div>
 					<?php
@@ -56,7 +57,7 @@
 							<label class="col-md-5" for="dokumen[<?= $pengajuan_field['field_id']; ?>]">
 								<?= $pengajuan_field['field'] ?>
 								<small id="emailHelp" class="form-text text-muted">
-									<?= $pengajuan_field['deskripsi'] ?>
+									<?= $pengajuan_field['deskripsi'] ?> <?= ($pengajuan_field['required'] == 1) ? '<strong class="text-danger">Wajib</strong>': ''; ?>
 								</small>
 							</label>
 
@@ -72,10 +73,11 @@
 
 					<?php } elseif ($pengajuan->status_id == 1) { ?>
 						<input type="hidden" name="status" value="<?= ($pengajuan->status_id == 1) ? '1' : '2' ?>">
-						<input class="btn btn-lg btn-<?= $pengajuan->badge; ?> btn-block" type="submit" name="submit" value="<?= ($pengajuan->status_id == 1) ? 'Ajukan Prestasi' : 'Simpan perubahan' ?> " />
+						<input class="btn btn-lg btn-<?= $pengajuan->badge; ?> btn-block dm-uploader-btn" type="submit" name="submit" value="<?= ($pengajuan->status_id == 1) ? 'Ajukan Prestasi' : 'Simpan perubahan' ?> " />
 					<?php } ?>
 
 					<?php echo form_close();  ?>
+					
 				</div>
 			</div>
 

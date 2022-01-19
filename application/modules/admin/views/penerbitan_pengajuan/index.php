@@ -25,16 +25,13 @@
 					<thead>
 						<tr>
 							<th style="width:1%"><input type="checkbox" name="" id="check_all"></th>
-							<th style="width:40%">Perihal</th>
+							<th style="width:40%">Kategori</th>
 							<th style="width:35%">Judul Kegiatan</th>
 							<th style="width:25%">Status</th>
-							<th>Mahasiswa</th>
+							<th>Mahasiswa</th>							
 							<th>Nominal (Rp)</th>
-							<?php if ($status_periode != 1) { ?>
-								<th>&nbsp;</th>
-							<?php } ?>
 							<th>&nbsp;</th>
-							<!-- <th></th> -->
+							
 						</tr>
 					</thead>
 					<tbody>
