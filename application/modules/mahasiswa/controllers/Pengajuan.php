@@ -107,8 +107,7 @@ class Pengajuan extends Mahasiswa_Controller
 	public function index($id_jenis_pengajuan = 0)
 	{
 		
-			$data['rekognisi'] = $this->pengajuan_model->rekognisi();
-			$data['prestasi'] = $this->pengajuan_model->prestasi();
+			$data['kategori_pengajuan'] = $this->pengajuan_model->kategori_pengajuan();
 		
 			$data['title'] = 'Ajukan Prestasi';
 			$data['all'] = true;

@@ -76,8 +76,16 @@ $selected_kat = array_column($result, 'field_id');
 	</div>
 
 	<div class="col-md-8">
+	
+		
 
-		<?php echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi']), 'class="form-horizontal"'); ?>
+
+		<?php 
+		 $katid= (isset($_GET['id'])) ? $_GET['id'] : '';
+		 $pos= (isset($_GET['pos'])) ? $_GET['pos'] : '';
+
+		echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['jpi'] . '?id=' . $katid .'&pos=' . $pos	), 'class="form-horizontal"'); ?>
+
 		<div class="card card-success card-outline">
 			<p class="card-header">Jenis Pengajuan</p>
 			<div class="card-body box-profile">
@@ -87,12 +95,32 @@ $selected_kat = array_column($result, 'field_id');
 						<div class="form-group">
 							<label for="Jenis_Pengajuan" class="control-label">Kategori *</label>
 							<div class="">
-								<select name="parent" class="form-control <?= (form_error('parent')) ? 'is-invalid' : ''; ?>" id="parent">
+
+							
+								<select name="parent" class="form-control <?= (form_error('parent')) ? 'is-invalid' : ''; ?>" id="parent" onchange="window.location='<?= $kat['jpi']; ?>?id='+this.value+'&pos='+this.selectedIndex;">
+
 									<option value=''>Pilih Kategori</option>
-									<option value="1" <?= (validation_errors()) ? (set_select('parent','1')): ($kat['parent'] == 1 ? 'selected': '') ?>>Rekoginisi</option>
-									<option value="2" <?= (validation_errors()) ? (set_select('parent','2')): ($kat['parent'] == 2 ? 'selected': '') ?>>Prestasi</option>
+									<?php							
+									
+									foreach($kategori_jenis_pengajuan as $jp) { ?>
+
+										<option value="<?= $jp['id']; ?>" <?= (validation_errors()) ? (set_select('parent',$jp['id'])): ($kat['parent'] == $jp['id'] ? 'selected': '') ?>><?= $jp['kategori_pengajuan']; ?></option>
+
+									<?php } ?>
+								
 								</select>
 								<span class="invalid-feedback"><?php echo form_error('parent'); ?></span>
+								<?php
+								if(isset($_GET['id']))								{
+									$parent=$_GET['id'];
+								?>
+								<script>
+									var myselect = document.getElementById("parent");
+									myselect.options.selectedIndex = <?php echo $_GET["pos"]; ?>
+								</script>
+								 <?php	}	?>
+
+							
 							</div>
 						</div>
 					</div>					
@@ -196,7 +224,9 @@ $selected_kat = array_column($result, 'field_id');
 															<!-- <option value='date_range' <?= ($result['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option> -->
 															<option value='url' <?= ($result['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
 															<option value='file' <?= ($result['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
-															<option value='select_tingkat' <?= ($result['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan Prestasi</option>
+															
+															<option value='select_prestasi' <?= ($result['type'] == 'select_prestasi') ? 'selected="selected"' : ''; ?>>Prestasi (Juara 1 dst)</option>
+															<option value='select_tingkat' <?= ($result['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan (Nasional, wilayah, dst)</option>
 															<option value='select_nasional_internasional' <?= ($result['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option>
 														</select>
 													</div>
@@ -288,7 +318,8 @@ $selected_kat = array_column($result, 'field_id');
 															<!-- <option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option> -->
 															<option value='url' <?= ($field['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
 															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
-															<option value='select_tingkat' <?= ($field['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan Prestasi</option>
+															<option value='select_prestasi' <?= ($field['type'] == 'select_prestasi') ? 'selected="selected"' : ''; ?>>Prestasi (Juara 1 dst)</option>
+															<option value='select_tingkat' <?= ($field['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan (Nasional, wilayah, dst)</option>
 															<option value='select_nasional_internasional' <?= ($field ['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option>
 															
 														</select>
@@ -335,173 +366,271 @@ $selected_kat = array_column($result, 'field_id');
 
 		<div class="card card-danger card-outline">
 
+		
+
 			<p class="card-header">Nominal Reward</p>
 			<div class="card-body box-profile">
-				<form name="nominal_reward" id="nominal_reward" action="<?= base_url('admin/jenispengajuan/edit_nominal/' . $kat['jpi']); ?>">
-					<div class="form-group">
-						<label for="Jenis_Pengajuan" class="control-label">Tipe Nominal Reward</label>
-						<ul class="list-group tipe_reward" id="tipe_reward">
-							<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 1 ? 'checked="checked"' : ''; ?> value="1"> <span>Individu</span></li>
-							<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 2 ? 'checked="checked"' : ''; ?> value="2"> <span>Kelompok (Ketua dan anggota memperoleh nominal yang berbeda)</span></li>
-							<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 3 ? 'checked="checked"' : ''; ?> value="3"> <span>Kelompok (Reward diberikan kepada kelompok, bukan kepada tiap anggota)</span></li>
-							<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 4 ? 'checked="checked"' : ''; ?> value="4"> <span>Berdasarkan biaya yang dikeluarkan oleh mahasiswa</span></li>
-						</ul>
-						<span class="invalid-feedback">Error</span>					
-					</div>
+
+				<?php
+				 
+				
+					if ( $parent != '') { 
+						
+						if(validation_errors()) {					
+							$kategori_nominal = $pos;
+						} else {					
+							$kategori_nominal = $parent;
+						}
+						
+					
+					
+					
+					?>	
+
+					<form name="nominal_reward" id="nominal_reward" action="<?= base_url('admin/jenispengajuan/edit_nominal/' . $kat['jpi']); ?>">
+
+					<?php if( $kategori_nominal != 3) { ?>
+						<div class="form-group">
+							<label for="Jenis_Pengajuan" class="control-label">Tipe Nominal Reward</label>
+							<ul class="list-group tipe_reward" id="tipe_reward">
+								<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 1 ? 'checked="checked"' : ''; ?> value="1"> <span>Individu</span></li>
+								<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 2 ? 'checked="checked"' : ''; ?> value="2"> <span>Kelompok (Ketua dan anggota memperoleh nominal yang berbeda)</span></li>
+								<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 3 ? 'checked="checked"' : ''; ?> value="3"> <span>Kelompok (Reward diberikan kepada kelompok, bukan kepada tiap anggota)</span></li>
+								<li class="list-group-item"><input type="radio" name="tipe_reward" <?= $kat['fixed'] == 4 ? 'checked="checked"' : ''; ?> value="4"> <span>Berdasarkan biaya yang dikeluarkan oleh mahasiswa</span></li>
+								
+							</ul>
+							<span class="invalid-feedback">Error</span>					
+						</div>
 
 
-					<div class="form-group" id="nominal">
-						<label for="Jenis_Pengajuan" class="control-label">Nominal (Rp)</label>
-						<div>
-							<div class="input-group mb-2 nominal1">
-								<div class="input-group-prepend">
-									<div class="input-group-text">Ketua Rp</div>
+						<div class="form-group" id="nominal">
+							<label for="Jenis_Pengajuan" class="control-label">Nominal (Rp)</label>
+							<div>
+								<div class="input-group mb-2 nominal1">
+									<div class="input-group-prepend">
+										<div class="input-group-text">Ketua Rp</div>
+									</div>
+									<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? get_nominal_byorder($kat['jpi'], 0) : $kat['nominal']);  ?>" name="nominal1" class="form-control">
+									<span class="invalid-feedback">Error Nominal 1</span>			
 								</div>
-								<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? get_nominal_byorder($kat['jpi'], 0) : $kat['nominal']);  ?>" name="nominal1" class="form-control">
-								<span class="invalid-feedback">Error Nominal 1</span>			
-							</div>
-							<div class="input-group mb-2 nominal2 ">
-								<div class="input-group-prepend">
-									<div class="input-group-text">Anggota Rp</div>
+								<div class="input-group mb-2 nominal2 ">
+									<div class="input-group-prepend">
+										<div class="input-group-text">Anggota Rp</div>
+									</div>
+									<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? get_nominal_byorder($kat['jpi'], 1)  : '');  ?>" name="nominal2" class="form-control">
+									<span class="invalid-feedback">Error Nominal 2</span>				
 								</div>
-								<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 2 ? get_nominal_byorder($kat['jpi'], 1)  : '');  ?>" name="nominal2" class="form-control">
-								<span class="invalid-feedback">Error Nominal 2</span>				
 							</div>
 						</div>
-					</div>
+
+						<?php } else { ?>
 
 
-					<div class="form-group">
-						<input type="submit" name="submit" value="Simpan Nominal Reward" class="btn btn-success btn-block simpan_nominal">
-
-						<p class="mt-1 sukses_simpan text-success text-center"><i class="fas fa-check-circle"></i> Berhasil disimpan</p>
-
-					</div>
-				</form>
-
-
-				<script>
-					$(document).ready(function() {
+							<input type="hidden" name="tipe_reward" id="" value="5">
 						
-						$('select[name="type"]').on('change', function() {
-							var val = $(this).val();
-							var typeId = $(this).closest(".ui-state-highlights").attr("id");						
+							<div class="form-group row " id="nominal-pkm">
+								<label for="Jenis_Pengajuan" class="control-label col-md-4 pt-2">Juara 1</label>
 
-							if(val == 'judul') {
-								$("#" + typeId).find("input[name='key']").attr('readonly', true);
-								$("#" + typeId).find("input[name='key']").val('judul');
-							} else if(val == 'select_mahasiswa') {
-								$("#" + typeId).find("input[name='key']").attr('readonly', true);
-								$("#" + typeId).find("input[name='key']").val('anggota');
-							} else {
-								$("#" + typeId).find("input[name='key']").attr('readonly', false);
+								<div class="col-md-8">
+									<div class="input-group  nominal1">
+										<div class="input-group-prepend">
+											<div class="input-group-text">Rp</div>
+										</div>
+										<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 5 ? get_nominal_byorder($kat['jpi'], 0) : $kat['nominal']);  ?>" name="nominal1" class="form-control">
+										<span class="invalid-feedback">Error Juara 1</span>			
+									</div>
+								</div>							
 
-								var old_value = $("#" + typeId).find("input[name='key']").val();
+							</div>
+							<div class="form-group row " id="nominal-pkm">
+								<label for="Jenis_Pengajuan" class="control-label col-md-4 pt-2">Juara 2</label>
 
-								if(old_value !='') {
-									$("#" + typeId).find("input[name='key']").val(old_value);
+								<div class="col-md-8">
+									<div class="input-group  nominal1">
+										<div class="input-group-prepend">
+											<div class="input-group-text">Rp</div>
+										</div>
+										<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 5 ? get_nominal_byorder($kat['jpi'], 1) : $kat['nominal']);  ?>" name="nominal2" class="form-control">
+										<span class="invalid-feedback">Error Juara 2</span>			
+									</div>
+								</div>							
+
+							</div>
+							<div class="form-group row " id="nominal-pkm">
+								<label for="Jenis_Pengajuan" class="control-label col-md-4 pt-2">Juara 3</label>
+
+								<div class="col-md-8">
+									<div class="input-group  nominal1">
+										<div class="input-group-prepend">
+											<div class="input-group-text">Rp</div>
+										</div>
+										<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 5 ? get_nominal_byorder($kat['jpi'], 2) : $kat['nominal']);  ?>" name="nominal3" class="form-control">
+										<span class="invalid-feedback">Error Juara 3</span>			
+									</div>
+								</div>							
+
+							</div>
+							<div class="form-group row " id="nominal-pkm">
+								<label for="Jenis_Pengajuan" class="control-label col-md-4 pt-2">Juara Favorit</label>
+
+								<div class="col-md-8">
+									<div class="input-group  nominal1">
+										<div class="input-group-prepend">
+											<div class="input-group-text">Rp</div>
+										</div>
+										<input type="number" value="<?= (validation_errors()) ? set_value('Jenis_Pengajuan') : ($kat['fixed'] == 5 ? get_nominal_byorder($kat['jpi'], 3) : $kat['nominal']);  ?>" name="nominal4" class="form-control">
+										<span class="invalid-feedback">Error Juara Favorit</span>			
+									</div>
+								</div>							
+
+							</div>
+
+							
+						<?php } ?>
+
+						<div class="form-group">
+							<input type="submit" name="submit" value="Simpan Nominal Reward" class="btn btn-success btn-block simpan_nominal">
+
+							<p class="mt-1 sukses_simpan text-success text-center"><i class="fas fa-check-circle"></i> Berhasil disimpan</p>
+
+						</div>
+
+					</form>
+
+
+					<script>
+						$(document).ready(function() {
+							
+							$('select[name="type"]').on('change', function() {
+								var val = $(this).val();
+								var typeId = $(this).closest(".ui-state-highlights").attr("id");						
+
+								if(val == 'judul') {
+									$("#" + typeId).find("input[name='key']").attr('readonly', true);
+									$("#" + typeId).find("input[name='key']").val('judul');
+								} else if(val == 'select_mahasiswa') {
+									$("#" + typeId).find("input[name='key']").attr('readonly', true);
+									$("#" + typeId).find("input[name='key']").val('anggota');
 								} else {
-									$("#" + typeId).find("input[name='key']").val('');
-								}								
-							}						
-						});
+									$("#" + typeId).find("input[name='key']").attr('readonly', false);
 
-						//sembunyikan alert berhasil simpan
-						$('.sukses_simpan').hide();
+									var old_value = $("#" + typeId).find("input[name='key']").val();
 
-						var checked = $("input[name='tipe_reward']").is(':checked'),
-							checkedVal = $("input[name='tipe_reward']:checked").val();
+									if(old_value !='') {
+										$("#" + typeId).find("input[name='key']").val(old_value);
+									} else {
+										$("#" + typeId).find("input[name='key']").val('');
+									}								
+								}						
+							});
 
-						if (checked) {
-							if ((checkedVal == 1) || (checkedVal == 3)) {
-								$('.nominal2').hide();
-								$('.nominal2').prop("disabled", true);
-							} else if (checkedVal == 4) {
+							//sembunyikan alert berhasil simpan
+							$('.sukses_simpan').hide();
+
+							var checked = $("input[name='tipe_reward']").is(':checked'),
+								checkedVal = $("input[name='tipe_reward']:checked").val();
+
+							if (checked) {
+								if ((checkedVal == 1) || (checkedVal == 3)) {
+									$('.nominal2').hide();
+									$('.nominal2').prop("disabled", true);
+								} else if (checkedVal == 4) {
+									$('#nominal').hide();
+								}
+							} else {
 								$('#nominal').hide();
-							}
-						} else {
-							$('#nominal').hide();
-							$('.nominal1').prop("disabled", true);
-							$('.nominal2').prop("disabled", true);
-						}
-
-						$('input:radio[name=tipe_reward]').change(function() {
-
-							if ((this.value == 1) || (this.value == 3)) {
-								$('#nominal').slideDown();
-								$('.nominal1').prop("disabled", false);
-								$('.nominal2').prop("disabled", true);
-								$('.nominal2').hide();
-
-							} else if (this.value == 2) {
-								$('#nominal').slideDown();
-								$('.nominal2').show();
-								$('.nominal1').prop("disabled", false);
-								$('.nominal2').prop("disabled", false);
-
-							} else if (this.value == 4) {
-								$('#nominal').slideUp();
 								$('.nominal1').prop("disabled", true);
 								$('.nominal2').prop("disabled", true);
 							}
-						});
 
-					});
+							$('input:radio[name=tipe_reward]').change(function() {
 
-					var frm = $('#nominal_reward');
+								if ((this.value == 1) || (this.value == 3)) {
+									$('#nominal').slideDown();
+									$('.nominal1').prop("disabled", false);
+									$('.nominal2').prop("disabled", true);
+									$('.nominal2').hide();
 
-					
+								} else if (this.value == 2) {
+									$('#nominal').slideDown();
+									$('.nominal2').show();
+									$('.nominal1').prop("disabled", false);
+									$('.nominal2').prop("disabled", false);
 
-					$(frm).bind('submit', function(e) {
-						e.preventDefault();
-
-						// $(frm).closest('.invalid-feedback').addClass('d-none');
-
-						$.ajax({
-							url: SITEURL + "admin/jenispengajuan/edit_nominal/" + <?= $kat['jpi']; ?>,
-							data: frm.serialize(),
-							type: "post",
-							dataType: 'json',
-							success: function(res) {	
-
-								if (res.status == 'Error') {					
-									
-									// foreach error keynya
-									Object.keys(res.error).forEach(function(k) {
-										if (res.error[k] !== '') {
-									
-											if (k == 'tipe_reward') {
-												$('#nominal_reward #tipe_reward').addClass('is-invalid');
-												$('#nominal_reward #tipe_reward').next('.invalid-feedback').addClass('d-block').html( res.error[k] );
-											} else {								
-												$('#nominal_reward').find("." + k).children('input').addClass('is-invalid').next('.invalid-feedback').html( res.error[k] );					
-											}
-										}
-									});
-
-								} else {	
-															
-								// 	$('#nominal_reward').find('.invalid-feedback').hide();
-									$('.simpan_nominal').next('.sukses_simpan').fadeIn().delay(500).fadeOut();
-									$('#nominal_reward').find("input, select").removeClass('is-invalid');
+								} else if (this.value == 4) {
+									$('#nominal').slideUp();
+									$('.nominal1').prop("disabled", true);
+									$('.nominal2').prop("disabled", true);
 								}
-							},
-							error: function(data) {
-								console.log('Error:', data);
-							}
-						});
-					});
+							});
 
-					// hialngkan eror ketika field diklik
-					$('.form-control').on('keypress', function() {
-						$(this).removeClass('is-invalid');
-					})
-					$('#tipe_reward li').on('click', function() {
-						$('#tipe_reward').removeClass('is-invalid');
-						$('#tipe_reward').next('.invalid-feedback').removeClass('d-block');
-					})
-				</script>
+						});
+
+						var frm = $('#nominal_reward');
+
+						
+
+						$(frm).bind('submit', function(e) {
+							e.preventDefault();
+
+							// $(frm).closest('.invalid-feedback').addClass('d-none');
+
+							$.ajax({
+								url: SITEURL + "admin/jenispengajuan/edit_nominal/" + <?= $kat['jpi']; ?>,
+								data: frm.serialize(),
+								type: "post",
+								dataType: 'json',
+								success: function(res) {	
+
+									if (res.status == 'Error') {					
+										
+										// foreach error keynya
+										Object.keys(res.error).forEach(function(k) {
+											if (res.error[k] !== '') {
+										
+												if (k == 'tipe_reward') {
+													$('#nominal_reward #tipe_reward').addClass('is-invalid');
+													$('#nominal_reward #tipe_reward').next('.invalid-feedback').addClass('d-block').html( res.error[k] );
+												} else {								
+													$('#nominal_reward').find("." + k).children('input').addClass('is-invalid').next('.invalid-feedback').html( res.error[k] );					
+												}
+											}
+										});
+
+									} else {	
+																
+									// 	$('#nominal_reward').find('.invalid-feedback').hide();
+										$('.simpan_nominal').next('.sukses_simpan').fadeIn().delay(500).fadeOut();
+										$('#nominal_reward').find("input, select").removeClass('is-invalid');
+									}
+								},
+								error: function(data) {
+									console.log('Error:', data);
+								}
+							});
+						});
+
+						// hialngkan eror ketika field diklik
+						$('.form-control').on('keypress', function() {
+							$(this).removeClass('is-invalid');
+						})
+						$('#tipe_reward li').on('click', function() {
+							$('#tipe_reward').removeClass('is-invalid');
+							$('#tipe_reward').next('.invalid-feedback').removeClass('d-block');
+						})
+					</script>
+
+				<?php 
+				
+
+
+			} else {
+					echo "Pilih kategori Pengajuan";
+				} ?>	
 			</div>
+
+				
+		
 		</div>
 	</div>
 

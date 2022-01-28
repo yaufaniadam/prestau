@@ -23,47 +23,12 @@
 
 							<tr>
 								<td><?= $jenis['Jenis_Pengajuan']; ?></td>
-								<td><?= ($jenis['parent']) == 1 ? 'Rekognisi' : 'Prestasi'; ?></td>
+								<td><?= $jenis['kategori_pengajuan']; ?></td>
 								<td class="text-center"><a class="btn btn-info btn-sm" href="<?= base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) ;?>"><i class='fas fa-pencil-alt'></i> Edit</a></td>
 							</tr>
 
-
-							<?php						
-
-						/*	if ($jenis['parent'] == 0 && check_child($jenis['Jenis_Pengajuan_Id'])->num_rows() == 0) {
-
-
-								echo "<tr>";
-
-								echo "<td>" . $jenis['Jenis_Pengajuan'];
-								// echo "<br>";
-
-								// print_r(check_child($jenis['Jenis_Pengajuan_Id'])->num_rows());
-
-								echo "</td>";
-								echo "<td>" . $jenis['parent'] . "</td>";
-
-								echo "<td class='text-center'><a class='btn btn-info btn-sm' href='" . base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) . "'><i class='fas fa-pencil-alt'></i> Edit</a></td>";
-								echo "</tr>";
-							} else if ($jenis['parent'] > 0 || check_child($jenis['Jenis_Pengajuan_Id'])->num_rows() > 0) {
-								echo "<tr>";
-
-								echo "<td>" . $jenis['Jenis_Pengajuan'];
-								// echo "<br>";
-
-								// print_r(check_child($jenis['Jenis_Pengajuan_Id'])->num_rows());
-
-								echo "</td>";
-								echo "<td>" . $jenis['parent'] . "</td>";
-
-								echo "<td class='text-center'><a class='btn btn-info btn-sm' href='" . base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) . "'><i class='fas fa-pencil-alt'></i> Edit</a></td>";
-								echo "</tr>";
-							} */
-						endforeach;
-						?>
-
+						<?php endforeach;	?>
 					</tbody>
-
 				</table>
 			</div>
 		</div>

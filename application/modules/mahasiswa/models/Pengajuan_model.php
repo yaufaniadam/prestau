@@ -88,13 +88,14 @@ class Pengajuan_model extends CI_Model
 		return $result;
 	}
 
-	public function rekognisi()
+	public function kategori_pengajuan()
 	{
-		return $this->db->query("SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent = 1")->result_array();
+		return $this->db->query("SELECT distinct(mj.parent), mkjp.kategori_pengajuan FROM Mstr_Jenis_Pengajuan mj LEFT JOIN mstr_kategori_jenis_pengajuan mkjp ON mkjp.id=mj.parent")->result_array();
 	}
-	public function prestasi()
+	
+	public function prestasi($id)
 	{
-		return $this->db->query("SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent = 2")->result_array();
+		return $this->db->query("SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent = $id ORDER BY Jenis_Pengajuan ASC")->result_array();
 	}
 
 	public function get_detail_pengajuan($pengajuan_id)

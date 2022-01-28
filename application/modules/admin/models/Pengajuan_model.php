@@ -240,7 +240,13 @@ class Pengajuan_model extends CI_Model
 
 	public function get_jenis_pengajuan()
 	{
-		$query = $this->db->query("SELECT * FROM dbo.Mstr_Jenis_Pengajuan");
+		$query = $this->db->query("SELECT mj.*, mkjp.kategori_pengajuan FROM Mstr_Jenis_pengajuan mj LEFT JOIN mstr_kategori_jenis_pengajuan mkjp ON mkjp.id=mj.parent");
+
+		return $result = $query->result_array();
+	}
+	public function get_kategori_jenis_pengajuan()
+	{
+		$query = $this->db->query("SELECT * FROM  mstr_kategori_jenis_pengajuan");
 
 		return $result = $query->result_array();
 	}

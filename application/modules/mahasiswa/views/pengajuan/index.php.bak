@@ -1,0 +1,131 @@
+<style>
+[data-toggle="collapse"] .fas:before {   
+  content: "\f139";
+}
+
+[data-toggle="collapse"].collapsed .fas:before {
+  content: "\f13a";
+}
+
+</style>
+<div class="row">
+	<div class="col-md-12">
+	<p>Pilih kategori di bawah ini.</p>
+		<div class="accordion" id="accordion">
+
+			<div class="accordion" id="accordionExample">
+				<div class="card">
+					<div class="card-header" id="heading-1">
+						<h5 class="h6 mb-0"> 
+							<a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+							<i class="fas"></i>	Rekognisi 
+							</a>
+						</h5>
+					</div>
+					<div id="collapse-1" class="collapse" data-parent="#accordion" aria-labelledby="heading-1">
+						<div class="card-body">
+							<div id="accordion-1">
+
+							<p>Pilih sub kategori Rekognisi di bawah ini.</p>
+								<?php $i= 1; foreach ($rekognisi as $rekognisi) {  ?>
+									<div class="card">
+										<div class="card-header" id="heading-1-2">
+											<h5 class="h6 mb-0"> 
+												<a class="collapsed" role="button" data-toggle="collapse" href="#collapse-1-<?= $rekognisi['Jenis_Pengajuan_Id']; ?>" aria-expanded="false" aria-controls="collapse-1-2">
+													<i class="fas"></i> <?= $rekognisi['Jenis_Pengajuan']; ?>
+												</a>
+												
+											</h5>
+										</div>
+										<div id="collapse-1-<?= $rekognisi['Jenis_Pengajuan_Id']; ?>" class="collapse" data-parent="#accordion-1" aria-labelledby="heading-1-2">
+											<div class="card-body">
+												<?php echo $rekognisi['deskripsi']; echo "as" . $i; ?>
+												<a class="btn btn-md btn-warning" href="<?= base_url('mahasiswa/pengajuan/baru/' . $rekognisi['Jenis_Pengajuan_Id']); ?>">Ajukan Prestasi</a>
+											</div>
+										</div>
+									</div>
+								<?php   }  $i++; ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="accordion" id="prestasi">
+				<div class="card">
+					<div class="card-header" id="prestasi-2">
+						<h5 class="h6 mb-0"> 
+							<a role="button" data-toggle="collapse" href="#collapse2" aria-expanded="true" aria-controls="collapse2">
+							<i class="fas"></i>	Prestasi 
+							</a>
+						</h5>
+					</div>
+					<div id="collapse2" class="collapse" data-parent="#accordion" aria-labelledby="prestasi-2">
+						<div class="card-body">
+							<div id="accordion-2">
+
+							<p>Pilih sub kategori prestasi di bawah ini.</p>
+								<?php foreach ($prestasi as $prestasi) { ?>
+									<div class="card">
+										<div class="card-header" id="prestasi-2-2">
+											<h5 class="h6 mb-0"> 
+												<a class="collapsed" role="button" data-toggle="collapse" href="#collapse2-<?= $prestasi['Jenis_Pengajuan_Id']; ?>" aria-expanded="false" aria-controls="collapse2-2">
+													<i class="fas"></i> <?= $prestasi['Jenis_Pengajuan']; ?>
+												</a>
+												
+											</h5>
+										</div>
+										<div id="collapse2-<?= $prestasi['Jenis_Pengajuan_Id']; ?>" class="collapse" data-parent="#accordion-2" aria-labelledby="prestasi-2-2">
+											<div class="card-body">
+												<?= $prestasi['deskripsi']; ?>
+												<a class="btn btn-md btn-warning" href="<?= base_url('mahasiswa/pengajuan/baru/' . $prestasi['Jenis_Pengajuan_Id']); ?>">Ajukan Prestasi</a>
+											</div>
+										</div>
+									</div>
+								<?php } ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="accordion" id="prestasi">
+				<div class="card">
+					<div class="card-header" id="prestasi-3">
+						<h5 class="h6 mb-0"> 
+							<a role="button" data-toggle="collapse" href="#collapse3" aria-expanded="true" aria-controls="collapse3">
+							<i class="fas"></i>	Prestasi 
+							</a>
+						</h5>
+					</div>
+					<div id="collapse3" class="collapse" data-parent="#accordion" aria-labelledby="prestasi-3">
+						<div class="card-body">
+							<div id="accordion-2">
+
+							<p>Pilih sub kategori prestasi di bawah ini.</p>
+								<?php foreach ($pkm as $prestasi) { ?>
+									<div class="card">
+										<div class="card-header" id="prestasi-3-2">
+											<h5 class="h6 mb-0"> 
+												<a class="collapsed" role="button" data-toggle="collapse" href="#collapse3-<?= $prestasi['Jenis_Pengajuan_Id']; ?>" aria-expanded="false" aria-controls="collapse3-2">
+													<i class="fas"></i> <?= $prestasi['Jenis_Pengajuan']; ?>
+												</a>
+												
+											</h5>
+										</div>
+										<div id="collapse3-<?= $prestasi['Jenis_Pengajuan_Id']; ?>" class="collapse" data-parent="#accordion-2" aria-labelledby="prestasi-3-2">
+											<div class="card-body">
+												<?= $prestasi['deskripsi']; ?>
+												<a class="btn btn-md btn-warning" href="<?= base_url('mahasiswa/pengajuan/baru/' . $prestasi['Jenis_Pengajuan_Id']); ?>">Ajukan Prestasi</a>
+											</div>
+										</div>
+									</div>
+								<?php } ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

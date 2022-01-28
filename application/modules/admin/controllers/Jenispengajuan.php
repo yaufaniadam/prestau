@@ -12,6 +12,7 @@ class Jenispengajuan extends Admin_Controller
 	public function index()
 	{
 		$data['jenis_pengajuan'] = $this->pengajuan_model->get_jenis_pengajuan();
+
 		$data['title'] = 'Jenis Pengajuan';
 		$data['view'] = 'jenispengajuan/index';
 		$data['menu'] = 'jenispengajuan';
@@ -55,7 +56,7 @@ class Jenispengajuan extends Admin_Controller
 					$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
 
 					$this->session->set_flashdata('msg', 'Kategori Pengajuan berhasil ditambah!');
-					redirect(base_url('admin/jenispengajuan/edit/' . $id));
+					redirect(base_url('admin/jenispengajuan/edit/' . $id . '?id=&pos='));
 				}
 			}
 		} else {
@@ -69,6 +70,7 @@ class Jenispengajuan extends Admin_Controller
 
 	public function edit($id)
 	{
+		
 
 		if ($this->input->post('submit')) {
 
@@ -98,6 +100,9 @@ class Jenispengajuan extends Admin_Controller
 			);
 
 			if ($this->form_validation->run() == FALSE) {
+
+				$data['kategori_jenis_pengajuan'] = $this->pengajuan_model->get_kategori_jenis_pengajuan();
+
 				$data['kategori'] = $this->pengajuan_model->get_jenis_pengajuan_byid($id);
 				$data['all_fields'] = $this->pengajuan_model->getAllFieldsPengajuan($id, 0);
 				// $data['fields_pengajuan'] = $this->pengajuan_model->getAllFieldsPengajuan(getAllFieldsPengajuan($id, 1);
@@ -107,8 +112,9 @@ class Jenispengajuan extends Admin_Controller
 				$this->load->view('layout/layout', $data);
 			} else {
 
+				$parent =$this->input->post('parent');
 				$data = array(
-					'parent' => $this->input->post('parent'),
+					'parent' => $parent,
 					'jenis_pengajuan' => $this->input->post('Jenis_Pengajuan'),
 					'deskripsi' => $this->input->post('deskripsinya'),
 				);
@@ -134,13 +140,14 @@ class Jenispengajuan extends Admin_Controller
 					$fields = $this->pengajuan_model->editFieldsPengajuan($dataFieldCheck, $id);
 
 					$this->session->set_flashdata('msg', 'Jenis Pengajuan berhasil diubah!');
-					redirect(base_url('admin/jenispengajuan/edit/' . $id));
+					redirect(base_url('admin/jenispengajuan/edit/' . $id . '?id=' . $parent . '&pos='. $parent));
 				}
 			}
 		} else {
 			$data['kategori'] = $this->pengajuan_model->get_jenis_pengajuan_byid($id);
 			$data['all_fields'] = $this->pengajuan_model->getAllFieldsPengajuan($id, 0);
-			// $data['fields_pengajuan'] = $this->pengajuan_model->getAllFieldsPengajuan();
+
+			$data['kategori_jenis_pengajuan'] = $this->pengajuan_model->get_kategori_jenis_pengajuan();
 
 			$data['title'] = 'Edit Jenis Pengajuan';
 			$data['view'] = 'jenispengajuan/edit';
@@ -176,7 +183,6 @@ class Jenispengajuan extends Admin_Controller
 			echo json_encode(array("status" => "Sukses"));
 		}
 	}
-
 
 	public function edit_field($id)
 	{

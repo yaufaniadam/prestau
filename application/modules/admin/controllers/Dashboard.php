@@ -6,6 +6,7 @@ class Dashboard extends Admin_Controller
 	{
 		parent::__construct();
 		$this->load->model('pengajuan_model');
+		// echo check merged
 	}
 
 	public function index()
