@@ -24,7 +24,7 @@
 							<tr>
 								<td><?= $jenis['Jenis_Pengajuan']; ?></td>
 								<td><?= $jenis['kategori_pengajuan']; ?></td>
-								<td class="text-center"><a class="btn btn-info btn-sm" href="<?= base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) ;?>"><i class='fas fa-pencil-alt'></i> Edit</a></td>
+								<td class="text-center"><a class="btn btn-info btn-sm" href="<?= base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) ;?>?id=<?=$jenis['parent'] ;?>&pos=<?=$jenis['parent'] ;?>"><i class='fas fa-pencil-alt'></i> Edit</a></td>
 							</tr>
 
 						<?php endforeach;	?>

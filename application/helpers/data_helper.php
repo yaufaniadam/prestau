@@ -338,7 +338,7 @@ function get_meta_value($key, $id_pengajuan, $file)
 			$value = $value->row_array()['value'];
 		}
 	} else {
-		$value = "Not found";
+		$value = "-";
 	}
 
 	return $value;

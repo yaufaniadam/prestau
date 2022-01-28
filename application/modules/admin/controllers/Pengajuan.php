@@ -191,10 +191,34 @@ class Pengajuan extends Admin_Controller
 							->set('date', 'getdate()', FALSE)
 							->set('pengajuan_id', $pengajuan_id)
 							->insert('Tr_Pengajuan_Status');
+					
+					} elseif ($tipe_reward == 5) {
+
+						echo "tipe reward 5";
+
+						// $nim = $this->db->get_where('Tr_Pengajuan', ['pengajuan_id' => $pengajuan_id])->row_object()->nim;
+
+						// $biaya = get_meta_value('biaya', $pengajuan_id,false);
+
+						// $data = [
+						// 	'id_periode' => $periode_id,
+						// 	'id_pengajuan' => $pengajuan_id,
+						// 	'pic' => $_SESSION['user_id'],
+						// 	'STUDENTID' => $nim,
+						// 	//ambil value dari field biaya
+						// 	'nominal' => $biaya,
+						// ];
+						// $this->db->insert('Tr_Penerbitan_Pengajuan', $data);				
+
+						// $this->db->set('status_id', 9)
+						// 	->set('pic', $this->session->userdata('user_id'))
+						// 	->set('date', 'getdate()', FALSE)
+						// 	->set('pengajuan_id', $pengajuan_id)
+						// 	->insert('Tr_Pengajuan_Status');
 					} 
 				}
 
-				redirect(base_url('admin/periode/bulan/' . $periode_id));
+				// redirect(base_url('admin/periode/bulan/' . $periode_id));
 			}
 		} else {
 			$data['query'] = $this->pengajuan_model->getVerifiedPengajuan();
