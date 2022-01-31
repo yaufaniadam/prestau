@@ -23,13 +23,13 @@ class Pengguna_model extends CI_Model
 			$where = "WHERE a.role != 1 AND a.role=$role";
 		}
 		return $this->db->query("SELECT a.*, r.role FROM users a
-		LEFT JOIN Mstr_Role r ON r.role_id = a.role
+		LEFT JOIN mstr_role r ON r.role_id = a.role
 		$where ");
 	}
 
 	public function get_role()
 	{
-		return $this->db->get_where('Mstr_Role', array('role_id !=' => '1'))->result_array();
+		return $this->db->get_where('mstr_role', array('role_id !=' => '1'))->result_array();
 	}
 	// Count total users by role
 	public function count_all_users_by_role($role)
@@ -69,7 +69,7 @@ class Pengguna_model extends CI_Model
 	public function role()
 	{
 		$query = $this->db->query("SELECT * 
-			FROM Mstr_Role 
+			FROM mstr_role 
 			WHERE role_id != 1 AND role_id != 4
 			");
 		return $query->result_array();

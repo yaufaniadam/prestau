@@ -74,9 +74,9 @@ class Pengajuan_model extends CI_Model
 	{
 		if ($id == 0) {
 		} else {
-			$query = $this->db->query("SELECT * FROM Mstr_Jenis_pengajuan WHERE Jenis_Pengajuan_Id =$id");
+			$query = $this->db->query("SELECT * FROM mstr_jenis_pengajuan WHERE Jenis_Pengajuan_Id =$id");
 
-			$isparent = $this->db->query("SELECT *  FROM Mstr_Jenis_pengajuan WHERE parent =$id");
+			$isparent = $this->db->query("SELECT *  FROM mstr_jenis_pengajuan WHERE parent =$id");
 
 			if ($isparent->num_rows() > 0) {
 				$result =  $isparent->result_array();
@@ -90,25 +90,25 @@ class Pengajuan_model extends CI_Model
 
 	public function kategori_pengajuan()
 	{
-		return $this->db->query("SELECT distinct(mj.parent), mkjp.kategori_pengajuan FROM Mstr_Jenis_Pengajuan mj LEFT JOIN mstr_kategori_jenis_pengajuan mkjp ON mkjp.id=mj.parent WHERE mj.parent <> '' ")->result_array();
+		return $this->db->query("SELECT distinct(mj.parent), mkjp.kategori_pengajuan FROM mstr_jenis_pengajuan mj LEFT JOIN mstr_kategori_jenis_pengajuan mkjp ON mkjp.id=mj.parent WHERE mj.parent <> '' ")->result_array();
 	}
 	
 	public function prestasi($id)
 	{
-		return $this->db->query("SELECT * FROM Mstr_Jenis_Pengajuan WHERE parent = '$id' ORDER BY Jenis_Pengajuan ASC")->result_array();
+		return $this->db->query("SELECT * FROM mstr_jenis_pengajuan WHERE parent = '$id' AND aktif = '1' ORDER BY Jenis_Pengajuan ASC")->result_array();
 	}
 
 	public function get_detail_pengajuan($pengajuan_id)
 	{
 		return $this->db->query(
-			"SELECT *, jp.jenis_pengajuan FROM Tr_Pengajuan p
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id 		
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
-			LEFT JOIN V_Mahasiswa m ON p.nim = m.STUDENTID
-			LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
-			WHERE p.pengajuan_id = $pengajuan_id AND s.status_id = (SELECT status_id FROM Tr_Pengajuan_Status WHERE status_pengajuan_id = (
-			SELECT MAX(status_pengajuan_id) FROM Tr_Pengajuan_Status WHERE pengajuan_id = $pengajuan_id
+			"SELECT *, jp.jenis_pengajuan FROM tr_pengajuan p
+			LEFT JOIN mstr_jenis_pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id 		
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
+			LEFT JOIN v_mahasiswa m ON p.nim = m.STUDENTID
+			LEFT JOIN mstr_department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
+			WHERE p.pengajuan_id = $pengajuan_id AND s.status_id = (SELECT status_id FROM tr_pengajuan_status WHERE status_pengajuan_id = (
+			SELECT MAX(status_pengajuan_id) FROM tr_pengajuan_status WHERE pengajuan_id = $pengajuan_id
 			))"
 		)->row_object();
 	}
@@ -116,7 +116,7 @@ class Pengajuan_model extends CI_Model
 	public function getAnggota($search)
 	{
 		$this->db->select('*');
-		$this->db->from('V_Mahasiswa');
+		$this->db->from('v_mahasiswa');
 		$this->db->like('FULLNAME', $search);
 		$this->db->or_like('STUDENTID', $search);
 		$this->db->limit(10);
@@ -140,28 +140,28 @@ class Pengajuan_model extends CI_Model
 			s.status_id,
 			s.badge,
 			FORMAT (ps.date, 'hh:mm:ss ') as time
-			FROM Tr_Pengajuan p 
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
-			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
+			FROM tr_pengajuan p 
+			LEFT JOIN mstr_jenis_pengajuan jp ON p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
+			LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
 			WHERE p.nim = '$nim' "
 				. ($id_jenis_pengajuan == 0
 					? ""
 					: ($id_jenis_pengajuan == 12 ? "AND jp.parent = 12 "
 						: " AND p.Jenis_Pengajuan_Id = $id_jenis_pengajuan")) .
 				"AND ps.status_pengajuan_id = (SELECT MAX(status_pengajuan_id) 
-													FROM Tr_Pengajuan_Status  
+													FROM tr_pengajuan_status  
 													WHERE pengajuan_id = p.pengajuan_id)"
 		)->result_array();
 
-		// return $this->db->query("SELECT * FROM V_Mahasiswa")->result_array();
+		// return $this->db->query("SELECT * FROM v_mahasiswa")->result_array();
 	}
 	// AND p.Jenis_Pengajuan_Id = $id_jenis_pengajuan
 	public function getPembimbing($search)
 	{
 		$this->db->select('*');
-		$this->db->from('V_Dosen');
+		$this->db->from('v_dosen');
 		$this->db->like('nama', $search);
 		$this->db->limit(10);
 		return $this->db->get()->result_array();
@@ -170,13 +170,13 @@ class Pengajuan_model extends CI_Model
 	public function get_spesific_pengajuan_fields($pengajuan_id)
 	{
 		return $this->db->query(
-			"SELECT * FROM Tr_Pengajuan
-			LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.Jenis_Pengajuan_Id = Tr_Pengajuan.Jenis_Pengajuan_Id
-			LEFT JOIN Tr_Pengajuan_Status ON Tr_Pengajuan_Status.id_pengajuan = Tr_Pengajuan.pengajuan_id
-			LEFT JOIN Mstr_Fields ON Mstr_Fields.field_id = Tr_Pengajuan_Field.field_id
-			LEFT JOIN Tr_Status ON Tr_Status.status_id = Tr_Pengajuan_Status.id_status
-			LEFT JOIN Mstr_Jenis_Pengajuan ON Mstr_Jenis_Pengajuan.Jenis_Pengajuan_Id = Tr_Pengajuan.Jenis_Pengajuan_Id
-			WHERE Tr_Pengajuan.pengajuan_id = $pengajuan_id AND Tr_Pengajuan_Field.terpakai = 1"
+			"SELECT * FROM tr_pengajuan
+			LEFT JOIN mstr_pengajuan_field ON mstr_pengajuan_field.Jenis_Pengajuan_Id = tr_pengajuan.Jenis_Pengajuan_Id
+			LEFT JOIN tr_pengajuan_status ON tr_pengajuan_status.id_pengajuan = tr_pengajuan.pengajuan_id
+			LEFT JOIN mstr_fields ON mstr_fields.field_id = mstr_pengajuan_field.field_id
+			LEFT JOIN mstr_status ON mstr_status.status_id = tr_pengajuan_status.id_status
+			LEFT JOIN mstr_jenis_pengajuan ON mstr_jenis_pengajuan.Jenis_Pengajuan_Id = tr_pengajuan.Jenis_Pengajuan_Id
+			WHERE tr_pengajuan.pengajuan_id = $pengajuan_id AND mstr_pengajuan_field.terpakai = 1"
 		)->result_array();
 	}
 
@@ -185,7 +185,7 @@ class Pengajuan_model extends CI_Model
 	}
 	public function tambah($data)
 	{
-		return $this->db->insert('Tr_Pengajuan', $data);
+		return $this->db->insert('tr_pengajuan', $data);
 	}
 	function simpan_upload($judul, $gambar)
 	{

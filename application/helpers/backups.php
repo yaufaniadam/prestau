@@ -3,7 +3,7 @@
 function field($field_id)
 {
     $CI = &get_instance();
-    return $CI->db->get_where('Mstr_Fields', array('field_id' => $field_id))->row_array();
+    return $CI->db->get_where('mstr_fields', array('field_id' => $field_id))->row_array();
 }
 
 //menampilkan kategori keterangan surat
@@ -14,8 +14,8 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status)
     <link href="<?= base_url() ?>public/plugins/dm-uploader/dist/css/jquery.dm-uploader.min.css" rel="stylesheet">
     <?php
     $CI = &get_instance();
-    $fields = $CI->db->select('mf.*, fv.value, fv.verifikasi')->from('Mstr_Fields mf')
-        ->join('Tr_Field_Value fv', 'fv.field_id=mf.field_id', 'left')
+    $fields = $CI->db->select('mf.*, fv.value, fv.verifikasi')->from('mstr_fields mf')
+        ->join('tr_field_value fv', 'fv.field_id=mf.field_id', 'left')
         ->where(array('mf.field_id' => $id))
         ->where(array('fv.pengajuan_id' => $pengajuan_id))
         // ->where(array('mf.type' => 'image'))
@@ -28,7 +28,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status)
         <?php
         $image_id = (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];
 
-        $image = $CI->db->select('*')->from('Tr_Media')
+        $image = $CI->db->select('*')->from('tr_media')
             ->where(array('id' => $image_id))->get()->row_array();
         if ($image) {
             $thumb = $image['thumb'];
@@ -205,7 +205,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status)
         <?php
         $image_id = (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];
 
-        $image = $CI->db->select('*')->from('Tr_Media')
+        $image = $CI->db->select('*')->from('tr_media')
             ->where(array('id' => $image_id))->get()->row_array();
         if ($image) {
             $thumb = $image['file'];
@@ -267,7 +267,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status)
 {
     $CI = &get_instance();
     $CI->db->order_by('id', 'DESC');
-    $media = $CI->db->get_where('Tr_Media', array('nim' => $CI->session->userdata('studentid')))->result_array();
+    $media = $CI->db->get_where('tr_media', array('nim' => $CI->session->userdata('studentid')))->result_array();
 
 ?>
     <style>
@@ -634,14 +634,14 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 {
     $id = $field_id;
     $CI = &get_instance();
-    $fields = $CI->db->select('*')->from('Mstr_Fields f')
-        ->join('Tr_Field_Value fv', 'fv.field_id=f.field_id', 'left')
+    $fields = $CI->db->select('*')->from('mstr_fields f')
+        ->join('tr_field_value fv', 'fv.field_id=f.field_id', 'left')
         ->where(array('f.field_id' => $id))
         ->where(array('fv.pengajuan_id' => $id_surat))
         ->get()->row_array();
 
     if ($fields['type'] == 'image') {
-        $image = $CI->db->select('*')->from('Tr_Media')
+        $image = $CI->db->select('*')->from('tr_media')
             ->where(array('id' => $fields['value']))->get()->row_array();
         $img_full = $image['file'];
         $thumb = $image['thumb'];

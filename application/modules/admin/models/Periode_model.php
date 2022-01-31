@@ -4,7 +4,7 @@ class Periode_model extends CI_Model
 	public function getPeriode($status)
 	{
 		$this->db->select('*');
-		$this->db->from('Tr_Periode_Penerbitan');
+		$this->db->from('tr_periode_penerbitan');
 		if ($status != '' || $status !== NULL) {
 			$this->db->where('status', $status);
 		}
@@ -13,6 +13,6 @@ class Periode_model extends CI_Model
 
 	public function tambahPeriode($data)
 	{
-		return $this->db->insert('Tr_Periode_Penerbitan', $data);
+		return $this->db->insert('tr_periode_penerbitan', $data);
 	}
 }

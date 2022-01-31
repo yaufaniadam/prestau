@@ -32,9 +32,9 @@ function get_jumlah_pengajuan_perbulan($no_urut)
 			->prodi;
 
 		return $CI->db->select("*")
-			->from("Tr_Penerbitan_Pengajuan pp")
-			->join('V_Mahasiswa m', "m.STUDENTID=pp.STUDENTID")
-			->join('Tr_Pengajuan_Status ps', 'ps.pengajuan_id=pp.id_pengajuan')
+			->from("tr_penerbitan_pengajuan pp")
+			->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			->join('tr_pengajuan_status ps', 'ps.pengajuan_id=pp.id_pengajuan')
 			->where([
 				"FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
 				"ps.status_id" => 9,
@@ -44,9 +44,9 @@ function get_jumlah_pengajuan_perbulan($no_urut)
 			->num_rows();
 	} else {
 		return $CI->db->select("*")
-			->from("Tr_Penerbitan_Pengajuan pp")
-			->join('V_Mahasiswa m', "m.STUDENTID=pp.STUDENTID")
-			->join('Tr_Pengajuan_Status ps', 'ps.pengajuan_id=pp.id_pengajuan')
+			->from("tr_penerbitan_pengajuan pp")
+			->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			->join('tr_pengajuan_status ps', 'ps.pengajuan_id=pp.id_pengajuan')
 			->where([
 				"FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
 				"ps.status_id" => 9,
@@ -95,10 +95,10 @@ function get_jumlah_pengajuan_per_jenis_pengajuan($jenis_pengajuan_id)
 			->prodi;
 
 		return $CI->db->select('*')
-			->from('Tr_Penerbitan_Pengajuan pp')
-			->join('V_Mahasiswa m', "m.STUDENTID=pp.STUDENTID")
-			->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->from('tr_penerbitan_pengajuan pp')
+			->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			->join('tr_pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
+			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
 			->where([
 				"jp.Jenis_Pengajuan_Id" => $jenis_pengajuan_id,
 				"m.DEPARTMENT_ID" => $prodi_user
@@ -107,9 +107,9 @@ function get_jumlah_pengajuan_per_jenis_pengajuan($jenis_pengajuan_id)
 			->num_rows();
 	} else {
 		return $CI->db->select('*')
-			->from('Tr_Penerbitan_Pengajuan pp')
-			->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->from('tr_penerbitan_pengajuan pp')
+			->join('tr_pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
+			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
 			->where([
 				'jp.Jenis_Pengajuan_Id' => $jenis_pengajuan_id
 
@@ -134,23 +134,23 @@ function get_jumlah_pengajuan_per_prodi()
 
 	if ($_SESSION['role'] == 5) {
 		$department = $CI->db->select('*')
-			->from('Mstr_Department')
+			->from('mstr_department')
 			->where([
 				'DEPARTMENT_ID' => $prodi_user
 			])
 			->get()->result_array();
 	} else {
 		$department = $CI->db->select('*')
-			->from('Mstr_Department')->get()->result_array();
+			->from('mstr_department')->get()->result_array();
 	}
 
 	foreach ($department as $department) {
 		$pengajuan_per_prodi[] = [
 			'nama_prodi' => $department['NAME_OF_DEPARTMENT'],
 			'jumlah_pengajuan' => $CI->db->select('*')
-				->from('Tr_Penerbitan_Pengajuan pp')
-				->join('V_Mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
-				->join('Mstr_Department d', 'd.DEPARTMENT_ID = m.DEPARTMENT_ID')
+				->from('tr_penerbitan_pengajuan pp')
+				->join('v_mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
+				->join('mstr_department d', 'd.DEPARTMENT_ID = m.DEPARTMENT_ID')
 				->where([
 					'm.DEPARTMENT_ID' => $department['DEPARTMENT_ID'],
 				])
@@ -225,11 +225,11 @@ function tampil_notif()
 
 	$notif = $CI->db
 		->select("*")
-		->from('Tr_Notif n')
-		->join('Mstr_Status_Pesan sp', 'sp.status_pesan_id = n.id_status_notif')
-		->join('Tr_Pengajuan p', 'p.pengajuan_id=n.id_pengajuan')
-		->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id=p.Jenis_Pengajuan_Id')
-		->join('V_Mahasiswa m', 'm.STUDENTID=p.nim')
+		->from('tr_notif n')
+		->join('mstr_status_pesan sp', 'sp.status_pesan_id = n.id_status_notif')
+		->join('tr_pengajuan p', 'p.pengajuan_id=n.id_pengajuan')
+		->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id=p.Jenis_Pengajuan_Id')
+		->join('v_mahasiswa m', 'm.STUDENTID=p.nim')
 		->order_by('id_notif', 'DESC')
 		->where($where)
 		->where(['n.status' => 0])
@@ -309,7 +309,7 @@ function tampil_notif()
 function check_child($id)
 {
 	$CI = &get_instance();
-	$query = $CI->db->query("SELECT * FROM dbo.Mstr_Jenis_Pengajuan where parent='$id'");
+	$query = $CI->db->query("SELECT * FROM mstr_jenis_pengajuan where parent='$id'");
 	return $query;
 }
 
@@ -318,15 +318,46 @@ function get_meta_value($key, $id_pengajuan, $file)
 	$CI = &get_instance();
 
 	$value = $CI->db->select("*")
-		->from('Mstr_Fields mf')
-		->join('Tr_Field_Value fv', 'mf.field_id=fv.field_id', 'left')
+		->from('mstr_fields mf')
+		->join('tr_field_value fv', 'mf.field_id=fv.field_id', 'left')
 		->where(array("mf.key" => $key, 'fv.pengajuan_id' => $id_pengajuan))
 		->get();
 
 	if ($value->num_rows() > 0) {
 
 		if ($file == true) {
-			$media = $CI->db->select("*")->from('Tr_Media')->where(array('id' => $value->row_array()['value']))->get()->row_array();
+			$media = $CI->db->select("*")->from('tr_media')->where(array('id' => $value->row_array()['value']))->get()->row_array();
+			$filename = explode('/dokumen/', $media['file']);
+			$value = array(
+				'file_id' => $media['id'],
+				'file' => $media['file'],
+				'thumb' => $media['thumb'],
+				'filename' => $filename[1],
+			);
+		} else {
+			$value = $value->row_array()['value'];
+		}
+	} else {
+		$value = "-";
+	}
+
+	return $value;
+}
+
+function get_meta_value_by_type_field($type, $id_pengajuan, $file)
+{
+	$CI = &get_instance();
+
+	$value = $CI->db->select("*")
+		->from('mstr_fields mf')
+		->join('tr_field_value fv', 'mf.field_id=fv.field_id', 'left')
+		->where(array("mf.type" => $type, 'fv.pengajuan_id' => $id_pengajuan))
+		->get();
+
+	if ($value->num_rows() > 0) {
+
+		if ($file == true) {
+			$media = $CI->db->select("*")->from('tr_media')->where(array('id' => $value->row_array()['value']))->get()->row_array();
 			$filename = explode('/dokumen/', $media['file']);
 			$value = array(
 				'file_id' => $media['id'],
@@ -346,7 +377,7 @@ function get_meta_value($key, $id_pengajuan, $file)
 function get_file($id)
 {
 	$CI = &get_instance();
-	return	$media = $CI->db->select("*")->from('Tr_Media')->where(array('id' => $id))->get()->row_array();
+	return	$media = $CI->db->select("*")->from('tr_media')->where(array('id' => $id))->get()->row_array();
 }
 
 function getUsersbyRole($role, $prodi)
@@ -391,8 +422,8 @@ function pengajuan_verified() {
 
 	$CI = &get_instance();
 	return $CI->db->select("*")
-				->from("Tr_Pengajuan p")
-				->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=p.pengajuan_id")
+				->from("tr_pengajuan p")
+				->join("tr_pengajuan_status ps", "ps.pengajuan_id=p.pengajuan_id")
 				->where([
 					"ps.status_id =" => 7
 				])->get()
@@ -407,7 +438,7 @@ function get_nominal_byorder($id_pengajuan, $order) {
 
 	$CI = &get_instance();
 
-	$nominal = $CI->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+	$nominal = $CI->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 		"Jenis_Pengajuan_Id" => $id_pengajuan,
 		"order" => $order
 	])->get()->row_array();

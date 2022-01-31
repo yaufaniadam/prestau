@@ -44,7 +44,7 @@ class Notif_model extends CI_Model
 				'status' => 0,
 			);
 		}
-		$result = $this->db->insert_batch('Tr_Notif', $notif);
+		$result = $this->db->insert_batch('tr_notif', $notif);
 
 		return $result;
 	}
@@ -52,13 +52,13 @@ class Notif_model extends CI_Model
 	//get status pesan by role dan status
 	private function get_status_pesan($role, $id_status)
 	{
-		$status = $this->db->get_where('Tr_Pengajuan_Status', array('id_status' => $id_status))->row_array();
+		$status = $this->db->get_where('tr_pengajuan_status', array('id_status' => $id_status))->row_array();
 		return $status['status_pengajuan_id'];
 	}
 
 	public function get_messages($role, $id_status)
 	{
-		$status = $this->db->get_where('Mstr_Status_Pesan', array('id_status' => $id_status, 'role' => $role))->row_array();
+		$status = $this->db->get_where('mstr_status_pesan', array('id_status' => $id_status, 'role' => $role))->row_array();
 		return $status;
 	}
 }

@@ -65,8 +65,8 @@ public function edit_nominal($id)
 			echo json_encode(array("status" => "Error", "error" => $error));
 
 		} else {
-			//ubah jenis nominal (column:fixed) pada tabel Mstr_Jenis_Pengajuan
-			$this->db->update('Mstr_Jenis_Pengajuan', ["fixed" => $tipe_reward], array('Jenis_Pengajuan_Id' => $id));
+			//ubah jenis nominal (column:fixed) pada tabel mstr_jenis_pengajuan
+			$this->db->update('mstr_jenis_pengajuan', ["fixed" => $tipe_reward], array('Jenis_Pengajuan_Id' => $id));
 
 			$new_nominal = array(
 				"0" => $this->input->post('nominal1'),
@@ -82,7 +82,7 @@ public function edit_nominal($id)
 			if ($tipe_reward == 2) {
 
 					//cek order awal apkah ada yg nilainya 1
-					$nominal_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+					$nominal_exist = $this->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 						"Jenis_Pengajuan_Id" => $id,
 						"order" => 1
 					])->get()->result_array();
@@ -99,7 +99,7 @@ public function edit_nominal($id)
 								"nominal" => $value
 							];
 
-							$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+							$this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $data_nominal);
 						}
 
 					} else {
@@ -110,7 +110,7 @@ public function edit_nominal($id)
 							"Jenis_Pengajuan_Id" => $id,
 						];
 
-						// $this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
+						// $this->db->insert('mstr_penghargaan_rekognisi_mahasiswa', $insdata_penghargaan);
 						foreach ($new_nominal as $key => $value) {
 							$this->db->where([
 								"Jenis_Pengajuan_Id" => $id,
@@ -120,7 +120,7 @@ public function edit_nominal($id)
 								"nominal" => $value
 							];
 
-							$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+							$this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $data_nominal);
 						}
 					}
 				
@@ -129,14 +129,14 @@ public function edit_nominal($id)
 				echo "tiper reward 5";
 
 					//cek order awal apkah ada yg nilainya 1
-					$nominal_exist = $this->db->select('nominal')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+					$nominal_exist = $this->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 						"Jenis_Pengajuan_Id" => $id,
 						"order" => 3
 					])->get()->result_array();
 
 					if ($nominal_exist) {
 
-						$this->db->delete('Mstr_Penghargaan_Rekognisi_Mahasiswa', [
+						$this->db->delete('mstr_penghargaan_rekognisi_mahasiswa', [
 							"Jenis_Pengajuan_Id" => $id,]);
 
 						echo " sudah ada nilai sebelumnya";
@@ -153,7 +153,7 @@ public function edit_nominal($id)
 						// 		"nominal" => $value
 						// 	];
 
-						// 	$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+						// 	$this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $data_nominal);
 						// }
 
 					} else {
@@ -165,7 +165,7 @@ public function edit_nominal($id)
 						// 	"Jenis_Pengajuan_Id" => $id,
 						// ];
 
-						$this->db->insert('Mstr_Penghargaan_Rekognisi_Mahasiswa', $insdata_penghargaan);
+						$this->db->insert('mstr_penghargaan_rekognisi_mahasiswa', $insdata_penghargaan);
 
 						foreach ($new_nominal as $key => $value) {
 							$this->db->where([
@@ -176,7 +176,7 @@ public function edit_nominal($id)
 								"nominal" => $value
 							];
 
-							$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_nominal);
+							$this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $data_nominal);
 						}
 					}
 				
@@ -199,7 +199,7 @@ public function edit_nominal($id)
 					'order'=>'0'
 				));
 
-				$this->db->update('Mstr_Penghargaan_Rekognisi_Mahasiswa', $data_penghargaan);
+				$this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $data_penghargaan);
 				
 
 			}

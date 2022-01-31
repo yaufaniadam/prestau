@@ -38,7 +38,8 @@
 
 		<!-- Surat diverifikasi oleh staf-->
 		<?php if (($pengajuan['status_id'] == 7) && $this->session->userdata('role') == 2) { ?>
-		<?php } ?>
+		<?php } 
+		?>
 
 		<div class="card shadow">
 			<a href="#collKeterangan" class="d-block card-header pt-3 pb-2 bg-abumuda <?= (($pengajuan['status_id'] == 9 || $pengajuan['status_id'] == 10) && $this->session->userdata('role') == 1) ? "collapseds" : "" ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collKeterangan">
@@ -50,14 +51,28 @@
 
 					<input type="hidden" name="user_id" value="<?= $pengajuan['STUDENTID']; ?>">
 
+					<div class="form-row mb-2">
+						<label class="col-md-5" for="">
+							Jenis Prestasi/Rekognisi 
+						</label>
+
+						<div class="col-md-7">
+							<input type="text" value="<?= $pengajuan['Jenis_Pengajuan']; ?>" disabled class="form-control">						
+						</div>
+					</div>
+
 					<?php foreach ($fields as $field) { ?>
 
 						<div class="form-row">
-							<label class="col-md-5" for="dokumen[<?= $field['field_id'] ?>]">
-								<?= $field['field'] ?></label>
+						<label class="col-md-5" for="dokumen[<?= $field['field_id']; ?>]">
+								<?= $field['field'] ?> <?= ($field['required'] == 1) ? '<sup class="badge badge-danger badge-counter">Wajib</sup>': ''; ?>
+								<small class="form-text text-muted d-inline d-md-block">
+									<?= $field['deskripsi'] ?> 
+								</small>
+							</label>
 							<div class="col-md-7">
 								<?php
-								generate_keterangan_surat($field['field_id'], $pengajuan['pengajuan_id'], $pengajuan['status_id']);
+								generate_keterangan_surat($field['field_id'], $pengajuan['pengajuan_id'], $pengajuan['status_id'], $pengajuan['Jenis_Pengajuan_Id'] );
 								?>
 							</div>
 						</div>

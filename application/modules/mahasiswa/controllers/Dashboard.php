@@ -16,11 +16,11 @@ class Dashboard extends Mahasiswa_Controller
 				DATENAME(month,n.tanggal_masuk) as bulan_masuk_surat,
 				FORMAT (n.tanggal_masuk, 'dd') as tanggal_masuk_surat",
 			)
-			->from('Tr_Notif n')
-			->join('Mstr_Status_Pesan sp', 'sp.status_pesan_id = n.id_status_notif')
-			->join('Tr_Pengajuan p', 'p.pengajuan_id=n.id_pengajuan')
-			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id=p.Jenis_Pengajuan_Id')
-			->join('V_Mahasiswa m', 'm.STUDENTID=p.nim')
+			->from('tr_notif n')
+			->join('mstr_status_pesan sp', 'sp.status_pesan_id = n.id_status_notif')
+			->join('tr_pengajuan p', 'p.pengajuan_id=n.id_pengajuan')
+			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id=p.Jenis_Pengajuan_Id')
+			->join('v_mahasiswa m', 'm.STUDENTID=p.nim')
 			->limit(10)
 			->order_by('id_notif', 'DESC')
 			->where(
@@ -35,22 +35,22 @@ class Dashboard extends Mahasiswa_Controller
 
 		$pengajuan_saya = $this->db
 			->get_where(
-				'Tr_Pengajuan',
+				'tr_pengajuan',
 				[
 					'nim' => $_SESSION['studentid']
 				]
 			)->num_rows();
 
-		// $is_field_anggota_exist = $this->db->get_where('Tr_Pengajuan_Field', ['field_id' => 77])->num_rows();
+		// $is_field_anggota_exist = $this->db->get_where('mstr_pengajuan_field', ['field_id' => 77])->num_rows();
 
 		$prestasi_saya = $this->db
 			->select('*')
-			->from('Tr_Penerbitan_Pengajuan')
-			->join('Tr_Periode_Penerbitan', 'Tr_Periode_Penerbitan.id_periode = Tr_Penerbitan_Pengajuan.id_periode ', 'left' )
+			->from('tr_penerbitan_pengajuan')
+			->join('tr_periode_penerbitan', 'tr_periode_penerbitan.id_periode = tr_penerbitan_pengajuan.id_periode ', 'left' )
 			->where(
 				[
-					'Tr_Penerbitan_Pengajuan.STUDENTID' => $_SESSION['studentid'],
-					'Tr_Periode_Penerbitan.status' => '1'
+					'tr_penerbitan_pengajuan.STUDENTID' => $_SESSION['studentid'],
+					'tr_periode_penerbitan.status' => '1'
 				]
 			)->get()
 			->num_rows();

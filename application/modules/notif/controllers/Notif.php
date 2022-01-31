@@ -99,6 +99,6 @@ class Notif extends MY_Controller
 			'tanggal_dibaca'  => $date,
 		];
 		$this->db->where('id_notif', $id_notif);
-		$this->db->update('Tr_Notif', $data);
+		$this->db->update('tr_notif', $data);
 	}
 }

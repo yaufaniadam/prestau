@@ -94,7 +94,7 @@ echo form_open_multipart(base_url('admin/jenispengajuan/tambah/'), 'class="form-
 							<div class="card-header">Field terpakai</div>
 							<div class="card-body box-profile ">
 								<?php
-								$default_field = $this->db->get_where('Mstr_Fields', array('key' => 'judul'))->row_array();
+								$default_field = $this->db->get_where('mstr_fields', array('key' => 'judul'))->row_array();
 								?>
 								<ul id="sortable2" class="connectedSortable errorTxt">
 									<li class="ui-state-highlight" id="item-<?= $default_field['field_id']; ?>">

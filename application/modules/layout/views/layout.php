@@ -25,6 +25,8 @@
 	<script src="<?= base_url() ?>public/vendor/jquery/jquery.min.js"></script>
 	<script src="<?= base_url() ?>public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+	<script type='text/javascript' src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
 	<!-- Core plugin JavaScript-->
 	<script src="<?= base_url() ?>public/vendor/jquery-easing/jquery.easing.min.js"></script>
 </head>
@@ -119,10 +121,10 @@
 			table.columns(2).search(this.value).draw();
 		});
 
-		var table = $('#kategorisurat').DataTable();
-		$('#selectpengguna').on('change', function() {
-			table.columns(1).search(this.value).draw();
-		});
+		// var table = $('#kategorisurat').DataTable();
+		// $('#selectpengguna').on('change', function() {
+		// 	table.columns(1).search(this.value).draw();
+		// });
 
 
 		$(document).ready(function() {
@@ -137,6 +139,31 @@
 				"order": [
 					[3, "desc"]
 				]
+			});
+		});
+
+		$(document).ready(function() {
+			$('#kategorisurat').DataTable({
+				initComplete: function() {
+					this.api().columns(1).every(function() {
+						var column = this;
+						var select = $('<select class="form-control"><option value="">Semua Kategori</option></select>')
+							.appendTo($(column.header()).empty())
+							.on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
+
+								column
+									.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
+
+						column.data().unique().sort().each(function(d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					});
+				}
 			});
 		});
 	</script>

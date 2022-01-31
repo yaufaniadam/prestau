@@ -1,40 +1,13 @@
 <?php
-list($kat, $result, $nominal) = $kategori;
-
-
-// echo "<pre>";
-// print_r($kat);
-// echo "</pre>";
-
-
-
-?>
-
-<link rel="stylesheet" href="<?= base_url('public/vendor/jquery-ui-1.12.1/jquery-ui.min.css'); ?>">
+list($kat, $result, $nominal) = $kategori; ?>
 
 <style>
+
+    input.nominal {
+        text-align: right;
+    }
     .alert.simpan {
         display: none;
-    }
-
-    #sortable1,
-    #sortable2 {
-        width: 100%;
-    }
-
-    #sortable1,
-    #sortable2 {
-        min-height: 20px;
-        list-style-type: none;
-        margin: 0;
-        padding: 15px;
-        margin-right: 10px;
-    }
-
-    #sortable1 div,
-    #sortable2 div {
-        padding: 1px 0px;
-        cursor: move;
     }
 
     .error {
@@ -48,31 +21,9 @@ list($kat, $result, $nominal) = $kategori;
 </style>
 
 <div class="row">
-    <div class="col-md-12">
-
-        <!-- fash message yang muncul ketika proses penghapusan data berhasil dilakukan -->
-        <?php if ($this->session->flashdata('msg') != '') : ?>
-            <div class="alert alert-success flash-msg alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4>Sukses!</h4>
-                <?= $this->session->flashdata('msg'); ?>
-            </div>
-        <?php endif; ?>
-        <?php if (isset($msg) || validation_errors() !== '') : ?>
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="fa fa-exclamation"></i> Terjadi Kesalahan</h4>
-                <?= validation_errors(); ?>
-                <?= isset($msg) ? $msg : ''; ?>
-            </div>
-        <?php endif; ?>
-
-    </div>
+  
 
     <div class="col-md-8 offset-md-2">
-
-
-
         <div class="card card-success card-outline">
             <ul class="nav nav-tabs pt-3 pl-4  bg-perak">
                 <li class="nav-item">
@@ -87,10 +38,6 @@ list($kat, $result, $nominal) = $kategori;
             </ul>
             <!-- <p class="card-header">Jenis Pengajuan</p> -->
             <div class="card-body box-profile">
-
-
-
-
                 <div class="form-group">
                     <label for="Jenis_Pengajuan" class="control-label">Jenis Pengajuan</label>
                     <input type="text" class="form-control" value="<?= $kat['Jenis_Pengajuan']; ?>" readonly>
@@ -268,7 +215,7 @@ list($kat, $result, $nominal) = $kategori;
                     </script>
 
                 <?php // PKM
-                } else if ($kat['parent'] == '3') { ?>
+                } else if ($kat['parent'] != '1') { ?>
 
                     <form class="nominal_reward_prestasi" name="nominal_reward" method="POST" action="<?= base_url('admin/jenispengajuan/edit_nominal_prestasi/' . $kat['jpi']); ?>">
 
@@ -276,170 +223,188 @@ list($kat, $result, $nominal) = $kategori;
 
                         <input type="hidden" name="tipe_reward" id="" value="5">
 
-                        <?php 
-                        
-                        $cekvalue = $this->db->select('*')->from('Mstr_Penghargaan_Rekognisi_Mahasiswa')->where([
+                        <?php
+
+                        $cekvalue = $this->db->select('*')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
                             "Jenis_Pengajuan_Id" => $kat['jpi'],
                         ])->get();
-                        
-                    
 
-                        if($cekvalue->num_rows() > 0) {
 
-                            foreach($cekvalue->result_array() as $field) { ?>
-                             
-                             <div class="formtoclone" id="form">                           
-                           
-                                <div class="form-group row " id="nominal-pkm">
+
+                        if ($cekvalue->num_rows() > 0) {
+
+                            $i = 0;
+                            foreach ($cekvalue->result_array() as $field) { ?>
+
+                                <div class="formtoclone" id="form-<?= $i; ?>" data-id="<?= $i; ?>">
+
+                                    <div class="form-group row " id="nominal-pkm">
+                                        <label for="Jenis_Pengajuan" class="control-label col-md-7">
+
+                                            <div class="input-group  keterangan">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">Keterangan *</div>
+                                                </div>
+                                                <input type="text" value="<?= $field['keterangan']; ?>" name="keterangan[]" class="form-control keterangan" placeholder="contoh: Juara 1 Poster" id="keterangan-<?= $i; ?>">
+                                                <span class="invalid-feedback"></span>
+                                            </div>
+
+                                        </label>
+
+                                        <div class="col-md-5">
+                                            <div class="input-group  nominal">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">Rp</div>
+                                                </div>
+                                                <input type="text" value="<?= $field['nominal']; ?>" name="nominal[]" class="form-control nominal" id="nominal-<?= $i; ?>">
+                                                <span class="invalid-feedback"></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            <?php $i++;
+                            }
+                        } else {
+                            //jika masih baru dan blm ada nilai
+                            ?>
+                            <div class="formtoclone" id="form-0" data-id="0">
+
+                                <div class="form-group row">
                                     <label for="Jenis_Pengajuan" class="control-label col-md-7">
 
                                         <div class="input-group  keterangan">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">Keterangan *</div>
                                             </div>
-                                            <input type="text" value="<?=$field['keterangan']; ?>" name="keterangan[]" class="form-control" placeholder="contoh: Juara 1 Poster">
+                                            <input type="text" value="" name="keterangan[]" class="form-control keterangan" placeholder="contoh: Juara 1 Poster" id="keterangan-0">
                                             <span class="invalid-feedback"></span>
                                         </div>
 
                                     </label>
 
                                     <div class="col-md-5">
-                                        <div class="input-group  nominal">
+                                        <div class="input-group nominal">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">Rp</div>
                                             </div>
-                                            <input type="number" value="<?=$field['nominal']; ?>" name="nominal[]" class="form-control">
+                                            <input type="text" value="12" name="nominal[]" class="form-control nominal"  id="nominal-0">
                                             <span class="invalid-feedback"></span>
                                         </div>
-                                    </div>                             
+                                    </div>
 
-                                </div>   
-                            </div> 
+                                </div>
+                            </div>
 
+                        <?php } ?>
 
-                           <?php }
-                           
-                        } else {
-                           //jika masih baru dan blm ada nilai
-                           ?>
-                             <div class="formtoclone" id="form">
-                           
-                           
-                           <div class="form-group row " id="nominal-pkm">
-                               <label for="Jenis_Pengajuan" class="control-label col-md-7">
-
-                                   <div class="input-group  keterangan">
-                                       <div class="input-group-prepend">
-                                           <div class="input-group-text">Keterangan *</div>
-                                       </div>
-                                       <input type="text" value="" name="keterangan[]" class="form-control" placeholder="contoh: Juara 1 Poster">
-                                       <span class="invalid-feedback"></span>
-                                   </div>
-
-                               </label>
-
-                               <div class="col-md-5">
-                                   <div class="input-group  nominal">
-                                       <div class="input-group-prepend">
-                                           <div class="input-group-text">Rp</div>
-                                       </div>
-                                       <input type="number" value="" name="nominal[]" class="form-control">
-                                       <span class="invalid-feedback"></span>
-                                   </div>
-                               </div>                             
-
-                           </div>   
-                       </div>
-
-                       <?php } ?>                        
-                        
-                        <button class="clone btn btn-md btn-warning mb-3">Tambah</button>
+                        <button class="clone btn btn-md btn-warning mb-3"><i class="fas fa-plus"></i> Tambah</button>
 
                         <input type="submit" name="submit" value="Simpan" class="btn btn-success btn-block simpan_nominal">
-                        <p class="mt-1 sukses_simpan text-success text-center"><i class="fas fa-check-circle"></i> Berhasil</p>              
+                        <p class="mt-1 sukses_simpan text-success text-center"><i class="fas fa-check-circle"></i> Berhasil disimpan</p>
                     </form>
 
                     <script>
 
-                        var cloneCount = 1;      
+                        $('.sukses_simpan').hide();
+
+                        $(document).ready(function() {
+
+                            $(':input[type="number"]').inputmask();
+
+                        });
 
                         $(".clone").click(function() {
-                          
-                                var
+
+                            var
                                 $self = $(this),
-                                    $element_to_clone = $self.prev(),
-                                    $new_element = $element_to_clone.clone();
+                                $element_to_clone = $self.prev(),
+                                $previousID = parseFloat($self.prev().data('id')) + 1;
 
-                                $new_element.find('.del').removeClass('hidden disabled').addClass('enabled');
+                            $new_element = $element_to_clone.clone().attr('data-id', $previousID).attr('id', 'form-' + $previousID);
 
-                                $new_element.insertAfter($element_to_clone);
+                            $new_element.find(':input[type="number"]').attr('id', 'nominal-' + $previousID).val('');
+                            $new_element.find(':input[type="text"]').attr('id', 'keterangan-' + $previousID).val('');
 
-                                return false;
-                                i++; 
-                            });
+                            $new_element.insertAfter($element_to_clone);
+
+                            return false;
+
+                        });
+
+                        // $new_element.find('.del').removeClass('hidden disabled').addClass('enabled');
 
                         var SITEURL = '<?php echo base_url(); ?>';
-                       
+
 
                         var frm = $('.nominal_reward_prestasi');
 
 
 
-                        // $(frm).bind('submit', function(e) {
-                        //     e.preventDefault();
+                        $(frm).bind('submit', function(e) {
+                            e.preventDefault();
 
-                        //     // $(frm).closest('.invalid-feedback').addClass('d-none');
+                            // $(frm).closest('.invalid-feedback').addClass('d-none');
 
-                        //     $.ajax({
-                        //         url: SITEURL + "admin/jenispengajuan/edit_nominal_prestasi/" + <?= $kat['jpi']; ?>,
-                        //         data: frm.serialize(),
-                        //         type: "post",
-                        //         dataType: 'json',
-                        //         success: function(res) {
+                            $.ajax({
+                                url: SITEURL + "admin/jenispengajuan/edit_nominal_prestasi/" + <?= $kat['jpi']; ?>,
+                                data: frm.serialize(),
+                                type: "post",
+                                dataType: 'json',
+                                success: function(res) {
 
-                        //             console.log('sukses');
+                                    if (res.status == 'Error') {
 
-                        //             // if (res.status == 'Error') {
+                                        // foreach error keynya
+                                        Object.keys(res.error).forEach(function(k) {
+                                            if (res.error[k] !== '') {
 
-                        //             //     // foreach error keynya
-                        //             //     Object.keys(res.error).forEach(function(k) {
-                        //             //         if (res.error[k] !== '') {
+                                                var idarray = $(".nominal_reward_prestasi")
+                                                    .find(':input.' + k) //Find the spans
+                                                    .map(function() {
+                                                        return this.id;
+                                                    }) //Project Ids
+                                                    .get(); //ToArray                                  
 
-                        //             //             if (k == 'tipe_reward') {
-                        //             //                 $('#nominal_reward #tipe_reward').addClass('is-invalid');
-                        //             //                 $('#nominal_reward #tipe_reward').next('.invalid-feedback').addClass('d-block').html(res.error[k]);
-                        //             //             } else {
-                        //             //                 $('#nominal_reward').find("." + k).children('input').addClass('is-invalid').next('.invalid-feedback').html(res.error[k]);
-                        //             //             }
-                        //             //         }
-                        //             //     });
+                                                $.each(idarray, function(key, value) {
 
-                        //             // } else {
+                                                    var fieldvalue = $("#" + value).val();
 
-                        //             //     // 	$('#nominal_reward').find('.invalid-feedback').hide();
-                        //             //     $('.simpan_nominal').next('.sukses_simpan').fadeIn().delay(500).fadeOut();
-                        //             //     $('#nominal_reward').find("input, select").removeClass('is-invalid');
-                        //             // }
-                        //         },
-                        //         error: function(data) {
-                        //             console.log('Error:', data);
-                        //         }
-                        //     });
-                        // });
+                                                    if (fieldvalue == '') {
+
+                                                        $("#" + value).addClass('is-invalid').next('.invalid-feedback').html(res.error[k]);
+
+                                                    }
+
+                                                });
+
+
+                                            }
+                                        });
+
+                                    } else {
+
+                                        $('.simpan_nominal').next('.sukses_simpan').fadeIn().delay(500).fadeOut();
+                                    }
+                                },
+                                error: function(data) {
+                                    console.log('Error:', data);
+                                }
+                            });
+                        });
 
                         // hialngkan eror ketika field diklik
                         $('.form-control').on('keypress', function() {
                             $(this).removeClass('is-invalid');
                         })
-                        $('#tipe_reward li').on('click', function() {
-                            $('#tipe_reward').removeClass('is-invalid');
-                            $('#tipe_reward').next('.invalid-feedback').removeClass('d-block');
-                        })
+                       
                     </script>
 
                 <?php } ?>
 
-                
+
 
             </div>
 
@@ -449,10 +414,5 @@ list($kat, $result, $nominal) = $kategori;
     </div>
 
 
-    <script src="<?= base_url('public/vendor/jquery-ui-1.12.1/jquery-ui.min.js'); ?>"></script>
-    <script src="<?= base_url() ?>public/plugins/inputmask/jquery.inputmask.bundle.js"></script>
-
-
 
 </div>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

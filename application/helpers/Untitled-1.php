@@ -3,14 +3,14 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 {
   $id = $field_id;
   $CI = &get_instance();
-  $fields = $CI->db->select('*')->from('Mstr_Fields f')
-    ->join('Tr_Field_Value fv', 'fv.field_id=f.field_id', 'left')
+  $fields = $CI->db->select('*')->from('mstr_fields f')
+    ->join('tr_field_value fv', 'fv.field_id=f.field_id', 'left')
     ->where(array('f.field_id' => $id))
     ->where(array('fv.pengajuan_id' => $id_surat))
     ->get()->row_array();
 
   if ($fields['type'] == 'image') {
-    $image = $CI->db->select('*')->from('Tr_Media')
+    $image = $CI->db->select('*')->from('tr_media')
       ->where(array('id' => $fields['value']))->get()->row_array();
     $img_full = $image['file'];
     $thumb = $image['thumb'];
@@ -134,7 +134,7 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
     <?php }
   } elseif ($fields['type'] == 'select_pembimbing') {
     $CI = &get_instance();
-    $dosen = $CI->db->get_where('V_Dosen', array('id_pegawai' => $fields['value']))->row_array();
+    $dosen = $CI->db->get_where('v_dosen', array('id_pegawai' => $fields['value']))->row_array();
     // print_r($dosen);
     ?>
 
@@ -159,7 +159,7 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
 
     <?php
     $CI = &get_instance();
-    $query = $CI->db->query("SELECT value FROM Tr_Field_Value WHERE pengajuan_id =  $id_surat AND field_id = $id")->row_array();
+    $query = $CI->db->query("SELECT value FROM tr_field_value WHERE pengajuan_id =  $id_surat AND field_id = $id")->row_array();
     $anggota_string = $query['value'];
     $anggota_array = explode(",", $anggota_string);
     ?>
@@ -227,7 +227,7 @@ function generate_keterangan_surat($field_id, $id_surat, $pengajuan_status)
     <?php
     $image_id = (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $fields['value'];
 
-    $image = $CI->db->select('*')->from('Tr_Media')
+    $image = $CI->db->select('*')->from('tr_media')
       ->where(array('id' => $image_id))->get()->row_array();
     if ($image) {
       $thumb = $image['file'];

@@ -185,10 +185,10 @@ list($kat, $result, $nominal) = $kategori;
 										<?php
 
 										$jenis_pengajuan_id = $kat['jpi'];
-										$query = $this->db->query("SELECT Tr_Pengajuan_Field.*, Mstr_Fields.* FROM Tr_Pengajuan_Field
-										LEFT JOIN Mstr_Fields ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
-										WHERE Tr_Pengajuan_Field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
-											" AND Tr_Pengajuan_Field.terpakai=1 ORDER BY urutan ASC");
+										$query = $this->db->query("SELECT mstr_pengajuan_field.*, mstr_fields.* FROM mstr_pengajuan_field
+										LEFT JOIN mstr_fields ON mstr_pengajuan_field.field_id = mstr_fields.field_id 
+										WHERE mstr_pengajuan_field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
+											" AND mstr_pengajuan_field.terpakai=1 ORDER BY urutan ASC");
 										$results = $query->result_array();
 
 										// echo '<pre>'; print_r($results); echo '</pre>';
@@ -251,7 +251,8 @@ list($kat, $result, $nominal) = $kategori;
 															
 															<option value='select_prestasi' <?= ($result['type'] == 'select_prestasi') ? 'selected="selected"' : ''; ?>>Prestasi (Juara 1 dst)</option>
 															<option value='select_tingkat' <?= ($result['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan (Nasional, wilayah, dst)</option>
-															<option value='select_nasional_internasional' <?= ($result['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option>
+															<!-- <option value='select_nasional_internasional' <?= ($result['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option> -->
+															<option value='select_pkm' <?= ($result['type'] == 'select_pkm') ? 'selected="selected"' : ''; ?>>Kategori Lomba PKM</option>
 														</select>
 													</div>
 
@@ -344,7 +345,8 @@ list($kat, $result, $nominal) = $kategori;
 															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
 															<option value='select_prestasi' <?= ($field['type'] == 'select_prestasi') ? 'selected="selected"' : ''; ?>>Prestasi (Juara 1 dst)</option>
 															<option value='select_tingkat' <?= ($field['type'] == 'select_tingkat') ? 'selected="selected"' : ''; ?>>Tingkatan (Nasional, wilayah, dst)</option>
-															<option value='select_nasional_internasional' <?= ($field ['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option>
+															<!-- <option value='select_nasional_internasional' <?= ($field ['type'] == 'select_nasional_internasional') ? 'selected="selected"' : ''; ?>>Tingkatan Nasional Internasional</option> -->
+															<option value='select_pkm' <?= ($field ['type'] == 'select_pkm') ? 'selected="selected"' : ''; ?>>Kategori Lomba PKM</option>
 															
 														</select>
 													</div>
@@ -431,7 +433,7 @@ list($kat, $result, $nominal) = $kategori;
 				var sorted = $("#sortable2").sortable("serialize", {
 					key: "sort"
 				});
-				console.log(sorted);
+
 				$('.field_surat').val(sorted);
 				$("#sortable2").css('border-color', '#eeeeee');
 				$("#errNm2").html('');

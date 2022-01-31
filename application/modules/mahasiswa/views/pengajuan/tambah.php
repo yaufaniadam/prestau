@@ -42,7 +42,7 @@
 
 					<div class="form-group row">
 						<label class="col-md-5" for="">
-							Kategori Prestasi
+							Jenis Prestasi/Rekognisi 
 						</label>
 
 						<div class="col-md-7">
@@ -55,14 +55,14 @@
 
 						<div class="form-group row">
 							<label class="col-md-5" for="dokumen[<?= $pengajuan_field['field_id']; ?>]">
-								<?= $pengajuan_field['field'] ?>
-								<small id="emailHelp" class="form-text text-muted">
-									<?= $pengajuan_field['deskripsi'] ?> <?= ($pengajuan_field['required'] == 1) ? '<strong class="text-danger">Wajib</strong>': ''; ?>
+								<?= $pengajuan_field['field'] ?> <?= ($pengajuan_field['required'] == 1) ? '<sup class="badge badge-danger badge-counter">Wajib</sup>': ''; ?>
+								<small class="form-text text-muted d-inline d-md-block">
+									<?= $pengajuan_field['deskripsi'] ?> 
 								</small>
 							</label>
 
 							<div class="col-md-7">
-								<?php generate_form_field($pengajuan_field['field_id'], $pengajuan_id, $pengajuan_status, 'mahasiswa/pengajuan'); ?>
+								<?php generate_form_field($pengajuan_field['field_id'], $pengajuan_id, $pengajuan_status, 'mahasiswa/pengajuan',$pengajuan->Jenis_Pengajuan_Id ); ?>
 							</div>
 						</div>
 					<?php  }  ?>

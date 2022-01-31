@@ -113,10 +113,10 @@ echo form_open_multipart(base_url('admin/jenispengajuan/edit/' . $kat['Jenis_Pen
 									<?php
 
 									$jenis_pengajuan_id = $kat['Jenis_Pengajuan_Id'];
-									$query = $this->db->query("SELECT Tr_Pengajuan_Field.*, Mstr_Fields.field FROM Tr_Pengajuan_Field
-									LEFT JOIN Mstr_Fields ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
-									WHERE Tr_Pengajuan_Field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
-										" AND Tr_Pengajuan_Field.terpakai=1 ORDER BY urutan ASC");
+									$query = $this->db->query("SELECT mstr_pengajuan_field.*, mstr_fields.field FROM mstr_pengajuan_field
+									LEFT JOIN mstr_fields ON mstr_pengajuan_field.field_id = mstr_fields.field_id 
+									WHERE mstr_pengajuan_field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
+										" AND mstr_pengajuan_field.terpakai=1 ORDER BY urutan ASC");
 									$results = $query->result_array();
 
 									if ($results) {

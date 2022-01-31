@@ -43,14 +43,14 @@ class Pengajuan extends Mahasiswa_Controller
 			s.badge,
 			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
 			FORMAT (ps.date, 'hh:mm:ss ') as time
-			FROM Tr_Pengajuan p 
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
-			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
+			FROM tr_pengajuan p 
+			LEFT JOIN mstr_jenis_pengajuan jp ON p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
+			LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
 			WHERE p.nim = '$nim'
 			AND ps.status_pengajuan_id = (SELECT MAX(status_pengajuan_id) 
-													FROM Tr_Pengajuan_Status  
+													FROM tr_pengajuan_status  
 													WHERE pengajuan_id = p.pengajuan_id ) AND NOT ps.status_id=20"
 		)->result_array();
 
@@ -65,11 +65,11 @@ class Pengajuan extends Mahasiswa_Controller
 
 		$data['prestasi'] =
 			$this->db->select('*')
-			->from('Tr_Penerbitan_Pengajuan pp')
-			->join('Tr_Pengajuan p', 'pp.id_pengajuan = p.pengajuan_id', 'left')
-			->join('Mstr_Jenis_Pengajuan jp', 'p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id')
-			->join('V_Mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
-			->join('Tr_Periode_Penerbitan per', 'per.id_periode = pp.id_periode')
+			->from('tr_penerbitan_pengajuan pp')
+			->join('tr_pengajuan p', 'pp.id_pengajuan = p.pengajuan_id', 'left')
+			->join('mstr_jenis_pengajuan jp', 'p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id')
+			->join('v_mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
+			->join('tr_periode_penerbitan per', 'per.id_periode = pp.id_periode')
 			->where(['pp.STUDENTID' => $user_nim, 'per.status' => 1])
 			->get()->result_array();
 
@@ -82,10 +82,10 @@ class Pengajuan extends Mahasiswa_Controller
 		$data['title'] = 'Detail Prestasi';
 
 		$query = $this->db->select('*')
-			->from('Tr_Penerbitan_Pengajuan pp')
-			->join('V_Mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
-			->join('Tr_Pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-			->join('Mstr_Jenis_Pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->from('tr_penerbitan_pengajuan pp')
+			->join('v_mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
+			->join('tr_pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
+			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
 			->where(
 				[
 					'pp.id_penerbitan_pengajuan' => $id_penerbitan_pengajuan
@@ -124,8 +124,8 @@ class Pengajuan extends Mahasiswa_Controller
 		);
 
 		//query ini buat apa ya? coba kita cek
-		$field = $this->db->select('*')->from('Tr_Pengajuan_Field')
-			->join('Mstr_Fields', 'Mstr_fields.field_id=Tr_Pengajuan_Field.field_id', 'left')
+		$field = $this->db->select('*')->from('mstr_pengajuan_field')
+			->join('mstr_fields', 'mstr_fields.field_id=mstr_pengajuan_field.field_id', 'left')
 			->where(array('Jenis_Pengajuan_Id' => $id))->get()
 			->result_array();
 
@@ -143,16 +143,16 @@ class Pengajuan extends Mahasiswa_Controller
 			->set('status_id', 1)
 			->set('pic', $data_user['STUDENTID'])
 			->set('date', 'getdate()', FALSE)
-			->insert('Tr_Pengajuan_Status');
+			->insert('tr_pengajuan_status');
 
 		// //ambil id surat berdasarkan last id status surat
-		$inserted_id = $this->db->select('pengajuan_id')->from('Tr_Pengajuan_Status')->where('status_pengajuan_id=', $this->db->insert_id())->get()->row_array();
+		$inserted_id = $this->db->select('pengajuan_id')->from('tr_pengajuan_status')->where('status_pengajuan_id=', $this->db->insert_id())->get()->row_array();
 
 
 		$field_id = $this->db->query(
-			"SELECT Tr_Pengajuan_Field.field_id  FROM Mstr_Jenis_Pengajuan
-			LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.Jenis_Pengajuan_Id = Mstr_Jenis_Pengajuan.Jenis_Pengajuan_Id
-			WHERE Mstr_Jenis_Pengajuan.Jenis_Pengajuan_Id = $id AND Tr_Pengajuan_Field.terpakai = 1"
+			"SELECT mstr_pengajuan_field.field_id  FROM mstr_jenis_pengajuan
+			LEFT JOIN mstr_pengajuan_field ON mstr_pengajuan_field.Jenis_Pengajuan_Id = mstr_jenis_pengajuan.Jenis_Pengajuan_Id
+			WHERE mstr_jenis_pengajuan.Jenis_Pengajuan_Id = $id AND mstr_pengajuan_field.terpakai = 1"
 		)->result_array();
 
 		// echo '<pre>'; print_r($field_id); echo '</pre>';
@@ -162,7 +162,7 @@ class Pengajuan extends Mahasiswa_Controller
 		// // foreach keterangan surat, lalu masukkan nilai awal (nilai kosong) berdasakan keterangan dari kategori surat kedalam field_value
 		foreach ($field_id as $key => $id_kat) {
 			$this->db->insert(
-				'Tr_Field_Value',
+				'tr_field_value',
 				array(
 					'value' => '',
 					'pengajuan_id' =>  $inserted_id['pengajuan_id'],
@@ -363,7 +363,7 @@ class Pengajuan extends Mahasiswa_Controller
 	private function getNamaField($id_field)
 	{
 		$this->db->select('*');
-		$this->db->from('Mstr_Fields');
+		$this->db->from('mstr_fields');
 		$this->db->where('field_id', $id_field);
 		$result = $this->db->get()->row_array();
 		return $result['field'];
@@ -380,8 +380,8 @@ class Pengajuan extends Mahasiswa_Controller
 		$data['pengajuan'] = $pengajuan;
 
 		$pengajuan_fields = $this->db->query(
-			"SELECT * FROM Tr_Pengajuan_Field pf
-			LEFT JOIN Mstr_Fields f ON f.field_id = pf.field_id
+			"SELECT * FROM mstr_pengajuan_field pf
+			LEFT JOIN mstr_fields f ON f.field_id = pf.field_id
 			WHERE pf.Jenis_Pengajuan_Id = $pengajuan->Jenis_Pengajuan_Id
 			AND pf.terpakai = 1
 			ORDER BY urutan ASC"
@@ -392,8 +392,8 @@ class Pengajuan extends Mahasiswa_Controller
 			*,
 			FORMAT (ps.date, 'dd/MM') as date,
 			FORMAT (ps.date, 'hh:mm:ss') as time 
-			FROM Tr_Pengajuan_Status ps
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
+			FROM tr_pengajuan_status ps
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
 			WHERE ps.pengajuan_id = $pengajuan->pengajuan_id
 			ORDER BY status_pengajuan_id DESC"
 		)->result_array();
@@ -478,7 +478,7 @@ class Pengajuan extends Mahasiswa_Controller
 						->set('status_id', $next_status)
 						->set('pic', $data_user['STUDENTID'])
 						->set('date', 'getdate()', FALSE)
-						->insert('Tr_Pengajuan_Status');
+						->insert('tr_pengajuan_status');
 				}
 
 				foreach ($this->input->post('dokumen') as $id => $dokumen) {
@@ -486,7 +486,7 @@ class Pengajuan extends Mahasiswa_Controller
 						$anggota = implode(",", $dokumen);
 						$this->db->where(array('field_id' => $id, 'pengajuan_id' => $pengajuan_id));
 						$this->db->update(
-							'Tr_Field_Value',
+							'tr_field_value',
 							array(
 								'value' => $anggota
 							)
@@ -494,7 +494,7 @@ class Pengajuan extends Mahasiswa_Controller
 					} else {
 						$this->db->where(array('field_id' => $id, 'pengajuan_id' => $pengajuan_id));
 						$this->db->update(
-							'Tr_Field_Value',
+							'tr_field_value',
 							array(
 								'value' => $dokumen
 							)
@@ -561,7 +561,7 @@ class Pengajuan extends Mahasiswa_Controller
 
 
 			$this->db->insert(
-				'Tr_Media',
+				'tr_media',
 				array(
 					'nim' => $this->session->userdata('studentid'),
 					'file' =>  $upload_path . '/' . $data['file_name'],
@@ -586,7 +586,7 @@ class Pengajuan extends Mahasiswa_Controller
 	public function hapus_file()
 	{
 		$id = $_POST['id'];
-		$media = $this->db->get_where('Tr_Media', array('id' => $id))->row_array();
+		$media = $this->db->get_where('tr_media', array('id' => $id))->row_array();
 
 
 		if ($media['file']) {
@@ -596,7 +596,7 @@ class Pengajuan extends Mahasiswa_Controller
 			}
 		}
 
-		$hapus = $this->db->delete('Tr_Media', array('id' => $id));
+		$hapus = $this->db->delete('tr_media', array('id' => $id));
 		// if ($hapus) {
 		echo json_encode(array(
 			"statusCode" => 200,
@@ -610,7 +610,7 @@ class Pengajuan extends Mahasiswa_Controller
 	public function get_used_file_name()
 	{
 		$used_file_id = $this->input->post('id');
-		$query = $this->db->query("SELECT * FROM Tr_Media WHERE id = $used_file_id")->row_array();
+		$query = $this->db->query("SELECT * FROM tr_media WHERE id = $used_file_id")->row_array();
 		$file_dir = $query['file'];
 
 		$file_name = explode("/", $file_dir);
@@ -730,7 +730,7 @@ class Pengajuan extends Mahasiswa_Controller
 			->set('date', 'getdate()', FALSE)
 			->set('pengajuan_id', $id)
 			->set('pic', $this->session->userdata('studentid'))
-			->insert('Tr_Pengajuan_Status');
+			->insert('tr_pengajuan_status');
 
 		$this->session->set_flashdata('msg', 'Pengajuan berhasil dihapus!');
 		redirect(base_url('mahasiswa/pengajuan/pengajuan_saya'));

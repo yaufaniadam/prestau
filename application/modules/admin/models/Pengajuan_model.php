@@ -10,13 +10,13 @@ class Pengajuan_model extends CI_Model
 			*,
 			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
 			FORMAT (ps.date, 'hh:mm:ss ') as time
-			FROM Tr_Pengajuan p
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
-			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-			LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
-			WHERE ps.status_id = (SELECT MAX(status_id) FROM Tr_Pengajuan_Status ps WHERE ps.pengajuan_id = p.pengajuan_id) 
+			FROM tr_pengajuan p
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
+			LEFT JOIN mstr_jenis_pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
+			LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
+			LEFT JOIN mstr_department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
+			WHERE ps.status_id = (SELECT MAX(status_id) FROM tr_pengajuan_status ps WHERE ps.pengajuan_id = p.pengajuan_id) 
 			$id_status"
 		);
 		return $query->result_array();
@@ -30,14 +30,14 @@ class Pengajuan_model extends CI_Model
 			pp.STUDENTID AS mhs_id,
 			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
 			FORMAT (ps.date, 'hh:mm:ss ') as time
-			FROM Tr_Pengajuan p
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
-			LEFT JOIN Tr_Penerbitan_Pengajuan pp ON pp.id_pengajuan = p.pengajuan_id
-			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = pp.STUDENTID
-			LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
-			WHERE ps.status_id = (SELECT MAX(status_id) FROM Tr_Pengajuan_Status ps WHERE ps.pengajuan_id = p.pengajuan_id)
+			FROM tr_pengajuan p
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
+			LEFT JOIN mstr_jenis_pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
+			LEFT JOIN tr_penerbitan_pengajuan pp ON pp.id_pengajuan = p.pengajuan_id
+			LEFT JOIN v_mahasiswa m ON m.STUDENTID = pp.STUDENTID
+			LEFT JOIN mstr_department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
+			WHERE ps.status_id = (SELECT MAX(status_id) FROM tr_pengajuan_status ps WHERE ps.pengajuan_id = p.pengajuan_id)
 			AND pp.id_periode = '$id_periode' "
 		);
 		return $query->result_array();
@@ -70,13 +70,13 @@ class Pengajuan_model extends CI_Model
 			*,
 			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
 			FORMAT (ps.date, 'hh:mm:ss ') as time
-			FROM Tr_Pengajuan p
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
-			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-			LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
-			WHERE ps.status_id = (SELECT MAX(status_id) FROM Tr_Pengajuan_Status ps WHERE ps.pengajuan_id = p.pengajuan_id) 
+			FROM tr_pengajuan p
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
+			LEFT JOIN mstr_jenis_pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
+			LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
+			LEFT JOIN mstr_department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
+			WHERE ps.status_id = (SELECT MAX(status_id) FROM tr_pengajuan_status ps WHERE ps.pengajuan_id = p.pengajuan_id) 
 			$id_status AND NOT ps.status_id=20"
 		);
 		return $result = $query->result_array();
@@ -84,8 +84,8 @@ class Pengajuan_model extends CI_Model
 
 	public function pengajuan_perlu_diproses()
 	{
-		// $this->db->query("SELECT * FROM Tr_Pengajuan p 
-		// LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
+		// $this->db->query("SELECT * FROM tr_pengajuan p 
+		// LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 		// WHERE ps.status_id != 1 
 		// AND ps.status_id != 10")->num_rows();
 
@@ -100,9 +100,9 @@ class Pengajuan_model extends CI_Model
 				->prodi;
 
 			return $this->db->select("*")
-				->from("Tr_Pengajuan p")
-				->join("V_Mahasiswa m", "m.STUDENTID=p.nim")
-				->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=p.pengajuan_id")
+				->from("tr_pengajuan p")
+				->join("v_mahasiswa m", "m.STUDENTID=p.nim")
+				->join("tr_pengajuan_status ps", "ps.pengajuan_id=p.pengajuan_id")
 				->where([
 					"m.DEPARTMENT_ID =" => $prodi_user,
 					"ps.status_id =" => 2
@@ -111,9 +111,9 @@ class Pengajuan_model extends CI_Model
 				->num_rows();
 		} else {
 			return $this->db->select("*")
-				->from("Tr_Pengajuan p")
-				->join("V_Mahasiswa m", "m.STUDENTID=p.nim")
-				->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=p.pengajuan_id")
+				->from("tr_pengajuan p")
+				->join("v_mahasiswa m", "m.STUDENTID=p.nim")
+				->join("tr_pengajuan_status ps", "ps.pengajuan_id=p.pengajuan_id")
 				->where([
 					"ps.status_id =" => 2
 				])->get()
@@ -123,8 +123,8 @@ class Pengajuan_model extends CI_Model
 
 	public function pengajuan_selesai()
 	{
-		// $this->db->query("SELECT * FROM Tr_Pengajuan p 
-		// LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
+		// $this->db->query("SELECT * FROM tr_pengajuan p 
+		// LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 		// WHERE ps.status_id != 1 
 		// AND ps.status_id = 10")->num_rows();
 
@@ -140,9 +140,9 @@ class Pengajuan_model extends CI_Model
 				->prodi;
 
 			return $this->db->select("*")
-				->from("Tr_Penerbitan_Pengajuan pp")
-				->join("V_Mahasiswa m", "m.STUDENTID=pp.STUDENTID")
-				// ->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=pp.id_pengajuan")
+				->from("tr_penerbitan_pengajuan pp")
+				->join("v_mahasiswa m", "m.STUDENTID=pp.STUDENTID")
+				// ->join("tr_pengajuan_status ps", "ps.pengajuan_id=pp.id_pengajuan")
 				->where([
 					"m.DEPARTMENT_ID =" => $prodi_user,
 				])
@@ -150,9 +150,9 @@ class Pengajuan_model extends CI_Model
 				->num_rows();
 		} else {
 			return $this->db->select("*")
-				->from("Tr_Penerbitan_Pengajuan pp")
-				->join("V_Mahasiswa m", "m.STUDENTID=pp.STUDENTID")
-				// ->join("Tr_Pengajuan_Status ps", "ps.pengajuan_id=pp.id_pengajuan")
+				->from("tr_penerbitan_pengajuan pp")
+				->join("v_mahasiswa m", "m.STUDENTID=pp.STUDENTID")
+				// ->join("tr_pengajuan_status ps", "ps.pengajuan_id=pp.id_pengajuan")
 				->get()
 				->num_rows();
 		}
@@ -165,13 +165,13 @@ class Pengajuan_model extends CI_Model
 			*,
 			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
 			FORMAT (ps.date, 'hh:mm:ss ') as time
-			FROM Tr_Pengajuan p
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
-			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-			-- LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
-			LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
+			FROM tr_pengajuan p
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
+			LEFT JOIN mstr_jenis_pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id
+			LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
+			-- LEFT JOIN mstr_department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
+			LEFT JOIN mstr_department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
 			WHERE ps.status_id = 10"
 				// . ($DEPARTMENT_ID == 0 ? "" : "AND d.DEPARTMENT_ID = $DEPARTMENT_ID")
 				. ($DEPARTMENT_ID == 0 ? "" : "AND m.DEPARTMENT_ID = '$DEPARTMENT_ID'")
@@ -186,7 +186,7 @@ class Pengajuan_model extends CI_Model
 			"SELECT 
 			-- distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
 			distinct(MONTH(ps.date)) AS bulan 
-			FROM Tr_Pengajuan_Status ps
+			FROM tr_pengajuan_status ps
 			WHERE ps.status_id = 2 
 			AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())
 			ORDER BY bulan ASC
@@ -195,9 +195,9 @@ class Pengajuan_model extends CI_Model
 
 		// SELECT 
 		// distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
-		// FROM Tr_Pengajuan_Status ps
-		// LEFT JOIN Tr_Pengajuan p ON p.pengajuan_id = ps.pengajuan_id
-		// LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
+		// FROM tr_pengajuan_status ps
+		// LEFT JOIN tr_pengajuan p ON p.pengajuan_id = ps.pengajuan_id
+		// LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
 		// WHERE ps.status_id = 2 
 		// AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())
 		// AND m.DEPARTMENT_ID = '1'
@@ -208,17 +208,17 @@ class Pengajuan_model extends CI_Model
 	{
 		return $this->db->query(
 			"SELECT *
-			FROM Tr_Pengajuan p
-			LEFT JOIN Mstr_Jenis_Pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id 		
-			LEFT JOIN Tr_Pengajuan_Status ps ON ps.pengajuan_id = p.pengajuan_id
-			LEFT JOIN Tr_Status s ON s.status_id = ps.status_id
-			LEFT JOIN V_Mahasiswa m ON m.STUDENTID = p.nim
-			LEFT JOIN Mstr_Department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
+			FROM tr_pengajuan p
+			LEFT JOIN mstr_jenis_pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id 		
+			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
+			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
+			LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
+			LEFT JOIN mstr_department d ON d.DEPARTMENT_ID = m.DEPARTMENT_ID
 			WHERE p.pengajuan_id = $pengajuan_id 
 			AND s.status_id = (
-				SELECT status_id FROM Tr_Pengajuan_Status 
+				SELECT status_id FROM tr_pengajuan_status 
 				WHERE status_pengajuan_id = (
-				SELECT MAX(status_pengajuan_id) FROM Tr_Pengajuan_Status 
+				SELECT MAX(status_pengajuan_id) FROM tr_pengajuan_status 
 				WHERE pengajuan_id = $pengajuan_id
 				)
 			)"
@@ -240,7 +240,7 @@ class Pengajuan_model extends CI_Model
 
 	public function get_jenis_pengajuan()
 	{
-		$query = $this->db->query("SELECT mj.*, mkjp.kategori_pengajuan FROM Mstr_Jenis_pengajuan mj LEFT JOIN mstr_kategori_jenis_pengajuan mkjp ON mkjp.id=mj.parent");
+		$query = $this->db->query("SELECT mj.*, mkjp.kategori_pengajuan FROM mstr_jenis_pengajuan mj LEFT JOIN mstr_kategori_jenis_pengajuan mkjp ON mkjp.id=mj.parent WHERE aktif = '1'");
 
 		return $result = $query->result_array();
 	}
@@ -256,24 +256,24 @@ class Pengajuan_model extends CI_Model
 
 		// $query1 = $this->db->query("SELECT 
 		// * 
-		// FROM dbo.Mstr_Jenis_Pengajuan jp
-		// LEFT JOIN Mstr_Penghargaan_Rekognisi_Mahasiswa reward ON reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
+		// FROM mstr_jenis_pengajuan jp
+		// LEFT JOIN mstr_penghargaan_rekognisi_mahasiswa reward ON reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
 		// where jp.Jenis_Pengajuan_Id='$id'");
 
 		$query1 = $this->db->select("*,jp.Jenis_pengajuan_Id as jpi")
-			->from('dbo.Mstr_Jenis_Pengajuan jp')
-			->join("Mstr_Penghargaan_Rekognisi_Mahasiswa reward", "reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id", "LEFT")
+			->from('mstr_jenis_pengajuan jp')
+			->join("mstr_penghargaan_rekognisi_mahasiswa reward", "reward.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id", "LEFT")
 			->where([
 				'jp.Jenis_Pengajuan_Id' => $id
 			])
 			->get();
 		$result1 = $query1->row_array();
 
-		$query2 = $this->db->query("SELECT field_id FROM Tr_Pengajuan_Field where Jenis_Pengajuan_Id=$id AND terpakai = 1");
+		$query2 = $this->db->query("SELECT field_id FROM mstr_pengajuan_field where Jenis_Pengajuan_Id=$id AND terpakai = 1");
 		$result2 = $query2->result_array();
 
 		$result3 = $this->db->get_where(
-			"Mstr_Penghargaan_Rekognisi_Mahasiswa",
+			"mstr_penghargaan_rekognisi_mahasiswa",
 			["Jenis_Pengajuan_Id" => $id]
 		)->result_array();
 
@@ -301,14 +301,14 @@ class Pengajuan_model extends CI_Model
 
 			// menambahkan field yang belum ada
 			$datafield_exist = $this->db->query(
-				"SELECT field_id FROM Tr_Pengajuan_Field 
+				"SELECT field_id FROM mstr_pengajuan_field 
 									WHERE Jenis_Pengajuan_Id = $id AND field_id IN (
-										SELECT field_id FROM Tr_Pengajuan_Field 
+										SELECT field_id FROM mstr_pengajuan_field 
 										WHERE Jenis_Pengajuan_Id = $id AND field_id = " . $data['field_id'] . " )"
 			)->num_rows();
 
 			if ($datafield_exist == 0) {
-				$this->db->insert('Tr_Pengajuan_Field', $data);
+				$this->db->insert('mstr_pengajuan_field', $data);
 			} else {
 				$field_property = [
 					'terpakai' => 1,
@@ -316,7 +316,7 @@ class Pengajuan_model extends CI_Model
 				];
 
 				$this->db->update(
-					'Tr_Pengajuan_Field',
+					'mstr_pengajuan_field',
 					$field_property,
 					[
 						'Jenis_Pengajuan_Id' => $id,
@@ -331,7 +331,7 @@ class Pengajuan_model extends CI_Model
 		}
 
 		$query_fields = $this->db->query(
-			"SELECT field_id FROM Tr_Pengajuan_Field 
+			"SELECT field_id FROM mstr_pengajuan_field 
 			WHERE Jenis_Pengajuan_Id = $id 
 			-- AND field_id = $field
 			 AND field_id NOT IN ($not_exist_fields_data)"
@@ -346,7 +346,7 @@ class Pengajuan_model extends CI_Model
 		if ($query_fields->num_rows() > 0) {
 			foreach ($non_exist_fields as $field_tidak_dipakai) {
 				$this->db->update(
-					'Tr_Pengajuan_Field',
+					'mstr_pengajuan_field',
 					$field_property,
 					[
 						'Jenis_Pengajuan_Id' => $id,
@@ -362,12 +362,12 @@ class Pengajuan_model extends CI_Model
 
 	public function tambah_field_pengajuan($data)
 	{
-		return $this->db->insert('Tr_Pengajuan_Field', $data);
+		return $this->db->insert('mstr_pengajuan_field', $data);
 	}
 
 	public function tambah_jenis_pengajuan($data)
 	{
-		return $this->db->insert('Mstr_Jenis_Pengajuan', $data);
+		return $this->db->insert('mstr_jenis_pengajuan', $data);
 	}
 
 	public function get_pengajuan_status($id_pengajuan)
@@ -399,16 +399,16 @@ class Pengajuan_model extends CI_Model
 	{
 		if($jenis_pengajuan_id) {
 			$query = $this->db->query(
-				"SELECT * FROM Mstr_Fields
-			LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
-				WHERE Tr_Pengajuan_Field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
-					" AND Tr_Pengajuan_Field.terpakai=" . $aktif
+				"SELECT * FROM mstr_fields
+			LEFT JOIN mstr_pengajuan_field ON mstr_pengajuan_field.field_id = mstr_fields.field_id 
+				WHERE mstr_pengajuan_field.Jenis_Pengajuan_Id =" . $jenis_pengajuan_id .
+					" AND mstr_pengajuan_field.terpakai=" . $aktif
 			);
 		} else {
 			$query = $this->db->query(
-				"SELECT * FROM Mstr_Fields
-			LEFT JOIN Tr_Pengajuan_Field ON Tr_Pengajuan_Field.field_id = Mstr_Fields.field_id 
-			AND Tr_Pengajuan_Field.terpakai=" . $aktif
+				"SELECT * FROM mstr_fields
+			LEFT JOIN mstr_pengajuan_field ON mstr_pengajuan_field.field_id = mstr_fields.field_id 
+			AND mstr_pengajuan_field.terpakai=" . $aktif
 			);
 
 		}
@@ -418,12 +418,12 @@ class Pengajuan_model extends CI_Model
 
 	public function edit_form_field($data, $id)
 	{
-		return $this->db->update('Mstr_Fields', $data, array('field_id' => $id));
+		return $this->db->update('mstr_fields', $data, array('field_id' => $id));
 	}
 
 	public function edit_jenis_pengajuan($data, $id)
 	{
-		return $this->db->update('Mstr_Jenis_Pengajuan', $data, array('Jenis_Pengajuan_Id' => $id));
+		return $this->db->update('mstr_jenis_pengajuan', $data, array('Jenis_Pengajuan_Id' => $id));
 	}
 
 	public function get_status_pengajuan_perbulan($status, $tahun)
@@ -437,7 +437,7 @@ class Pengajuan_model extends CI_Model
 		//mengambil data keseluruhan pengajuan berdsarkan status
 		return $this->db->query("SELECT COUNT(status_pengajuan_id) jumlah, 
 		MONTH(date) bulan 
-		FROM Tr_Pengajuan_Status 
+		FROM tr_pengajuan_status 
 		WHERE status_id IN($status) AND YEAR(date)=$tahun
 		GROUP BY MONTH(date) 
 		ORDER BY MONTH(date) ASC
