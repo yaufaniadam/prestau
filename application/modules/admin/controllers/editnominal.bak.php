@@ -84,7 +84,7 @@ public function edit_nominal($id)
 					//cek order awal apkah ada yg nilainya 1
 					$nominal_exist = $this->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 						"Jenis_Pengajuan_Id" => $id,
-						"order" => 1
+						"urutan" => 1
 					])->get()->result_array();
 
 					if ($nominal_exist) {
@@ -93,7 +93,7 @@ public function edit_nominal($id)
 						foreach ($new_nominal as $key => $value) {
 							$this->db->where([
 								"Jenis_Pengajuan_Id" => $id,
-								"order" => $key
+								"urutan" => $key
 							]);
 							$data_nominal = [
 								"nominal" => $value
@@ -106,7 +106,7 @@ public function edit_nominal($id)
 
 					
 						$insdata_penghargaan = [
-							"order" => 1,
+							"urutan" => 1,
 							"Jenis_Pengajuan_Id" => $id,
 						];
 
@@ -114,7 +114,7 @@ public function edit_nominal($id)
 						foreach ($new_nominal as $key => $value) {
 							$this->db->where([
 								"Jenis_Pengajuan_Id" => $id,
-								"order" => $key
+								"urutan" => $key
 							]);
 							$data_nominal = [
 								"nominal" => $value
@@ -131,7 +131,7 @@ public function edit_nominal($id)
 					//cek order awal apkah ada yg nilainya 1
 					$nominal_exist = $this->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 						"Jenis_Pengajuan_Id" => $id,
-						"order" => 3
+						"urutan" => 3
 					])->get()->result_array();
 
 					if ($nominal_exist) {
@@ -147,7 +147,7 @@ public function edit_nominal($id)
 						// foreach ($new_nominal as $key => $value) {
 						// 	$this->db->where([
 						// 		"Jenis_Pengajuan_Id" => $id,
-						// 		"order" => $key
+						// 		"urutan" => $key
 						// 	]);
 						// 	$data_nominal = [
 						// 		"nominal" => $value
@@ -161,7 +161,7 @@ public function edit_nominal($id)
 						echo "nilai blm ada";
 					
 						// $insdata_penghargaan = [
-						// 	"order" => 1,
+						// 	"urutan" => 1,
 						// 	"Jenis_Pengajuan_Id" => $id,
 						// ];
 
@@ -170,7 +170,7 @@ public function edit_nominal($id)
 						foreach ($new_nominal as $key => $value) {
 							$this->db->where([
 								"Jenis_Pengajuan_Id" => $id,
-								"order" => $key
+								"urutan" => $key
 							]);
 							$data_nominal = [
 								"nominal" => $value
@@ -186,7 +186,7 @@ public function edit_nominal($id)
 
 				$data_penghargaan = [
 					"nominal" => $new_nominal,
-					"order" => 0,
+					"urutan" => 0,
 				];
 			}
 

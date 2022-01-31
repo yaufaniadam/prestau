@@ -229,7 +229,7 @@ class Periode extends Admin_Controller
 				$urutan = array_search($prestasi->STUDENTID, $anggota);
 				$reward = $this->db->get_where('mstr_penghargaan_rekognisi_mahasiswa', [
 					'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id,
-					'order' => $urutan > 0 ? 2 : 1
+					'urutan' => $urutan > 0 ? 2 : 1
 				])->row_object()->nominal;
 			}
 		} else {

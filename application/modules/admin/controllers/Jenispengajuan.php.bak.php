@@ -47,7 +47,7 @@ class Jenispengajuan extends Admin_Controller
 				if ($result) {
 
 					$insdata_penghargaan = [
-						"order" => NULL,
+						"urutan" => NULL,
 						"Jenis_Pengajuan_Id" => $id,
 					];
 					$this->db->insert('mstr_penghargaan_rekognisi_mahasiswa', $insdata_penghargaan);
@@ -283,7 +283,7 @@ class Jenispengajuan extends Admin_Controller
 				//cek nominal1 awal, ada atau tidak
 				$null_exist = $this->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 					"Jenis_Pengajuan_Id" => $id,
-					"order" => 0
+					"urutan" => 0
 				])->get()->result_array();
 
 				// echo "tipe reward 2";
@@ -295,17 +295,17 @@ class Jenispengajuan extends Admin_Controller
 					// jika ada order yang NULL maka ubah dulu null ke 0
 					$this->db->where([
 						"Jenis_Pengajuan_Id" => $id,
-						"order" => 0
+						"urutan" => 0
 					]);
 
 					$updata_penghargaan = [
-						"order" => 0
+						"urutan" => 0
 					];
 
 					$this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $updata_penghargaan);
 
 					$insdata_penghargaan = [
-						"order" => 1,
+						"urutan" => 1,
 						"Jenis_Pengajuan_Id" => $id,
 					];
 					$this->db->insert('mstr_penghargaan_rekognisi_mahasiswa', $insdata_penghargaan);
@@ -315,7 +315,7 @@ class Jenispengajuan extends Admin_Controller
 					foreach ($new_nominal as $key => $value) {
 						$this->db->where([
 							"Jenis_Pengajuan_Id" => $id,
-							"order" => $key
+							"urutan" => $key
 						]);
 						$data_nominal = [
 							"nominal" => $value
@@ -331,7 +331,7 @@ class Jenispengajuan extends Admin_Controller
 					//cek order awal apkah ada yg nilainya 1
 					$nominal_exist = $this->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 						"Jenis_Pengajuan_Id" => $id,
-						"order" => 1
+						"urutan" => 1
 					])->get()->result_array();
 
 					if ($nominal_exist) {
@@ -341,7 +341,7 @@ class Jenispengajuan extends Admin_Controller
 						foreach ($new_nominal as $key => $value) {
 							$this->db->where([
 								"Jenis_Pengajuan_Id" => $id,
-								"order" => $key
+								"urutan" => $key
 							]);
 							$data_nominal = [
 								"nominal" => $value
@@ -355,7 +355,7 @@ class Jenispengajuan extends Admin_Controller
 						// echo "ada value";
 
 						$insdata_penghargaan = [
-							"order" => 1,
+							"urutan" => 1,
 							"Jenis_Pengajuan_Id" => $id,
 						];
 
@@ -363,7 +363,7 @@ class Jenispengajuan extends Admin_Controller
 						foreach ($new_nominal as $key => $value) {
 							$this->db->where([
 								"Jenis_Pengajuan_Id" => $id,
-								"order" => $key
+								"urutan" => $key
 							]);
 							$data_nominal = [
 								"nominal" => $value
@@ -388,13 +388,13 @@ class Jenispengajuan extends Admin_Controller
 
 				// $this->db->where(array(
 				// 	'Jenis_Pengajuan_Id' => $id, 
-				// 	'order'=>'0'
+				// 	'urutan'=>'0'
 				// ));
 
 				// $this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $data_penghargaan);
 				$query = $this->db->select('*')->from('mstr_penghargaan_rekognisi_mahasiswa')
 				->where(['Jenis_Pengajuan_Id' => $id, 
-				'order'=>'0'])->get()->result_array();
+				'urutan'=>'0'])->get()->result_array();
 				;
 
 				print_r($query);

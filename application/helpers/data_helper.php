@@ -440,7 +440,7 @@ function get_nominal_byorder($id_pengajuan, $order) {
 
 	$nominal = $CI->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 		"Jenis_Pengajuan_Id" => $id_pengajuan,
-		"order" => $order
+		"urutan" => $order
 	])->get()->row_array();
 
 	if( $nominal ) {

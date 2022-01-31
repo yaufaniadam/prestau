@@ -72,7 +72,7 @@ class Jenispengajuan extends Admin_Controller
 				if ($result) {
 
 					$insdata_penghargaan = [
-						"order" => 0,
+						"urutan" => 0,
 						"Jenis_Pengajuan_Id" => $id,
 					];
 					$this->db->insert('mstr_penghargaan_rekognisi_mahasiswa', $insdata_penghargaan);
@@ -352,7 +352,7 @@ class Jenispengajuan extends Admin_Controller
 				//cek order awal apkah ada yg nilainya 1
 				$nominal_exist = $this->db->select('nominal')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 					"Jenis_Pengajuan_Id" => $id,
-					"order" => 1
+					"urutan" => 1
 				])->get()->result_array();
 
 				if ($nominal_exist) {
@@ -362,7 +362,7 @@ class Jenispengajuan extends Admin_Controller
 					foreach ($new_nominal as $key => $value) {
 						$this->db->where([
 							"Jenis_Pengajuan_Id" => $id,
-							"order" => $key
+							"urutan" => $key
 						]);
 						$data_nominal = [
 							"nominal" => $value
@@ -373,7 +373,7 @@ class Jenispengajuan extends Admin_Controller
 				} else {
 
 					$insdata_penghargaan = [
-						"order" => 1,
+						"urutan" => 1,
 						"Jenis_Pengajuan_Id" => $id,
 					];
 
@@ -384,7 +384,7 @@ class Jenispengajuan extends Admin_Controller
 					foreach ($new_nominal as $key => $value) {
 						$this->db->where([
 							"Jenis_Pengajuan_Id" => $id,
-							"order" => $key
+							"urutan" => $key
 						]);
 						$data_nominal = [
 							"nominal" => $value
@@ -399,7 +399,7 @@ class Jenispengajuan extends Admin_Controller
 
 				$data_penghargaan = [
 					"nominal" => $new_nominal,
-					"order" => 0,
+					"urutan" => 0,
 				];
 			}
 
@@ -409,7 +409,7 @@ class Jenispengajuan extends Admin_Controller
 
 				$this->db->where(array(
 					'Jenis_Pengajuan_Id' => $id,
-					'order' => '0'
+					'urutan' => '0'
 				));
 
 				$this->db->update('mstr_penghargaan_rekognisi_mahasiswa', $data_penghargaan);
@@ -469,14 +469,14 @@ class Jenispengajuan extends Admin_Controller
 			foreach($keterangan as $key=>$val)
 			{
 				  $data[$i]['Jenis_Pengajuan_Id'] = $id;
-				  $data[$i]['order'] = $i;
+				  $data[$i]['urutan'] = $i;
 				  $data[$i]['keterangan'] = $val;
 				  $data[$i]['nominal'] = $nominal[$key];
 				  $i++;
 			}
 
 			//cek order awal apkah ada yg nilainya 1
-			$cekvalue = $this->db->select('MAX([order]) as maxnum')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
+			$cekvalue = $this->db->select('MAX(urutan) as maxnum')->from('mstr_penghargaan_rekognisi_mahasiswa')->where([
 				"Jenis_Pengajuan_Id" => $id,
 			])->get();
 
@@ -495,7 +495,7 @@ class Jenispengajuan extends Admin_Controller
 				foreach ($start as $key => $val) {
 					$this->db->where([
 						"Jenis_Pengajuan_Id" => $id,
-						"order" => $key
+						"urutan" => $key
 					]);
 					$data_nominal = [
 						"nominal" => $val['nominal'],

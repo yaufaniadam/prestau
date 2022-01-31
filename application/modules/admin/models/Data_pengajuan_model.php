@@ -50,8 +50,8 @@ class Data_pengajuan_model extends CI_Model
 		}
 
 		$order_by = '';
-		if (isset($_POST['order'])) {
-			$var_order = $_POST['order']['0']['column'];
+		if (isset($_POST['urutan'])) {
+			$var_order = $_POST['urutan']['0']['column'];
 			$order_by = " ORDER BY $var_order ASC ";
 		}
 

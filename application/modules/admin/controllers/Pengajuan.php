@@ -357,7 +357,7 @@ class Pengajuan extends Admin_Controller
 					'mstr_penghargaan_rekognisi_mahasiswa',
 					[
 						'Jenis_Pengajuan_Id' => $queryp->Jenis_Pengajuan_Id,
-						'order' => $urutan > 0 ? 2 : 1
+						'urutan' => $urutan > 0 ? 2 : 1
 					]
 				)->row_object()->nominal;
 			}
