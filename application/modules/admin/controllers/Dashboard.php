@@ -12,8 +12,12 @@ class Dashboard extends Admin_Controller
 	public function index()
 	{
 		$data['pengajuan_perlu_diproses'] = $this->pengajuan_model->pengajuan_perlu_diproses();
-		$data['pengajuan_selesai'] = $this->pengajuan_model->pengajuan_selesai();
+
+		$data['prestasi'] = $this->db->query('select * FROM v_prestasi')->num_rows();
+
+
 		$data['nama_bulan'] = $this->pengajuan_model->getbulan();
+
 		$data['jenis_pengajuan'] = $this->db->query(
 			"SELECT 
 			DISTINCT(jp.Jenis_Pengajuan),

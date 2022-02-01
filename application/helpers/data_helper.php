@@ -55,6 +55,60 @@ function get_jumlah_pengajuan_perbulan($no_urut)
 			->num_rows();
 	}
 }
+function get_jumlah_prestasi_perbulan($no_urut)
+{
+	$CI = &get_instance();
+
+	$no = (int)$no_urut;
+
+	$nama_bulan = [
+		1 =>
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"Oktober",
+		"November",
+		"December",
+	];
+
+	if ($_SESSION['role'] == 5) {
+		$prodi_user = $CI->db->select('prodi')
+			->from('users')
+			->where([
+				'id' => $_SESSION['user_id']
+			])
+			->get()
+			->row_object()
+			->prodi;
+
+		return $CI->db->select("*")
+			->from("v_prestasi")
+		
+			->where([
+				// "FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
+				// "ps.status_id" => 9,
+				"DEPARTMENT_ID" => $prodi_user
+			])
+			->get()
+			->num_rows();
+	} else {
+		return $CI->db->select("*")
+			->from("v_prestasi")
+			// ->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			// ->join('tr_pengajuan_status ps', 'ps.pengajuan_id=pp.id_pengajuan')
+			->where([
+				"MONTH(tanggal) =" => $no,				
+			])
+			->get()
+			->num_rows();
+	}
+}
 
 function get_nama_bulan($no_urut)
 {

@@ -269,7 +269,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 						//field sudah dicek, tapi perlu direvisi
 						if ($verifikasi == 0 && $pengajuan_status == 4) {
 							//field memiliki isi
-							$form = '';
+							$form = 'd-none';
 							$listing = '';
 							$error = 'is-invalid';
 							$change = '';
@@ -852,11 +852,11 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 			if (validation_errors()) { // cek adakah eror validasi
 				// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain
 
-				echo "ada error";
+				// echo "ada error";
 
 				if (set_value('dokumen[' . $id . ']')) {
 
-					echo "error di field lain<br>";
+					// echo "error di field lain<br>";
 
 					// error di field lain       
 					$value = set_value('dokumen[' . $id . '][]');
@@ -869,7 +869,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 					$disabled = 'en';
 				} else {
 					// error di field ini
-					echo "error di field ini";
+					// echo "error di field ini";
 
 					$value = set_value('dokumen[' . $id . '][]');
 					$value_explode = explode(',', $value);
@@ -885,10 +885,10 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 
 				if ($field_value) {
 
-					echo "ada value";
+					// echo "ada value";
 					//field sudah dicek, tapi perlu direvisi
 					if ($verifikasi == 0 && $pengajuan_status == 4) {
-						echo "blm diverifikasi dan pengajuan status 4";
+						// echo "blm diverifikasi dan pengajuan status 4";
 						$value_explode = explode(',', $field_value);
 						// ambil ketua
 						$ketua = array_shift($value_explode);
@@ -897,7 +897,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 						$valid = 'is-invalid';
 						$disabled = 'en';
 					} else {
-						echo " sudah diverifikasi, nilai akan diexplode";
+						// echo " sudah diverifikasi, nilai akan diexplode";
 						$value_explode = explode(',', $field_value);
 						// ambil ketua
 						$ketua = array_shift($value_explode);

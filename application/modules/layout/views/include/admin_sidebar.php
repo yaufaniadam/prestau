@@ -26,44 +26,48 @@
 		</a>
 	</li>
 
-	<?php if ($this->session->userdata('role') == 5) { ?>
 
-		<li class="nav-item" id="semua_pengajuan">
-			<a class="nav-link" href="<?= base_url("admin/pengajuan/prestasi_prodi"); ?>">
-				<i class=" fas fa-fw fa-medal"></i>
-				<span>Prestasi</span>
-			</a>
-		</li>
 
-	<?php } ?>
+	<?php if (($this->session->userdata('role') == 1) || ($this->session->userdata('role') == 2) || ($this->session->userdata('role') == 5)) { ?>
 
-	<?php if (($this->session->userdata('role') == 1) || ($this->session->userdata('role') == 2)) { ?>
 
-		<li class="nav-item" id="menu_verified">
-			<a class="nav-link" href="<?= base_url("admin/pengajuan/verified"); ?>">
-				<i class=" fas fa-fw fa-check-circle"></i>
-				<span>Lolos Verifikasi
-					 <!-- <span class="float-right badge badge-warning">2</span> -->					
-				</span>
-				
-			</a>
-		</li>
 
-		<li class="nav-item" id="menu_periode">
-			<a class="nav-link" href="<?= base_url("admin/periode/index/1"); ?>">
-				<i class="fas fa-fw fa-calendar-alt"></i>
-				<span>Periode</span>
-			</a>
-		</li>
-
-		<li class="nav-item" id="menu_arsip">
+		<!-- <li class="nav-item" id="menu_arsip">
 			<a class="nav-link" href="<?= base_url("admin/pengajuan/arsip/0/0") ?>">
 				<i class="fas fa-file-archive"></i>
 				<span>Arsip Pengajuan</span>
 			</a>
-		</li>
+		</li> -->
+
+		<?php if (($this->session->userdata('role') == 1) || ($this->session->userdata('role') == 5)) { ?>
+
+			<li class="nav-item" id="menu_prestasi">
+				<a class="nav-link" href="<?= base_url("admin/prestasi"); ?>">
+					<i class=" fas fa-fw fa-medal"></i>
+					<span>Prestasi</span>
+				</a>
+			</li>
+
+		<?php } ?>
 
 		<?php if ($this->session->userdata('role') == 1) { ?>
+
+			<li class="nav-item" id="menu_verified">
+				<a class="nav-link" href="<?= base_url("admin/pengajuan/verified"); ?>">
+					<i class=" fas fa-fw fa-check-circle"></i>
+					<span>Lolos Verifikasi
+						<!-- <span class="float-right badge badge-warning">2</span> -->
+					</span>
+
+				</a>
+			</li>
+
+			<li class="nav-item" id="menu_periode">
+				<a class="nav-link" href="<?= base_url("admin/periode/index/1"); ?>">
+					<i class="fas fa-fw fa-calendar-alt"></i>
+					<span>Periode</span>
+				</a>
+			</li>
 
 			<!-- Divider -->
 			<hr class="sidebar-divider d-none d-md-block">
@@ -84,7 +88,7 @@
 					<span>Jenis Pengajuan</span>
 				</a>
 			</li>
-<!-- 
+			<!-- 
 			<li class="nav-item" id="menu_kategoripengajuan">
 				<a class="nav-link" href="<?= base_url("admin/jenispengajuan/nominal_penghargaan"); ?>">
 					<i class="fas fa-fw fa-list"></i>

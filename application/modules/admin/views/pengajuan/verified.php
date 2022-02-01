@@ -11,14 +11,16 @@
 				<li class="nav-item">
 					<a class="nav-link" href="<?= base_url("admin/pengajuan/index/" . $this->session->userdata('role')); ?>"><i class="fas fa-fw fa-exclamation-circle"></i> Perlu Diproses</a>
 				</li>
+
+        <li class="nav-item">
+					<a class="nav-link active" href="<?= base_url("admin/pengajuan/verified/"); ?>"><i class="fas fa-fw fa-award"></i> Lolos Verifikasi</a>
+				</li> 
 		
 				<li class="nav-item">
 					<a class="nav-link" href="<?= base_url("admin/pengajuan/index/"); ?>"><i class="fas fa-fw fa-envelope"></i> Semua Pengajuan</a>
 				</li>
 				
-				<li class="nav-item">
-					<a class="nav-link active" href="<?= base_url("admin/pengajuan/verified/"); ?>"><i class="fas fa-fw fa-award"></i> Lolos Verifikasi</a>
-				</li>
+			
 				
 			</ul>
 

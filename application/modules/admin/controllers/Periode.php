@@ -1,10 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\IOFactory; 
-use PhpOffice\PhpSpreadsheet\Style\Alignment; 
-
 class Periode extends Admin_Controller
 {
 	public function __construct()

@@ -445,6 +445,33 @@ class Pengajuan extends Admin_Controller
 		$this->load->view('layout/layout', $data);
 	}
 
+	public function arsip_prestasi($DEPARTMENT_ID = 0, $ID_JENIS_PENGAJUAN = 0)
+	{
+		$department_data = $this->db->query("SELECT * FROM mstr_department")->result_array();
+		$kategori_data = $this->db->query("SELECT * FROM mstr_jenis_pengajuan WHERE Jenis_Pengajuan_Id != 12")->result_array();
+
+		$data['query'] = $this->pengajuan_model->get_arsip_pengajuan($DEPARTMENT_ID, $ID_JENIS_PENGAJUAN);
+		$data['departments'] = $department_data;
+		$data['kategories'] = $kategori_data;
+
+		$data['button_text'] = $DEPARTMENT_ID == 0 ? 'Semua Prodi' : $this->db->query(
+			"SELECT NAME_OF_DEPARTMENT 
+			FROM mstr_department 
+			WHERE DEPARTMENT_ID = $DEPARTMENT_ID"
+		)->row_object()->NAME_OF_DEPARTMENT;
+
+		$data['button_text_2'] = $ID_JENIS_PENGAJUAN == 0 ? 'Semua Kategori' : $this->db->query(
+			"SELECT Jenis_Pengajuan 
+			FROM mstr_jenis_pengajuan 
+			WHERE Jenis_Pengajuan_Id = $ID_JENIS_PENGAJUAN"
+		)->row_object()->Jenis_Pengajuan;
+
+		$data['title'] = 'Semua Pengajuan';
+		$data['view'] = 'pengajuan/arsip';
+		$data['menu'] = 'arsip';
+		$this->load->view('layout/layout', $data);
+	}
+
 	public function proses_pengajuan($id_pengajuan = 0)
 	{
 		$this->db->set('id_status', 2)

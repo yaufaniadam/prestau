@@ -226,18 +226,6 @@ class Pengajuan_model extends CI_Model
 		// return $pengajuan_id;
 	}
 
-	public function get_no_pengajuan($id_pengajuan)
-	{
-		// $no_pengajuan = $this->db->query("select ns.no_pengajuan, ns.instansi, kts.kode, ts.kode_tujuan, us.kode as kode_us, DATE_FORMAT(tanggal_terbit, '%c') as bulan, DATE_FORMAT(tanggal_terbit, '%Y') as tahun, DATE_FORMAT(tanggal_terbit, '%c %M %Y') as tanggal_full from no_pengajuan ns 
-		// 	LEFT JOIN kat_tujuan_pengajuan kts ON kts.id=ns.kat_tujuan_pengajuan
-		// 	LEFT JOIN tujuan_pengajuan ts ON ts.id=ns.tujuan_pengajuan
-		// 	LEFT JOIN urusan_pengajuan us ON us.id=ns.urusan_pengajuan
-		// 	where ns.id_pengajuan= $id_pengajuan
-		//     ")->row_array();
-
-		// return $no_pengajuan;
-	}
-
 	public function get_jenis_pengajuan()
 	{
 		$query = $this->db->query("SELECT mj.*, mkjp.kategori_pengajuan FROM mstr_jenis_pengajuan mj LEFT JOIN mstr_kategori_jenis_pengajuan mkjp ON mkjp.id=mj.parent WHERE aktif = '1'");
