@@ -32,29 +32,44 @@ function get_jumlah_pengajuan_perbulan($no_urut)
 			->prodi;
 
 		return $CI->db->select("*")
-			->from("tr_penerbitan_pengajuan pp")
-			->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
+			->from("tr_pengajuan p")
 			->join('tr_pengajuan_status ps', 'ps.pengajuan_id=pp.id_pengajuan')
 			->where([
-				"FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
+				// "MONTH(tanggal) =" => $no,
 				"ps.status_id" => 9,
 				"m.DEPARTMENT_ID" => $prodi_user
 			])
 			->get()
 			->num_rows();
 	} else {
-		return $CI->db->select("*")
-			->from("tr_penerbitan_pengajuan pp")
-			->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
-			->join('tr_pengajuan_status ps', 'ps.pengajuan_id=pp.id_pengajuan')
+		return $CI->db->select("distinct(ps.pengajuan_id) as psid")
+		->from("tr_pengajuan p")
+		->join('tr_pengajuan_status ps', 'ps.pengajuan_id=p.pengajuan_id')
 			->where([
-				"FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
-				"ps.status_id" => 9,
+			// 	"FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
+				"ps.status_id > " => 1
 			])
 			->get()
 			->num_rows();
 	}
 }
+
+function get_verified()
+{
+	$CI = &get_instance();
+
+		$jmlstatus =  $CI->db->select("distinct(pengajuan_id)")
+		->from("tr_pengajuan_status")
+			->where("status_id =", 7)->get()->num_rows();
+
+		$jmlnextstatus =  $CI->db->select("distinct(pengajuan_id)")
+		->from("tr_pengajuan_status")
+			->where("status_id =", 9 )->get()->num_rows();
+
+		return $jmlstatus-$jmlnextstatus;
+	
+}
+
 function get_jumlah_prestasi_perbulan($no_urut)
 {
 	$CI = &get_instance();
@@ -77,6 +92,7 @@ function get_jumlah_prestasi_perbulan($no_urut)
 		"December",
 	];
 
+
 	if ($_SESSION['role'] == 5) {
 		$prodi_user = $CI->db->select('prodi')
 			->from('users')
@@ -88,7 +104,7 @@ function get_jumlah_prestasi_perbulan($no_urut)
 			->prodi;
 
 		return $CI->db->select("*")
-			->from("v_prestasi")
+			->from("Tr_Penerbitan_Pengajuan")
 		
 			->where([
 				// "FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
@@ -98,11 +114,11 @@ function get_jumlah_prestasi_perbulan($no_urut)
 			->get()
 			->num_rows();
 	} else {
+	
 		return $CI->db->select("*")
-			->from("v_prestasi")
-			// ->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
-			// ->join('tr_pengajuan_status ps', 'ps.pengajuan_id=pp.id_pengajuan')
-			->where([
+			->from("tr_penerbitan_pengajuan a")
+			->join('tr_periode_penerbitan b', "b.id_periode = a.id_periode")
+			->where([				
 				"MONTH(tanggal) =" => $no,				
 			])
 			->get()
@@ -276,7 +292,6 @@ function tampil_notif()
 		$where = ["n.role" => 6];
 	}
 
-
 	$notif = $CI->db
 		->select("*")
 		->from('tr_notif n')
@@ -315,8 +330,8 @@ function tampil_notif()
 					<a class="dropdown-item d-flex align-items-center notif" id="<?= $notif['id_notif']; ?>" name="<?= $notif['pengajuan_id']; ?>" href="#">
 						<div>
 							<div class="small text-gray-500"><?= $notif['tanggal_masuk']; ?></div>
-							<span class="font-weight-bold"> <i class=""></i>
-								<?= $notif['judul_notif']; ?>
+							<span class="font-weight-bold text-<?= $notif['badge']; ?>"> <i class="fas <?= $notif['icon']; ?>"></i>
+								<?= $notif['judul_notif']; ?> 
 							</span> &raquo; <span class="font-weight-bold">
 								<?= $notif['Jenis_Pengajuan']; ?>
 							</span>
@@ -334,7 +349,7 @@ function tampil_notif()
 				</a>
 			<?php	} 	?>
 
-			<a class="dropdown-item text-center medium text-gray-500" href="<?= base_url('notif'); ?>">Lihat semua Notifikasi</a>
+			<!-- <a class="dropdown-item text-center medium text-gray-500" href="<?= base_url('notif'); ?>">Lihat semua Notifikasi</a> -->
 		</div>
 	</li>
 	<script type="text/javascript">

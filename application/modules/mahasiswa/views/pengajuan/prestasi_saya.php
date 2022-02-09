@@ -16,7 +16,7 @@
 						<?php
 						foreach ($prestasi as $prestasi) { ?>
 							<tr>
-								<td><a href="<?= base_url('mahasiswa/pengajuan/detail_prestasi/' . $prestasi['id_penerbitan_pengajuan']); ?>"><?= get_meta_value('judul', $prestasi['id_pengajuan'], false); ?></a></td>
+								<td><a href="<?= base_url('mahasiswa/pengajuan/detail_prestasi/' . $prestasi['id_penerbitan_pengajuan']); ?>"><?= $prestasi['judul']; ?></a></td>
 								<td><?= $prestasi['Jenis_Pengajuan']; ?></td>
 								<td><?= $prestasi['nama_periode']; ?></td>
 

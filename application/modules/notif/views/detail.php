@@ -4,7 +4,7 @@
       <div class="card-body">
         <h1 class="h4 mb-1 text-gray-800"><?= $notif['judul_notif']; ?></h1>
         <hr />
-        <p class="">Surat <?= $notif['kategori_surat']; ?></p>
+        <p class="">Surat <?= $notif['Jenis_pengajuan_Id']; ?></p>
         <p class="">Pembuat <?= $notif['fullname']; ?></p>
         <p class="">Keterangan : <?= $notif['isi_notif']; ?></p>
         <hr />

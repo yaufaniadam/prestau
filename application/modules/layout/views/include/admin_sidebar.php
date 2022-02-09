@@ -56,7 +56,9 @@
 				<a class="nav-link" href="<?= base_url("admin/pengajuan/verified"); ?>">
 					<i class=" fas fa-fw fa-check-circle"></i>
 					<span>Lolos Verifikasi
-						<!-- <span class="float-right badge badge-warning">2</span> -->
+						<?php 
+						$jumlah_lolos = get_verified();
+						echo ($jumlah_lolos > 0) ? '<span class="float-right badge badge-warning">' . $jumlah_lolos . '</span>' : '' ?>
 					</span>
 
 				</a>

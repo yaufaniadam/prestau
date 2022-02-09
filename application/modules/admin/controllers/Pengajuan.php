@@ -390,34 +390,6 @@ class Pengajuan extends Admin_Controller
 	}
 
 
-	public function detail_prestasi($id_penerbitan_pengajuan = 0)
-	{
-		$data['view'] = 'pengajuan/detail_prestasi';
-
-		$query = $this->db->select('*')
-			->from('tr_penerbitan_pengajuan pp')
-			->join('v_mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
-			->join('tr_pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
-			->where(
-				[
-					'pp.id_penerbitan_pengajuan' => $id_penerbitan_pengajuan
-				]
-			)
-			->get()
-			->row_array();
-
-		// echo "<pre>";
-		// print_r($query);
-		// echo "</pre>";
-
-		// die();
-
-		$data['pengajuan'] = $query;
-
-		$this->load->view('layout/layout', $data);
-	}
-
 	public function arsip($DEPARTMENT_ID = 0, $ID_JENIS_PENGAJUAN = 0)
 	{
 		$department_data = $this->db->query("SELECT * FROM mstr_department")->result_array();

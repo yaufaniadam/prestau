@@ -16,10 +16,10 @@ class Pengajuan extends Mahasiswa_Controller
 
 	public function detail($id_surat = 0)
 	{
-		// $data['surat'] = $this->pengajuan_model->get_detail_surat($id_surat);
-		// $data['title'] = $data['surat']['id_mahasiswa'];
-		// $data['view'] = 'surat/detail';
-		// $this->load->view('layout/layout', $data);
+		$data['surat'] = $this->pengajuan_model->get_detail_surat($id_surat);
+		$data['title'] = $data['surat']['id_mahasiswa'];
+		$data['view'] = 'surat/detail';
+		$this->load->view('layout/layout', $data);
 	}
 
 	public function pengajuan_saya()
@@ -61,17 +61,22 @@ class Pengajuan extends Mahasiswa_Controller
 	{
 		$data['title'] = 'Prestasi Saya';
 		$data['view'] = 'pengajuan/prestasi_saya';
+
 		$user_nim = $_SESSION['studentid'];
 
 		$data['prestasi'] =
 			$this->db->select('*')
-			->from('tr_penerbitan_pengajuan pp')
-			->join('tr_pengajuan p', 'pp.id_pengajuan = p.pengajuan_id', 'left')
-			->join('mstr_jenis_pengajuan jp', 'p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id')
-			->join('v_mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
-			->join('tr_periode_penerbitan per', 'per.id_periode = pp.id_periode')
-			->where(['pp.STUDENTID' => $user_nim, 'per.status' => 1])
+			->from('v_prestasi')
+		
+			->where(['STUDENTID' => $user_nim, 'status' => 1])
 			->get()->result_array();
+
+			// echo "<pre>";
+			// print_r($data['prestasi']);
+			// echo "</pre>";
+
+			$data['title'] = 'Prestasi Saya';
+			$data['menu'] = 'prestasi';
 
 		$this->load->view('layout/layout', $data);
 	}
@@ -79,27 +84,23 @@ class Pengajuan extends Mahasiswa_Controller
 	public function detail_prestasi($id_penerbitan_pengajuan = 0)
 	{
 		$data['view'] = 'pengajuan/detail_prestasi';
-		$data['title'] = 'Detail Prestasi';
+		$data['title'] = 'Prestasi Saya';
+		$data['menu'] = 'prestasi';
 
+		
 		$query = $this->db->select('*')
-			->from('tr_penerbitan_pengajuan pp')
-			->join('v_mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
-			->join('tr_pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->from('v_prestasi')
+		
 			->where(
 				[
-					'pp.id_penerbitan_pengajuan' => $id_penerbitan_pengajuan
+					'id_penerbitan_pengajuan' => $id_penerbitan_pengajuan
 				]
 			)
 			->get()
 			->row_array();
 
-		// echo "<pre>";
-		// print_r($query);
-		// echo "</pre>";
-		// die();
-
-		$data['pengajuan'] = $query;
+	
+		$data['prestasi'] = $query;
 
 		$this->load->view('layout/layout', $data);
 	}

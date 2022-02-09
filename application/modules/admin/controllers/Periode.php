@@ -73,43 +73,49 @@ class Periode extends Admin_Controller
 				'status' => 1
 			];
 	
-
+			//update periode penerbitan
 			$this->db->where('id_periode', $id_periode);
 			$this->db->update('tr_periode_penerbitan', $data);
 
+			$id_periode = $this->input->post('id_periode');
 			$pengajuan = $this->input->post('pengajuan[]');
 
-			$penerima = $this->input->post(['pengajuan_id']);
-			$pengajuan = $this->input->post('pengajuan[]');
+			print_r($id_periode);
+			print_r($pengajuan);
 
-			for ($i = 0; $i < count($penerima); $i++) {
-				$this_pengajuan = $this->db->get_where(
-					'tr_penerbitan_pengajuan',
-					[
-						'STUDENTID' => $penerima[$i],
-						'id_periode' => $id_periode,
-						'id_pengajuan' => $pengajuan[$i]
-					]
-				)->row_array();
+			// for ($i = 0; $i < count($penerima); $i++) {
+			// 	$this_pengajuan = $this->db->get_where(
+			// 		'tr_penerbitan_pengajuan',
+			// 		[
+			// 			'STUDENTID' => $penerima[$i],
+			// 			'id_periode' => $id_periode,
+			// 			'id_pengajuan' => $pengajuan[$i]
+			// 		]         
+			// 	)->row_array();
 
-					//data utk kirim email & notif ke pegawai
-					$data_for_notif = [
-						'STUDENTID' => $penerima[$i],
-						'STUDENTNAME' => $penerima[$i],
-						'penerima' => '',
-						'id_pengajuan' => $pengajuan[$i],
-						'judul_pengajuan' => $data['title'],
-						'role' => [3],
-						'link' => base_url('admin/pengajuan/detail/'. $pengajuan[$i]),
-						'subjek' => 'Ada Pengajuan Prestasi Baru dari ' . $pengajuan[$i],
-						'isi' => 'Ada Pengajuan Prestasi Baru dari <strong>' . $pengajuan[$i] . '</strong> kategori <strong>' . $data['title'] . '</strong> yang perlu diperiksa.',
-						'id_status_notif' => 10,
-					];
+			// 		//data utk kirim email & notif ke pegawai
+			// 		$data_for_notif = [
+			// 			'STUDENTID' => $penerima[$i],
+			// 			'STUDENTNAME' => $penerima[$i],
+			// 			'penerima' => '',
+			// 			'id_pengajuan' => $pengajuan[$i],
+			// 			'judul_pengajuan' => $data['title'],
+			// 			'role' => [3],
+			// 			'link' => base_url('admin/pengajuan/detail/'. $pengajuan[$i]),
+			// 			'subjek' => 'Ada Pengajuan Prestasi Baru dari ' . $pengajuan[$i],
+			// 			'isi' => 'Ada Pengajuan Prestasi Baru dari <strong>' . $pengajuan[$i] . '</strong> kategori <strong>' . $data['title'] . '</strong> yang perlu diperiksa.',
+			// 			'id_status_notif' => 10,
+			// 		];
 	
-					//sendmail & notif
-					$this->mailer->send_mail($data_for_notif);			
-
-			}
+			// 		//sendmail & notif
+			// 		// $this->mailer->send_mail($data_for_notif);			
+			// 		echo "<pre>";
+			// 		print_r($this_pengajuan);
+			// 		echo "</pre> <hr>";
+			// 		echo "<pre>";
+			// 		print_r($data_for_notif);
+			// 		echo "</pre> <hr>";
+			// }		
 			// die();
 
 			$this->db->select('id_pengajuan');

@@ -33,7 +33,7 @@ list($kat, $result, $nominal) = $kategori; ?>
                     <a class="nav-link" href="<?= base_url('admin/jenispengajuan/edit/' . $kat['jpi']); ?>"><i class="fas fa-fw fa-edit"></i> Edit Jenis pengajuan</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="<?= base_url('admin/jenispengajuan/nominal_reward'); ?>"><i class="fas fa-fw fa-dollar-sign"></i> Nominal Reward</a>
+                    <a class="nav-link active" href="<?= base_url('admin/jenispengajuan/nominal_reward/' . $kat['jpi']); ?>"><i class="fas fa-fw fa-dollar-sign"></i> Nominal Reward</a>
                 </li>
             </ul>
             <!-- <p class="card-header">Jenis Pengajuan</p> -->
@@ -219,7 +219,13 @@ list($kat, $result, $nominal) = $kategori; ?>
 
                     <form class="nominal_reward_prestasi" name="nominal_reward" method="POST" action="<?= base_url('admin/jenispengajuan/edit_nominal_prestasi/' . $kat['jpi']); ?>">
 
-                        <label for="Jenis_Pengajuan" class="control-label">Juara & Nominal Reward:</label>
+                        <label for="Jenis_Pengajuan" class="control-label">Juara & Nominal Reward: <br>
+                        <em class="small"><i class="fas fa-exclamation-triangle text-danger"></i> Achtung!<br>
+                        1. Kalau kolom isiannya kelebihan, keterangan sama nominal diisi angka nol (0) aja ya, gaes.<br>
+                        2. Pastikan setelah menekan tombol simpan, muncul pesan "Berhasil dsimpan".<br>
+                        3. Nominal tidak perlu ditulis pakai pemisah ribuan
+                    </em>
+                    </label>
 
                         <input type="hidden" name="tipe_reward" id="" value="5">
 

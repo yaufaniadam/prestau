@@ -3,23 +3,23 @@ class Notif_model extends CI_Model
 {
 	public function get_notif()
 	{
-		if ($_SESSION['role'] == 1) {
-			$where = "n.role = 1";
-		} else if ($_SESSION['role'] == 2) {
-			$where = "n.role = 2 AND n.id_prodi = " . $_SESSION['id_prodi'];
-		} else if ($_SESSION['role'] == 3) {
-			$where = "n.role = 3 AND n.kepada = " . $_SESSION['user_id'];
-		} else if ($_SESSION['role'] == 4) {
-			$where = "n.role = 4 AND n.kepada = " . $_SESSION['user_id'];
-		} else if ($_SESSION['role'] == 5) {
-			$where = "n.role = 5";
-		} else if ($_SESSION['role'] == 6) {
-			$where = "n.role = 6 AND n.id_prodi = " . $_SESSION['id_prodi'];
-		}
-		$query = $this->db->select("n.*, sp.*, n.id as notif_id, DATE_FORMAT(n.tanggal, '%H:%i') as time,  DATE_FORMAT(n.tanggal, '%d %M %Y') as date_full")->from("notif n")
-			->join('status_pesan sp', 'n.id_status_pesan = sp.id', 'left')
-			->where($where)
-			->order_by('n.id', 'desc')
+		// if ($_SESSION['role'] == 1) {
+		// 	$where = "n.role = 1";
+		// } else if ($_SESSION['role'] == 2) {
+		// 	$where = "n.role = 2 AND n.id_prodi = " . $_SESSION['id_prodi'];
+		// } else if ($_SESSION['role'] == 3) {
+		// 	$where = "n.role = 3 AND n.kepada = " . $_SESSION['user_id'];
+		// } else if ($_SESSION['role'] == 4) {
+		// 	$where = "n.role = 4 AND n.kepada = " . $_SESSION['user_id'];
+		// } else if ($_SESSION['role'] == 5) {
+		// 	$where = "n.role = 5";
+		// } else if ($_SESSION['role'] == 6) {
+		// 	$where = "n.role = 6 AND n.id_prodi = " . $_SESSION['id_prodi'];
+		// }
+		
+		$query = $this->db->select('*')->from('v_notif')
+			// ->where($where)
+			->order_by('id_notif', 'desc')
 			->get();
 
 		return $query;

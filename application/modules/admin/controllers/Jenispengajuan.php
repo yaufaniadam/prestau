@@ -121,6 +121,12 @@ class Jenispengajuan extends Admin_Controller
 				array('required' => '%s wajib diisi.')
 			);
 			$this->form_validation->set_rules(
+				'aktif',
+				'Aktif',
+				'trim|required',
+				array('required' => '%s wajib diisi.')
+			);
+			$this->form_validation->set_rules(
 				'fields',
 				'Field formulir',
 				'trim|required|min_length[6]',
@@ -148,6 +154,7 @@ class Jenispengajuan extends Admin_Controller
 					'jenis_pengajuan' => $this->input->post('Jenis_Pengajuan'),
 					'deskripsi' => $this->input->post('deskripsinya'),
 					'jumlah_anggota' => $this->input->post('jumlah_anggota'),
+					'aktif' => $this->input->post('aktif')
 				);
 
 				$fields = $this->input->post('fields');

@@ -22,9 +22,9 @@
 						<?php foreach ($jenis_pengajuan as $jenis) : ?>
 
 							<tr>
-								<td><?= $jenis['Jenis_Pengajuan']; ?></td>
+								<td><?= $jenis['Jenis_Pengajuan']; ?> <?= ($jenis['aktif'] == 1) ? '' : '<span class="text-danger"> (tidak aktif) </span>'; ?></td>
 								<td><?= $jenis['kategori_pengajuan']; ?></td>
-								<td class="text-center"><a class="btn btn-info btn-sm" href="<?= base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) ;?>?id=<?=$jenis['parent'] ;?>&pos=<?=$jenis['parent'] ;?>"><i class='fas fa-pencil-alt'></i> Edit</a></td>
+								<td class="text-center"><a class="btn <?= ($jenis['aktif'] == 1) ? 'btn-info' : 'btn-danger'; ?> btn-sm" href="<?= base_url('admin/jenispengajuan/edit/' . $jenis['Jenis_Pengajuan_Id']) ;?>?id=<?=$jenis['parent'] ;?>&pos=<?=$jenis['parent'] ;?>"><i class='fas fa-pencil-alt'></i> Edit</a></td>
 							</tr>
 
 						<?php endforeach;	?>

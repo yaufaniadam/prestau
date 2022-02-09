@@ -40,6 +40,30 @@ class Prestasi extends Admin_Controller
         $data['view'] = 'admin/prestasi/index';
         $data['menu'] = 'prestasi';    
         $this->load->view('layout/layout', $data);
+		//masa beda?
     }
+
+    public function detail($id_penerbitan_pengajuan = 0)
+	{
+		
+
+		$query = $this->db->select('*')
+			->from('v_prestasi')
+		
+			->where(
+				[
+					'id_penerbitan_pengajuan' => $id_penerbitan_pengajuan
+				]
+			)
+			->get()
+			->row_array();
+
+		$data['prestasi'] = $query;
+        $data['title'] = 'Prestasi & Rekognisi';
+        $data['view'] = 'admin/prestasi/detail_prestasi';
+        $data['menu'] = 'prestasi'; 
+
+		$this->load->view('layout/layout', $data);
+	}
 
 }

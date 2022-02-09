@@ -1107,7 +1107,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 			$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 				
 			$CI = &get_instance();
-			$capaian_prestasi = $CI->db->select('*')->from('mstr_penghargaan_rekognisi_mahasiswa')->where(['Jenis_Pengajuan_Id' => $jenis_pengajuan_id])->get()->result_array();
+			$capaian_prestasi = $CI->db->select('*')->from('mstr_penghargaan_rekognisi_mahasiswa')->where(['Jenis_Pengajuan_Id' => $jenis_pengajuan_id, 'keterangan !='=> '0' ])->get()->result_array();
 			?>
 
 			<fieldset>

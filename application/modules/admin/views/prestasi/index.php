@@ -53,7 +53,7 @@
 							$reward = $prestasi['nominal']; ?>
 							<tr>
 								<td><?= $prestasi['Jenis_Pengajuan']; ?></td>
-								<td><?= $prestasi['judul']; ?></td>
+								<td><a href="<?= base_url('admin/prestasi/detail/' . $prestasi['id_penerbitan_pengajuan']); ?>"><?= $prestasi['judul']; ?></a></td>
 								<td><?= $prestasi['FULLNAME']; ?></td>
 								<td><?= $prestasi['NAME_OF_DEPARTMENT']; ?></td>
 								<td><?= $prestasi['nama_periode']; ?></td>
