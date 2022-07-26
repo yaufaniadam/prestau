@@ -1,18 +1,18 @@
 <div class="col-12">
-	<div class="row">
-		<div class="col-6 col-md-6 mb-4">
+<div class="row">
+		<div class="col-4 col-md-4 mb-4">
 			<div class="card border-left-warning shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
 						<div class="col mr-2">
 							<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-								Jumlah 	Pengajuan
+								Menunggu Diproses
 							</div>
 							<div class="h5 mb-0 font-weight-bold text-gray-800">
 								<?php if ($pengajuan_perlu_diproses > 0) { ?>
 									<?= $pengajuan_perlu_diproses; ?>
 								<?php } else { ?>
-									tidak ada
+									-
 								<?php } ?>
 							</div>
 						</div>
@@ -23,7 +23,30 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-6 col-md-6 mb-4">
+		<div class="col-4 col-md-4 mb-4">
+			<div class="card border-left-danger shadow h-100 py-2">
+				<div class="card-body">
+					<div class="row no-gutters align-items-center">
+						<div class="col mr-2">
+							<div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+								Sudah diverifikasi
+							</div>
+							<div class="h5 mb-0 font-weight-bold text-gray-800">
+								<?php if ($verified > 0) { ?>
+									<?= $verified; ?>
+								<?php } else { ?>
+									-
+								<?php } ?>
+							</div>
+						</div>
+						<div class="col-auto">
+							<i class="fas fa-envelope fa-2x text-gray-300"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-4 col-md-4 mb-4">
 			<div class="card border-left-success shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
@@ -35,7 +58,7 @@
 								<?php if ($prestasi > 0) { ?>
 									<?= $prestasi; ?>
 								<?php } else { ?>
-									tidak ada
+									-
 								<?php } ?>
 							</div>
 						</div>
@@ -96,8 +119,7 @@
 									<tr>
 										<?php foreach ($nama_bulan as $bulan) { ?>
 											<th style="width:20%">
-												<i class="fas fa-envelope text-danger"></i> <?php echo  get_jumlah_pengajuan_perbulan($bulan['bulan']) ?>
-												<i class="fas fa-medal text-warning"></i> <?php echo  get_jumlah_prestasi_perbulan($bulan['bulan']) ?>
+												<i class="fas fa-medal text-warning"></i> <?php echo  get_jumlah_prestasi_perbulan($bulan['bulan'], $selected_year) ?>
 											</th>
 										<?php } ?>
 									</tr>
@@ -138,7 +160,7 @@
 											<?= $pengajuan['Jenis_Pengajuan']; ?>
 										</th>
 										<th>
-											<?= get_jumlah_pengajuan_per_jenis_pengajuan($pengajuan['Jenis_Pengajuan_Id']); ?>
+											<?= get_jumlah_prestasi_per_jenis_pengajuan($pengajuan['Jenis_Pengajuan_Id'], $selected_year); ?>
 										</th>
 									</tr>
 								<?php } ?>
@@ -181,7 +203,8 @@
 									</tr>
 								</thead>
 								<tbody>
-									<?php foreach (get_jumlah_pengajuan_per_prodi() as $per_prodi) { ?>
+									<?php foreach (get_jumlah_prestasi_per_prodi($selected_year) as $per_prodi) { 
+										if($per_prodi['jumlah_pengajuan'] > 0) {?>
 										<tr>
 											<th style="width:20%">
 												<?= $per_prodi['nama_prodi']; ?>
@@ -190,7 +213,9 @@
 												<?= $per_prodi['jumlah_pengajuan']; ?>
 											</th>
 										</tr>
-									<?php } ?>
+										<?php } //endif
+									 } //endforeach
+									?>
 								</tbody>
 							</table>
 						</div>

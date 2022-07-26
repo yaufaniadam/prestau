@@ -35,11 +35,12 @@
         <?php echo form_open_multipart(base_url("admin/pengajuan/verified/"), 'class="lolos" id="lolos"') ?>
         <table id="pengajuan-desc" class="table table-bordered tb-pengajuans">
           <thead>
-            <tr>
-              <th style="width:1%"><input type="checkbox" name="" id="check_all"></th>
+            <th style="width:1%"><input type="checkbox" name="" id="check_all"></th>
               <th style="width:30%">Judul</th>
               <th style="width:20%">Kategori</th>
               <th>Mahasiswa</th>
+              <th>Prodi</th>
+              <th>Fakultas</th>
               <th>Tanggal</th>
             </tr>
           </thead>
@@ -57,17 +58,17 @@
                     <?= get_meta_value('judul', $pengajuan['pengajuan_id'], false) ?></a>
                 </td>
                 <td>
-                  <a class="judul" href="<?= base_url('admin/pengajuan/detail/' . $pengajuan['pengajuan_id']); ?>">
-                    <?= $pengajuan['Jenis_Pengajuan']; ?></a>
+                  <?= $pengajuan['Jenis_Pengajuan']; ?>
                 </td>
 
+                <td>                 
+                    <?= $pengajuan['FULLNAME']; ?>                
+                </td>
                 <td>
-                  <p class="m-0">
-                    <?= $pengajuan['FULLNAME']; ?>
-                  </p>
-                  <p class="badge m-0 badge-ijomuda">
-                    <?= $pengajuan['NAME_OF_DEPARTMENT']; ?>
-                  </p>
+                  <?= $pengajuan['NAME_OF_DEPARTMENT']; ?>
+                </td>
+                <td>
+                  <?= $pengajuan['faculty']; ?>
                 </td>
                 <td>
                   <p class="m-0">
@@ -76,7 +77,6 @@
                   <p class="badge m-0 badge-warning">
                     <?= $pengajuan['time'];  ?>
                   </p>
-                </td>
                 </td>
               </tr>
             <?php  } ?>
@@ -140,11 +140,27 @@
 
     <?php if ($title != 'Pengajuan telah diverifikasi') { ?>
       $('#pengajuan-desc').DataTable({
-        "bPaginate": false,
-        "bLengthChange": false,
-        "bFilter": false,
-        "bInfo": false,
-      });
+				initComplete: function() {
+					this.api().columns([2,4,5]).every(function() {
+						var column = this;
+						var select = $('<select class="form-control"><option value=""> '+ + '</option></select>')
+							.appendTo($(column.header()).empty())
+							.on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
+
+								column
+									.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
+
+						column.data().unique().sort().each(function(d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					});
+				}
+			});
     <?php } ?>
   });
 </script>

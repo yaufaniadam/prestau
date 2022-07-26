@@ -42,10 +42,10 @@
 			<div class="card-body">
 				<a class="nav-link">
 					<div class="row">
-						<div class="col-2">
+						<div class="col-3">
 							<?= ($this->session->userdata('role') == 3) ? profPic($this->session->userdata('studentid'), 70) : ''; ?>
 						</div>
-						<div class="col-10">
+						<div class="col-9">
 							<h5><?= $this->session->userdata('fullname'); ?></h5>
 
 							<span class="badge badge-primary"><?= $this->session->userdata('studentid'); ?></span>

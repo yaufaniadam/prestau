@@ -6,7 +6,7 @@
 <div class="row">
 	<div class="col-12">
 		<div class="card card-success card-outline">
-			<div class="card-header">
+			<!-- <div class="card-header">
 				<div class="row">
 					<div class="dropdown">
 						<button class="btn btn-ijomuda dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -32,7 +32,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> -->
 
 			<div class="card-body">
 				<table id="pengajuan-desc" class="table table-bordered tb-pengajuans table-striped">
@@ -45,6 +45,7 @@
 							<th>Prodi</th>
 							<th>Periode</th>
 							<th style="width:10%">Reward</th>
+							<th style="width:10px">&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -53,11 +54,12 @@
 							$reward = $prestasi['nominal']; ?>
 							<tr>
 								<td><?= $prestasi['Jenis_Pengajuan']; ?></td>
-								<td><a href="<?= base_url('admin/prestasi/detail/' . $prestasi['id_penerbitan_pengajuan']); ?>"><?= $prestasi['judul']; ?></a></td>
+								<td><?= get_meta_value('judul', $prestasi['id_pengajuan'], false ); ?></a></td>
 								<td><?= $prestasi['FULLNAME']; ?></td>
 								<td><?= $prestasi['NAME_OF_DEPARTMENT']; ?></td>
 								<td><?= $prestasi['nama_periode']; ?></td>
 								<td><?= ($reward > 0) ? number_format($reward) : 'Pada Tim'; ?></td>
+								<td><a href="<?= base_url('admin/pengajuan/detail/' . $prestasi['id_pengajuan']); ?>"><i class="fas fa-folder-open"></i></a></td>
 							</tr>
 						<?php } ?>
 				</table>
@@ -80,7 +82,28 @@
 
 <script>
 	$(document).ready(function() {
-		$('#pengajuan-desc').DataTable({});
+		$('#pengajuan-desc').DataTable({
+				initComplete: function() {
+					this.api().columns([0,1,3,4]).every(function() {
+						var column = this;
+						var select = $('<select class="form-control"><option value=""> '+ + '</option></select>')
+							.appendTo($(column.header()).empty())
+							.on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
+
+								column
+									.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
+
+						column.data().unique().sort().each(function(d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					});
+				}
+			});
 	});
 
 	$(".btn-pencairan").click(function() {

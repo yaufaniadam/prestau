@@ -70,56 +70,30 @@ function get_verified()
 	
 }
 
-function get_jumlah_prestasi_perbulan($no_urut)
+function get_jumlah_prestasi_perbulan($no_urut, $year)
 {
 	$CI = &get_instance();
 
 	$no = (int)$no_urut;
 
-	$nama_bulan = [
-		1 =>
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"Oktober",
-		"November",
-		"December",
-	];
-
-
 	if ($_SESSION['role'] == 5) {
-		$prodi_user = $CI->db->select('prodi')
-			->from('users')
-			->where([
-				'id' => $_SESSION['user_id']
-			])
-			->get()
-			->row_object()
-			->prodi;
 
 		return $CI->db->select("*")
-			->from("Tr_Penerbitan_Pengajuan")
-		
+			->from("v_prestasi")		
 			->where([
-				// "FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
-				// "ps.status_id" => 9,
-				"DEPARTMENT_ID" => $prodi_user
+				"MONTH(tanggal) =" => $no,
+				"YEAR(tanggal) =" => $year,
+				"DEPARTMENT_ID" => $_SESSION['id_prodi']
 			])
 			->get()
 			->num_rows();
 	} else {
 	
 		return $CI->db->select("*")
-			->from("tr_penerbitan_pengajuan a")
-			->join('tr_periode_penerbitan b', "b.id_periode = a.id_periode")
+			->from("v_prestasi")
 			->where([				
-				"MONTH(tanggal) =" => $no,				
+				"MONTH(tanggal) =" => $no,
+				"YEAR(tanggal) =" => $year			
 			])
 			->get()
 			->num_rows();
@@ -149,80 +123,52 @@ function get_nama_bulan($no_urut)
 	return $nama_bulan[$no];
 }
 
-function get_jumlah_pengajuan_per_jenis_pengajuan($jenis_pengajuan_id)
+function get_jumlah_prestasi_per_jenis_pengajuan($jenis_pengajuan_id, $year)
 {
 	$CI = &get_instance();
 
 	if ($_SESSION['role'] == 5) {
 
-		$prodi_user = $CI->db->select('prodi')
-			->from('users')
-			->where([
-				'id' => $_SESSION['user_id']
-			])
-			->get()
-			->row_object()
-			->prodi;
-
 		return $CI->db->select('*')
-			->from('tr_penerbitan_pengajuan pp')
-			->join('v_mahasiswa m', "m.STUDENTID=pp.STUDENTID")
-			->join('tr_pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->from('v_prestasi')
 			->where([
-				"jp.Jenis_Pengajuan_Id" => $jenis_pengajuan_id,
-				"m.DEPARTMENT_ID" => $prodi_user
+				"status" => 1,
+				"Jenis_Pengajuan_Id" => $jenis_pengajuan_id,
+				"m.DEPARTMENT_ID" => $_SESSION['id_prodi'],
+				"YEAR(tanggal) =" => $year
 			])
 			->get()
 			->num_rows();
 	} else {
 		return $CI->db->select('*')
-			->from('tr_penerbitan_pengajuan pp')
-			->join('tr_pengajuan p', 'p.pengajuan_id = pp.id_pengajuan')
-			->join('mstr_jenis_pengajuan jp', 'jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id')
+			->from('v_prestasi')
 			->where([
-				'jp.Jenis_Pengajuan_Id' => $jenis_pengajuan_id
-
+				"status" => 1,
+				'Jenis_Pengajuan_Id' => $jenis_pengajuan_id,
+				"YEAR(tanggal) =" => $year
 			])
 			->get()
 			->num_rows();
 	}
 }
 
-function get_jumlah_pengajuan_per_prodi()
+
+function get_jumlah_prestasi_per_prodi($year)
 {
 	$CI = &get_instance();
-
-	$prodi_user = $CI->db->select('prodi')
-		->from('users')
-		->where([
-			'id' => $_SESSION['user_id']
-		])
-		->get()
-		->row_object()
-		->prodi;
-
-	if ($_SESSION['role'] == 5) {
-		$department = $CI->db->select('*')
-			->from('mstr_department')
-			->where([
-				'DEPARTMENT_ID' => $prodi_user
-			])
-			->get()->result_array();
-	} else {
-		$department = $CI->db->select('*')
+	
+	$department = $CI->db->select('*')
 			->from('mstr_department')->get()->result_array();
-	}
 
 	foreach ($department as $department) {
 		$pengajuan_per_prodi[] = [
 			'nama_prodi' => $department['NAME_OF_DEPARTMENT'],
 			'jumlah_pengajuan' => $CI->db->select('*')
-				->from('tr_penerbitan_pengajuan pp')
-				->join('v_mahasiswa m', 'm.STUDENTID = pp.STUDENTID')
-				->join('mstr_department d', 'd.DEPARTMENT_ID = m.DEPARTMENT_ID')
+				->from('v_prestasi')
 				->where([
-					'm.DEPARTMENT_ID' => $department['DEPARTMENT_ID'],
+					'DEPARTMENT_ID' => $department['DEPARTMENT_ID'],
+					"YEAR(tanggal) =" => $year,
+					"status" => 1,
 				])
 				->get()
 				->num_rows()
