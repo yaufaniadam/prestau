@@ -56,7 +56,7 @@
 									<a class="btn btn-info btn-sm btn-circle" href="<?= base_url('admin/pengguna/edit/' . $row['id']); ?>">
 										<i class="fas fa-pencil-alt"></i>
 									</a>
-									<a href="" style="color:#fff;" title="Hapus" class="delete btn btn-sm  btn-circle btn-danger" data-href="<?= base_url('admin/pengguna/hapus/' . $row['id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+									<!-- <a href="" style="color:#fff;" title="Hapus" class="delete btn btn-sm  btn-circle btn-danger" data-href="<?= base_url('admin/pengguna/hapus/' . $row['id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a> -->
 								</td>
 							</tr>
 						<?php } ?>

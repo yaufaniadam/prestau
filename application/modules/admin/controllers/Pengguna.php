@@ -38,11 +38,14 @@ class Pengguna extends Admin_Controller
 				array('required' => '%s wajib diisi', 'valid_email' => 'Format %s salah',  'is_unique' => '%s tidak tersedia, gunakan yang lain.')
 			);
 			$this->form_validation->set_rules('role', 'Role', 'trim|required', array('required' => '%s wajib diisi'));
+			if(	$this->input->post('role') == '5') {
+				$this->form_validation->set_rules('prodi', 'Prodi', 'trim|required', array('required' => '%s wajib diisi'));
+			}
 			$this->form_validation->set_rules('password', 'Password', 'trim|required', array('required' => '%s wajib diisi'));
-			$this->form_validation->set_rules('nama', 'Nama Lengkap', 'trim|required', array('required' => '%s wajib diisi'));
 
 			if ($this->form_validation->run() == FALSE) {
 				$data['role'] = $this->pengguna_model->role();
+				$data['prodi'] = $this->pengguna_model->get_prodi();
 				$data['title'] = 'Tambah Pengguna';
 				$data['view'] = 'admin/pengguna/tambah';
 				$this->load->view('layout/layout', $data);
@@ -52,7 +55,8 @@ class Pengguna extends Admin_Controller
 					'username' => $this->input->post('username'),
 					'email' => $this->input->post('email'),
 					'role' => $this->input->post('role'),
-					'fullname' => $this->input->post('nama'),
+					'prodi' => ($this->input->post('role') == '2' || $this->input->post('role') == '5') ? $this->input->post('prodi') : '',					
+					'fullname' => $this->input->post('username'),
 					'password' =>  password_hash($this->input->post('password'), PASSWORD_BCRYPT),
 					'created_at' => date('Y-m-d h:m:s'),
 					'updated_at' => date('Y-m-d h:m:s'),
@@ -67,12 +71,12 @@ class Pengguna extends Admin_Controller
 			}
 		} else {
 			$data['role'] = $this->pengguna_model->role();
+			$data['prodi'] = $this->pengguna_model->get_prodi();
 			$data['title'] = 'Tambah Pengguna';
 			$data['view'] = 'admin/pengguna/tambah';
 			$this->load->view('layout/layout', $data);
 		}
 	}
-
 	public function edit($id = 0)
 	{
 		if ($this->input->post('submit')) {
@@ -81,6 +85,7 @@ class Pengguna extends Admin_Controller
 
 			if ($this->form_validation->run() == FALSE) {
 				$data['user'] = $this->pengguna_model->get_user_by_id($id);
+				$data['prodi'] = $this->pengguna_model->get_prodi();
 				$data['role'] = $this->pengguna_model->role();
 				$data['title'] = 'Edit Pengguna';
 				$data['view'] = 'admin/pengguna/edit';
@@ -92,6 +97,7 @@ class Pengguna extends Admin_Controller
 					'fullname' => $this->input->post('nama'),
 					'password' => ($this->input->post('password') !== "" ? password_hash($this->input->post('password'), PASSWORD_BCRYPT) : $this->input->post('password_hidden')),
 					'updated_at' => date('Y-m-d h:m:s'),
+					'prodi' => $this->input->post('prodi'),
 				);
 
 				$data = $this->security->xss_clean($data);
@@ -105,6 +111,7 @@ class Pengguna extends Admin_Controller
 		} else {
 			$data['user'] = $this->pengguna_model->get_user_by_id($id);
 			$data['role'] = $this->pengguna_model->role();
+			$data['prodi'] = $this->pengguna_model->get_prodi();
 			$data['title'] = 'Edit Pengguna';
 			$data['view'] = 'admin/pengguna/edit';
 			$this->load->view('layout/layout', $data);
