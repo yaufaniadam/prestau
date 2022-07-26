@@ -134,11 +134,12 @@ function get_jumlah_prestasi_per_jenis_pengajuan($jenis_pengajuan_id, $year)
 			->where([
 				"status" => 1,
 				"Jenis_Pengajuan_Id" => $jenis_pengajuan_id,
-				"m.DEPARTMENT_ID" => $_SESSION['id_prodi'],
+				"DEPARTMENT_ID" => $_SESSION['id_prodi'],
 				"YEAR(tanggal) =" => $year
 			])
 			->get()
 			->num_rows();
+
 	} else {
 		return $CI->db->select('*')
 			->from('v_prestasi')

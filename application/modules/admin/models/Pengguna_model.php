@@ -31,6 +31,11 @@ class Pengguna_model extends CI_Model
 	{
 		return $this->db->get_where('mstr_role', array('role_id !=' => '1'))->result_array();
 	}
+	
+	public function get_prodi()
+	{
+		return $this->db->get('mstr_department')->result_array();
+	}
 	// Count total users by role
 	public function count_all_users_by_role($role)
 	{

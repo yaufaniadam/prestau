@@ -11,6 +11,15 @@ class Prestasi extends Admin_Controller
     public function index()
     {
 
+        $prodinya = $this->session->userdata('id_prodi');
+
+		if ($prodinya == 0) {
+			$prodi = '';
+		} else {
+			$prodi = 'AND DEPARTMENT_ID = ' . $prodinya;
+		}
+
+
         $department_data = $this->db->query("SELECT * FROM mstr_department")->result_array();
 		$kategori_data = $this->db->query("SELECT * FROM mstr_jenis_pengajuan WHERE Jenis_Pengajuan_Id != 12")->result_array();
 
@@ -20,7 +29,7 @@ class Prestasi extends Admin_Controller
 		
 
         $prestasi = $this->db->query("SELECT * FROM v_prestasi 
-            WHERE status = 1 ")->result_array();
+            WHERE status = 1  " . $prodi )->result_array();
         
         $data['daftar_prestasi'] = $prestasi;
         $data['title'] = 'Daftar Prestasi & Rekognisi';

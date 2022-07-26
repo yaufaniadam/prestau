@@ -60,13 +60,20 @@
 					</div>
 				</div>
 
-				<!--	<div class="form-group">
-					<label for="nama" class="control-label">Prodi</label>
-					<div class="">
-						
-
+				<div class="form-group prodi">
+					<label for="prodi" class="control-label">Pilih Prodi</label>
+					<div>
+						<select name="prodi" class="prodi form-control <?= (form_error('prodi')) ? 'is-invalid' : ''; ?>">
+							<option value="">Pilih Prodi</option>
+							<?php foreach ($prodi as $prodi) { ?>				
+								<option value="<?= $prodi['DEPARTMENT_ID']; ?>" <?= ($user['prodi'] == $prodi['DEPARTMENT_ID']) ? "selected"  : ""; ?> ><?= $prodi['NAME_OF_DEPARTMENT']; ?> (<?= $prodi['DEPARTMENT_ID']; ?>)</option>
+							<?php 
+							}
+							 ?>
+						</select>
+						<span class="text-danger"><?php echo form_error('prodi'); ?></span>
 					</div>
-				</div> -->
+				</div>
 
 				<div class="form-group">
 					<div>

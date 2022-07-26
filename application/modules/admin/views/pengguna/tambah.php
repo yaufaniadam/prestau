@@ -44,26 +44,36 @@
 						<span class="text-danger"><?php echo form_error('password'); ?></span>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="nama" class="control-label">Nama Lengkap</label>
-					<div class="">
-						<input type="text" name="nama" class="form-control <?= (form_error('nama')) ? 'is-invalid' : ''; ?>" id="nama" placeholder="" value="<?php if (validation_errors()) {
-																																									echo set_value('nama');
-																																								}  ?>">
-						<span class="text-danger"><?php echo form_error('nama'); ?></span>
-					</div>
-				</div>
-
+			
 				<div class="form-group">
 					<label for="role" class="control-label">Role</label>
 					<div>
-						<select name="role" class="form-control <?= (form_error('role')) ? 'is-invalid' : ''; ?>">
+						<select name="role" class="form-control <?= (form_error('role')) ? 'is-invalid' : ''; ?> role">
 							<option value="">Pilih Role</option>
-							<?php foreach ($role as $row) { ?>
+							<?php foreach ($role as $row) { 
+								
+								if('mahasiswa' != $row['role'] ) { ?>
 								<option value="<?= $row['role_id']; ?>" <?= (set_select('role', $row['role_id'])) ?>><?= $row['role']; ?></option>
-							<?php } ?>
+							<?php }
+							}
+							 ?>
 						</select>
 						<span class="text-danger"><?php echo form_error('role'); ?></span>
+					</div>
+				</div>
+
+				<div class="form-group prodi">
+					<label for="prodi" class="control-label">Pilih Prodi</label>
+					<div>
+						<select name="prodi" class="prodi form-control <?= (form_error('prodi')) ? 'is-invalid' : ''; ?>">
+							<option value="">Pilih Prodi</option>
+							<?php foreach ($prodi as $prodi) { ?>				
+								<option value="<?= $prodi['DEPARTMENT_ID']; ?>" <?= (set_select('prodi', $prodi['DEPARTMENT_ID'])) ?>><?= $prodi['NAME_OF_DEPARTMENT']; ?> (<?= $prodi['DEPARTMENT_ID']; ?>)</option>
+							<?php 
+							}
+							 ?>
+						</select>
+						<span class="text-danger"><?php echo form_error('prodi'); ?></span>
 					</div>
 				</div>
 
@@ -80,3 +90,4 @@
 	</div>
 
 </div>
+
