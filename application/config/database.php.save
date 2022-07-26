@@ -79,9 +79,9 @@ $db['dbsqlsrv'] = array(
 
 	'hostname' => '10.0.1.131,49169',
 	// 'hostname' => 'ADAM-HP\SQLEXPRESS',
-	'username' => 'simkatmawa',
-	// 'username' => 'adam',
-	'password' => 'new#simkatmawa#2022',
+	'username' => 'programmer',
+	// 'username' => 'new#simkatmawa#2022',
+	'password' => 'programmer',
 	// 'password' => '',
 	'database' => 'simkatmawa',
 	'dbdriver' => 'sqlsrv',
