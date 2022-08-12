@@ -451,6 +451,7 @@ function generate_form_field($field_id, $pengajuan_id, $pengajuan_status, $fungs
 							var obj = JSON.parse(response);
 							$('#files-<?= $id; ?>').find('li.empty').hide();
 
+							console.log(obj);
 
 							$('.id-dokumen-<?= $id; ?>').val(obj.id);
 							$('#drag-and-drop-zone-<?= $id; ?>').fadeOut('400');
