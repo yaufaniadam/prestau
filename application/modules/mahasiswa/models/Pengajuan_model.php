@@ -101,7 +101,7 @@ class Pengajuan_model extends CI_Model
 	public function get_detail_pengajuan($pengajuan_id)
 	{
 		return $this->db->query(
-			"SELECT *, jp.jenis_pengajuan FROM tr_pengajuan p
+			"SELECT * jp.jenis_pengajuan FROM tr_pengajuan p
 			LEFT JOIN mstr_jenis_pengajuan jp ON jp.Jenis_Pengajuan_Id = p.Jenis_Pengajuan_Id 		
 			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
@@ -138,8 +138,7 @@ class Pengajuan_model extends CI_Model
 			ps.date,
 			s.status,
 			s.status_id,
-			s.badge,
-			FORMAT (ps.date, 'hh:mm:ss ') as time
+			s.badge
 			FROM tr_pengajuan p 
 			LEFT JOIN mstr_jenis_pengajuan jp ON p.Jenis_Pengajuan_Id = jp.Jenis_Pengajuan_Id
 			LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim

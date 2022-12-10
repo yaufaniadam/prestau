@@ -6,11 +6,7 @@ class Pengajuan_model extends CI_Model
 		$id_status = " AND ps.status_id = 7";
 
 		$query = $this->db->query(
-			"SELECT 
-			*,
-			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
-			FORMAT (ps.date, 'hh:mm:ss ') as time,
-			f.faculty
+			"SELECT *,	ps.date as date, f.faculty
 			FROM tr_pengajuan p
 			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
@@ -27,11 +23,8 @@ class Pengajuan_model extends CI_Model
 	public function getPengajuanPerPeriode($id_periode)
 	{
 		$query = $this->db->query(
-			"SELECT
-			*,
-			pp.STUDENTID AS mhs_id,
-			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
-			FORMAT (ps.date, 'hh:mm:ss ') as time
+			"SELECT	*,	pp.STUDENTID AS mhs_id,
+			ps.date as date
 			FROM tr_pengajuan p
 			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
@@ -70,8 +63,7 @@ class Pengajuan_model extends CI_Model
 		$query = $this->db->query(
 			"SELECT 
 			*,
-			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
-			FORMAT (ps.date, 'hh:mm:ss ') as time
+			ps.date as date
 			FROM tr_pengajuan p
 			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
@@ -165,8 +157,7 @@ class Pengajuan_model extends CI_Model
 		$query = $this->db->query(
 			"SELECT 
 			*,
-			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
-			FORMAT (ps.date, 'hh:mm:ss ') as time
+			ps.date as date
 			FROM tr_pengajuan p
 			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
@@ -185,25 +176,15 @@ class Pengajuan_model extends CI_Model
 	public function getbulan()
 	{
 		return $this->db->query(
-			"SELECT 
-			-- distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
+			"SELECT  
 			distinct(MONTH(ps.date)) AS bulan 
 			FROM tr_pengajuan_status ps
 			WHERE ps.status_id = 2 
-			AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())
+			AND YEAR(ps.date) = YEAR(getdate())
 			ORDER BY bulan ASC
 			"
 		)->result_array();
 
-		// SELECT 
-		// distinct(FORMAT (ps.date, 'MMMM')) AS bulan 
-		// FROM tr_pengajuan_status ps
-		// LEFT JOIN tr_pengajuan p ON p.pengajuan_id = ps.pengajuan_id
-		// LEFT JOIN v_mahasiswa m ON m.STUDENTID = p.nim
-		// WHERE ps.status_id = 2 
-		// AND FORMAT (ps.date, 'yyyy') = YEAR(getdate())
-		// AND m.DEPARTMENT_ID = '1'
-		// ORDER BY bulan DESC
 	}
 
 	public function get_detail_pengajuan($pengajuan_id)

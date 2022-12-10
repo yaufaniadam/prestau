@@ -25,7 +25,7 @@ ob_start();
 |
 */
 
-$url = "https://" . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+$url = "http://" . $_SERVER['HTTP_HOST'] . str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 
 $config['base_url'] = $url;
 
@@ -408,7 +408,7 @@ $config['cookie_prefix']    = '';
 $config['cookie_domain']    = '';
 $config['cookie_path']        = '/';
 $config['cookie_secure']    = FALSE;
-$config['cookie_httponly']     = FALSE;
+$config['cookie_httponly']     = TRUE;
 
 /*
 |--------------------------------------------------------------------------

@@ -46,12 +46,19 @@ function get_jumlah_pengajuan_perbulan($no_urut)
 		->from("tr_pengajuan p")
 		->join('tr_pengajuan_status ps', 'ps.pengajuan_id=p.pengajuan_id')
 			->where([
-			// 	"FORMAT (ps.date, 'MMMM') =" => $nama_bulan[$no],
+
 				"ps.status_id > " => 1
 			])
 			->get()
 			->num_rows();
 	}
+}
+
+function konversi_date($format, $value) {
+
+	$new_date = date($format, strtotime($value));
+
+	return  $new_date;
 }
 
 function get_verified()

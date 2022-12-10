@@ -231,12 +231,12 @@
 						<?php foreach ($timeline as $tl) { ?>
 							<div class="timeline-item">
 								<div class="timeline-item-marker">
-									<div class="timeline-item-marker-text"><?= $tl['date']; ?></div>
+									<div class="timeline-item-marker-text"><?= konversi_date("j M", $tl['date']);?> </div>
 									<div class="timeline-item-marker-indicator bg-<?= $tl['badge']; ?>"></div>
 								</div>
 								<div class="timeline-item-content">
 									<?= $tl['status']; ?>
-									<span class="badge badge-perak"><?= $tl['time']; ?></span>
+									
 								</div>
 							</div>
 						<?php } ?>

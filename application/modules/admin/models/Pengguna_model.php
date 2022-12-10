@@ -17,14 +17,9 @@ class Pengguna_model extends CI_Model
 	// get all users for server-side datatable processing (ajax based)
 	public function get_pengguna($role)
 	{
-		if ($role == '') {
-			$where = "WHERE a.role != 1";
-		} else {
-			$where = "WHERE a.role != 1 AND a.role=$role";
-		}
 		return $this->db->query("SELECT a.*, r.role FROM users a
 		LEFT JOIN mstr_role r ON r.role_id = a.role
-		$where ");
+		");
 	}
 
 	public function get_role()

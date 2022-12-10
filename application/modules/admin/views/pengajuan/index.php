@@ -33,10 +33,11 @@
 						<thead>
 							<tr>
 								<th style="width:1%"><input type="checkbox" name="" id="check_all"></th>
-								<th style="width:30%">Judul</th>
+								<th style="width:20%">Judul</th>
 								<th class="sortir" style="width:20%">Kategori</th>
-								<th class="sortir" style="width:20%">Status</th>
+								<th class="sortir" style="width:14%">Status</th>
 								<th>Mahasiswa</th>
+								<th class="sortir">Prodi</th>
 								<th>Tanggal</th>
 								<th></th>
 							</tr>
@@ -62,20 +63,18 @@
 										<?= $pengajuan['status']; ?>
 									</td>
 									<td>
-										<p class="m-0">
-											<?= $pengajuan['FULLNAME']; ?>
-										</p>
-										<p class="badge m-0 badge-ijomuda">
-											<?= $pengajuan['NAME_OF_DEPARTMENT']; ?>
-										</p>
+											<?= $pengajuan['FULLNAME']; ?>									
+									</td>
+									<td>
+										<?= $pengajuan['NAME_OF_DEPARTMENT']; ?>							
 									</td>
 									<td>
 										<p class="m-0">
-											<?= $pengajuan['date'];	?>
+											<?php										
+												echo konversi_date("j F Y", $pengajuan['date']);
+											?>
 										</p>
-										<p class="badge m-0 badge-warning">
-											<?= $pengajuan['time'];	?>
-										</p>
+									
 									</td>
 									<td>
 										<?php if ($pengajuan['status_id'] < 3) { ?>

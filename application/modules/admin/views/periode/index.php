@@ -38,7 +38,7 @@
 							<tr>
 								<td><a href="<?= base_url('admin/periode/bulan/' . $periode['id_periode']); ?>"><?= $periode['nama_periode']; ?></a></td>
 								<td><?= $periode['status'] == 0 ? 'Belum Diterbitkan' : 'Sudah Diterbitkan'; ?></td>
-								<td><?= $periode['tanggal'] == '' ? '-' : $periode['tanggal']; ?></td>
+								<td><?= $periode['tanggal'] == '' ? '-' : konversi_date("j F Y", $periode['tanggal']); ?></td>
 							</tr>
 						<?php } ?>
 					</tbody>

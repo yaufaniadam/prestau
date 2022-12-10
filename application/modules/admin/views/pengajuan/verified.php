@@ -71,12 +71,9 @@
                   <?= $pengajuan['faculty']; ?>
                 </td>
                 <td>
-                  <p class="m-0">
-                    <?= $pengajuan['date'];  ?>
-                  </p>
-                  <p class="badge m-0 badge-warning">
-                    <?= $pengajuan['time'];  ?>
-                  </p>
+                    <?php										
+												echo konversi_date("j F Y", $pengajuan['date']);
+										?>
                 </td>
               </tr>
             <?php  } ?>

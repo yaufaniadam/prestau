@@ -60,8 +60,7 @@ class Data_pengajuan_model extends CI_Model
 		$query = $this->db->query(
 			"SELECT 
 			*,
-			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
-			FORMAT (ps.date, 'hh:mm:ss ') as time
+			ps.date as date
 			FROM tr_pengajuan p
 			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
@@ -99,10 +98,7 @@ class Data_pengajuan_model extends CI_Model
 		}
 
 		$query = $this->db->query(
-			"SELECT 
-			*,
-			FORMAT (ps.date, 'dd/MM/yyyy ') as date,
-			FORMAT (ps.date, 'hh:mm:ss ') as time
+			"SELECT *, ps.date as tanggal
 			FROM tr_pengajuan p
 			LEFT JOIN tr_pengajuan_status ps ON ps.pengajuan_id = p.pengajuan_id
 			LEFT JOIN mstr_status s ON s.status_id = ps.status_id
